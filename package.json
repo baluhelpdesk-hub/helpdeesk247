@@ -1,0 +1,15 @@
+{
+  "name": "ai-fitness-coach",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "mobile",
+    "admin"
+  ],
+  "scripts": {
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:admin": "npm start --workspace=admin",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down"
+  }
+}
