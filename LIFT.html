@@ -1,0 +1,4813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="theme-color" content="#080808"/>
+<title>LIFT — Fitness Coach</title>
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body,#root{width:100%;height:100%;overflow:hidden;background:#080808}
+body{font-family:'Space Grotesk',sans-serif;overscroll-behavior:none}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield}
+::-webkit-scrollbar{width:0;height:0}
+select{-webkit-appearance:none;appearance:none}
+input,select,button{font-family:'Space Grotesk',sans-serif}
+/* Safe area insets for iPhone notch */
+.safe-top{padding-top:env(safe-area-inset-top,0px)}
+.safe-bottom{padding-bottom:max(env(safe-area-inset-bottom,0px),12px)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.screen-enter{animation:fadeUp 0.22s cubic-bezier(0.22,1,0.36,1)}
+.modal-enter{animation:slideUp 0.28s cubic-bezier(0.22,1,0.36,1)}
+.fade-enter{animation:fadeIn 0.18s ease-out}
+
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>Host not in allowlist</script>
+<script>Host not in allowlist</script>
+<script>"use strict";
+
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+// ═══════════════════════════════════════════════════════════════════════════
+// DESIGN TOKENS
+// ═══════════════════════════════════════════════════════════════════════════
+var C = {
+  bg950: "#080808",
+  bg900: "#111111",
+  bg800: "#1a1a1a",
+  bg700: "#242424",
+  bg600: "#2e2e2e",
+  bg500: "#3d3d3d",
+  lime300: "#b8f500",
+  lime400: "#9dd600",
+  lime200: "#c8ff52",
+  text0: "#f5f5f5",
+  text1: "#e8e8e8",
+  text2: "#cccccc",
+  text3: "#aaaaaa",
+  text4: "#888888",
+  text5: "#666666",
+  danger: "#f54040",
+  warning: "#f5c400",
+  info: "#4a9eff"
+};
+var T = {
+  display: {
+    fontFamily: "'Space Grotesk',sans-serif",
+    fontWeight: 700
+  },
+  heading: {
+    fontFamily: "'Space Grotesk',sans-serif",
+    fontWeight: 600
+  },
+  body: {
+    fontFamily: "'Space Grotesk',sans-serif",
+    fontWeight: 400
+  },
+  mono: {
+    fontFamily: "'Space Mono',monospace",
+    fontWeight: 400
+  }
+};
+var MC = {
+  Chest: "#4a9eff",
+  Back: "#f5c400",
+  Legs: "#9dd600",
+  Shoulders: "#c8ff52",
+  Triceps: "#b8f500",
+  Biceps: "#7aab00",
+  Abs: "#f54040",
+  Cardio: "#ff7a2f"
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DATABASE (IndexedDB + localStorage fallback)
+// ═══════════════════════════════════════════════════════════════════════════
+var DB = {
+  _db: null,
+  open: function open() {
+    var _this = this;
+    return _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            if (!_this._db) {
+              _context.n = 1;
+              break;
+            }
+            return _context.a(2, _this._db);
+          case 1:
+            return _context.a(2, new Promise(function (res, rej) {
+              var req = indexedDB.open("lift_db", 2);
+              req.onupgradeneeded = function (e) {
+                var db = e.target.result;
+                if (!db.objectStoreNames.contains("kv")) db.createObjectStore("kv", {
+                  keyPath: "k"
+                });
+                if (!db.objectStoreNames.contains("workouts")) db.createObjectStore("workouts", {
+                  keyPath: "id",
+                  autoIncrement: true
+                });
+                if (!db.objectStoreNames.contains("sets")) db.createObjectStore("sets", {
+                  keyPath: "id",
+                  autoIncrement: true
+                });
+                if (!db.objectStoreNames.contains("logs")) db.createObjectStore("logs", {
+                  keyPath: "id",
+                  autoIncrement: true
+                });
+              };
+              req.onsuccess = function (e) {
+                _this._db = e.target.result;
+                res(_this._db);
+              };
+              req.onerror = function () {
+                return rej(req.error);
+              };
+            }));
+        }
+      }, _callee);
+    }))();
+  },
+  get: function get(key) {
+    var _this2 = this;
+    return _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+      var db, _JSON$parse, _t;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.p = _context2.n) {
+          case 0:
+            _context2.p = 0;
+            _context2.n = 1;
+            return _this2.open();
+          case 1:
+            db = _context2.v;
+            return _context2.a(2, new Promise(function (res, rej) {
+              var tx = db.transaction("kv", "readonly");
+              var req = tx.objectStore("kv").get(key);
+              req.onsuccess = function () {
+                var _req$result$v, _req$result;
+                return res((_req$result$v = (_req$result = req.result) === null || _req$result === void 0 ? void 0 : _req$result.v) !== null && _req$result$v !== void 0 ? _req$result$v : null);
+              };
+              req.onerror = function () {
+                return rej(req.error);
+              };
+            }));
+          case 2:
+            _context2.p = 2;
+            _t = _context2.v;
+            return _context2.a(2, (_JSON$parse = JSON.parse(localStorage.getItem(key))) !== null && _JSON$parse !== void 0 ? _JSON$parse : null);
+        }
+      }, _callee2, null, [[0, 2]]);
+    }))();
+  },
+  set: function set(key, val) {
+    var _this3 = this;
+    return _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+      var db, _t2;
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.p = _context3.n) {
+          case 0:
+            _context3.p = 0;
+            _context3.n = 1;
+            return _this3.open();
+          case 1:
+            db = _context3.v;
+            return _context3.a(2, new Promise(function (res, rej) {
+              var tx = db.transaction("kv", "readwrite");
+              tx.objectStore("kv").put({
+                k: key,
+                v: val
+              });
+              tx.oncomplete = function () {
+                return res();
+              };
+              tx.onerror = function () {
+                return rej(tx.error);
+              };
+            }));
+          case 2:
+            _context3.p = 2;
+            _t2 = _context3.v;
+            localStorage.setItem(key, JSON.stringify(val));
+          case 3:
+            return _context3.a(2);
+        }
+      }, _callee3, null, [[0, 2]]);
+    }))();
+  },
+  addWorkout: function addWorkout(entry) {
+    var _this4 = this;
+    return _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
+      var db, hist, _t3;
+      return _regenerator().w(function (_context4) {
+        while (1) switch (_context4.p = _context4.n) {
+          case 0:
+            _context4.p = 0;
+            _context4.n = 1;
+            return _this4.open();
+          case 1:
+            db = _context4.v;
+            return _context4.a(2, new Promise(function (res, rej) {
+              var tx = db.transaction("workouts", "readwrite");
+              var req = tx.objectStore("workouts").add(entry);
+              req.onsuccess = function () {
+                return res(req.result);
+              };
+              req.onerror = function () {
+                return rej(req.error);
+              };
+            }));
+          case 2:
+            _context4.p = 2;
+            _t3 = _context4.v;
+            hist = JSON.parse(localStorage.getItem("hist") || "[]");
+            hist.unshift(entry);
+            localStorage.setItem("hist", JSON.stringify(hist.slice(0, 100)));
+          case 3:
+            return _context4.a(2);
+        }
+      }, _callee4, null, [[0, 2]]);
+    }))();
+  },
+  getWorkouts: function getWorkouts() {
+    var _this5 = this;
+    return _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+      var db, _t4;
+      return _regenerator().w(function (_context5) {
+        while (1) switch (_context5.p = _context5.n) {
+          case 0:
+            _context5.p = 0;
+            _context5.n = 1;
+            return _this5.open();
+          case 1:
+            db = _context5.v;
+            return _context5.a(2, new Promise(function (res, rej) {
+              var tx = db.transaction("workouts", "readonly");
+              var req = tx.objectStore("workouts").getAll();
+              req.onsuccess = function () {
+                return res((req.result || []).reverse());
+              };
+              req.onerror = function () {
+                return rej(req.error);
+              };
+            }));
+          case 2:
+            _context5.p = 2;
+            _t4 = _context5.v;
+            return _context5.a(2, JSON.parse(localStorage.getItem("hist") || "[]"));
+        }
+      }, _callee5, null, [[0, 2]]);
+    }))();
+  }
+};
+
+// Simple sync wrapper for non-critical state
+var LS = {
+  get: function get(k) {
+    var fb = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    try {
+      var v = localStorage.getItem(k);
+      return v ? JSON.parse(v) : fb;
+    } catch (_unused5) {
+      return fb;
+    }
+  },
+  set: function set(k, v) {
+    try {
+      localStorage.setItem(k, JSON.stringify(v));
+    } catch (_unused6) {}
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// EXERCISE LIBRARY
+// ═══════════════════════════════════════════════════════════════════════════
+var EX = {
+  bench_bb: {
+    id: "bench_bb",
+    name: "Barbell Bench Press",
+    muscle: "Chest",
+    eq: "Barbell",
+    sets: 4,
+    reps: "6–8",
+    rest: 150,
+    cues: ["Retract shoulder blades", "Bar to lower chest", "Drive feet into floor", "Press in slight arc"],
+    mistakes: ["Flaring elbows", "Bouncing off chest", "Losing upper back"]
+  },
+  bench_db: {
+    id: "bench_db",
+    name: "Dumbbell Bench Press",
+    muscle: "Chest",
+    eq: "Dumbbells",
+    sets: 4,
+    reps: "8–10",
+    rest: 120,
+    cues: ["Full stretch at bottom", "Squeeze at top", "Control descent", "Neutral grip option"],
+    mistakes: ["Drifting too wide", "No full ROM", "Rushing eccentric"]
+  },
+  chest_machine: {
+    id: "chest_machine",
+    name: "Chest Press Machine",
+    muscle: "Chest",
+    eq: "Machine",
+    sets: 4,
+    reps: "10–12",
+    rest: 90,
+    cues: ["Handles at lower chest", "Full extension", "3-sec negative", "Back flat on pad"],
+    mistakes: ["Seat too high", "Using momentum", "Shrugging"]
+  },
+  cable_fly: {
+    id: "cable_fly",
+    name: "Cable Chest Fly",
+    muscle: "Chest",
+    eq: "Cable",
+    sets: 3,
+    reps: "12–15",
+    rest: 75,
+    cues: ["Slight forward lean", "Slight elbow bend", "Meet at chest height", "1-sec squeeze"],
+    mistakes: ["Straightening arms", "Too heavy", "No peak contraction"]
+  },
+  incline_db: {
+    id: "incline_db",
+    name: "Incline Dumbbell Press",
+    muscle: "Chest",
+    eq: "Dumbbells",
+    sets: 3,
+    reps: "8–10",
+    rest: 120,
+    cues: ["30–45° incline", "Full ROM", "Don't flare elbows", "Control descent"],
+    mistakes: ["Too steep", "Partial reps", "Dropping quickly"]
+  },
+  pullup: {
+    id: "pullup",
+    name: "Pull-Up",
+    muscle: "Back",
+    eq: "Bodyweight",
+    sets: 4,
+    reps: "6–8",
+    rest: 150,
+    cues: ["Dead hang start", "Depress scapula", "Pull elbows to hips", "Chin over bar"],
+    mistakes: ["Kipping", "Partial range", "Shrugging at top"]
+  },
+  lat_pulldown: {
+    id: "lat_pulldown",
+    name: "Lat Pulldown",
+    muscle: "Back",
+    eq: "Cable",
+    sets: 4,
+    reps: "8–10",
+    rest: 120,
+    cues: ["Slight back lean", "Pull to upper chest", "Lead with elbows", "Full stretch at top"],
+    mistakes: ["Behind neck", "Momentum", "Not stretching"]
+  },
+  cable_row: {
+    id: "cable_row",
+    name: "Seated Cable Row",
+    muscle: "Back",
+    eq: "Cable",
+    sets: 4,
+    reps: "10–12",
+    rest: 90,
+    cues: ["Upright torso", "Pull to navel", "Squeeze scapula", "Slow eccentric"],
+    mistakes: ["Rounding", "Body swing", "No scapula retraction"]
+  },
+  bb_row: {
+    id: "bb_row",
+    name: "Barbell Row",
+    muscle: "Back",
+    eq: "Barbell",
+    sets: 4,
+    reps: "6–8",
+    rest: 150,
+    cues: ["Hip hinge 45°", "Pull to lower sternum", "Elbows back", "Brace core"],
+    mistakes: ["Too upright", "Jerking", "Hips rising"]
+  },
+  machine_row: {
+    id: "machine_row",
+    name: "Machine Row",
+    muscle: "Back",
+    eq: "Machine",
+    sets: 4,
+    reps: "10–12",
+    rest: 90,
+    cues: ["Chest on pad", "Full stretch", "Retract scapula", "Squeeze at peak"],
+    mistakes: ["Partial range", "Too heavy", "Hunching"]
+  },
+  squat_bb: {
+    id: "squat_bb",
+    name: "Barbell Back Squat",
+    muscle: "Legs",
+    eq: "Barbell",
+    sets: 4,
+    reps: "5–6",
+    rest: 180,
+    cues: ["Feet shoulder-width", "Break hips and knees together", "Chest tall", "Drive through full foot"],
+    mistakes: ["Knees caving", "Heels rising", "Good morning"]
+  },
+  leg_press: {
+    id: "leg_press",
+    name: "Leg Press",
+    muscle: "Legs",
+    eq: "Machine",
+    sets: 4,
+    reps: "8–10",
+    rest: 150,
+    cues: ["Mid-platform feet", "Lower to 90°", "Don't lock knees", "Push through heels"],
+    mistakes: ["Too low foot", "Locking knees", "Shallow range"]
+  },
+  hack_squat: {
+    id: "hack_squat",
+    name: "Hack Squat",
+    muscle: "Legs",
+    eq: "Machine",
+    sets: 4,
+    reps: "8–10",
+    rest: 150,
+    cues: ["Shoulder-width", "Full ROM", "Knees track toes", "Don't round back"],
+    mistakes: ["Half reps", "Knees caving", "Rising onto toes"]
+  },
+  rdl: {
+    id: "rdl",
+    name: "Romanian Deadlift",
+    muscle: "Legs",
+    eq: "Barbell",
+    sets: 3,
+    reps: "8–10",
+    rest: 120,
+    cues: ["Soft knee bend", "Push hips back", "Bar stays close", "Hamstring stretch"],
+    mistakes: ["Rounding back", "Squatting it", "Bar drifting"]
+  },
+  leg_curl: {
+    id: "leg_curl",
+    name: "Lying Leg Curl",
+    muscle: "Legs",
+    eq: "Machine",
+    sets: 3,
+    reps: "10–12",
+    rest: 90,
+    cues: ["Hips flat", "Full contraction", "3-sec eccentric", "Don't arch"],
+    mistakes: ["Raising hips", "Swinging", "Too fast"]
+  },
+  leg_ext: {
+    id: "leg_ext",
+    name: "Leg Extension",
+    muscle: "Legs",
+    eq: "Machine",
+    sets: 3,
+    reps: "12–15",
+    rest: 75,
+    cues: ["Full extension", "1-sec hold", "Controlled descent", "Back flat"],
+    mistakes: ["Partial reps", "Too fast", "Jerking"]
+  },
+  lunge: {
+    id: "lunge",
+    name: "Dumbbell Lunge",
+    muscle: "Legs",
+    eq: "Dumbbells",
+    sets: 3,
+    reps: "10ea",
+    rest: 90,
+    cues: ["Big step", "Back knee near floor", "Front shin vertical", "Drive through heel"],
+    mistakes: ["Knee caving", "Leaning forward", "Short step"]
+  },
+  ohp_bb: {
+    id: "ohp_bb",
+    name: "Barbell Overhead Press",
+    muscle: "Shoulders",
+    eq: "Barbell",
+    sets: 4,
+    reps: "6–8",
+    rest: 150,
+    cues: ["Bar on front delts", "Press straight up", "Full lockout", "Head back slightly"],
+    mistakes: ["Excessive arch", "Bar drifting", "Incomplete lockout"]
+  },
+  ohp_db: {
+    id: "ohp_db",
+    name: "Dumbbell Shoulder Press",
+    muscle: "Shoulders",
+    eq: "Dumbbells",
+    sets: 4,
+    reps: "8–10",
+    rest: 120,
+    cues: ["Neutral spine", "Full lockout", "Don't arch", "Control descent"],
+    mistakes: ["Back arch", "Partial range", "Too heavy"]
+  },
+  shld_machine: {
+    id: "shld_machine",
+    name: "Machine Shoulder Press",
+    muscle: "Shoulders",
+    eq: "Machine",
+    sets: 4,
+    reps: "10–12",
+    rest: 90,
+    cues: ["Grip outside shoulders", "Full extension", "Slow negative", "Core tight"],
+    mistakes: ["Too narrow", "Partial reps", "Momentum"]
+  },
+  lat_raise: {
+    id: "lat_raise",
+    name: "Dumbbell Lateral Raise",
+    muscle: "Shoulders",
+    eq: "Dumbbells",
+    sets: 4,
+    reps: "12–15",
+    rest: 60,
+    cues: ["Slight forward lean", "Lead with elbows", "Stop at shoulder", "3-sec down"],
+    mistakes: ["Swinging", "Too high", "Too heavy"]
+  },
+  cable_lat: {
+    id: "cable_lat",
+    name: "Cable Lateral Raise",
+    muscle: "Shoulders",
+    eq: "Cable",
+    sets: 4,
+    reps: "12–15",
+    rest: 60,
+    cues: ["Cross-body cable", "Constant tension", "Shoulder height max", "Control always"],
+    mistakes: ["Too fast", "Elbow bending", "Too heavy"]
+  },
+  face_pull: {
+    id: "face_pull",
+    name: "Face Pull",
+    muscle: "Shoulders",
+    eq: "Cable",
+    sets: 3,
+    reps: "15–20",
+    rest: 45,
+    cues: ["Rope at eye level", "Pull to ears", "External rotate", "Elbows high"],
+    mistakes: ["Elbows dropping", "No rotation", "Too heavy"]
+  },
+  pushdown: {
+    id: "pushdown",
+    name: "Tricep Pushdown",
+    muscle: "Triceps",
+    eq: "Cable",
+    sets: 4,
+    reps: "10–12",
+    rest: 60,
+    cues: ["Elbows pinned", "Full extension", "Squeeze bottom", "Upper arm still"],
+    mistakes: ["Leaning forward", "Elbows drifting", "Partial reps"]
+  },
+  oh_tri: {
+    id: "oh_tri",
+    name: "Overhead Tricep Extension",
+    muscle: "Triceps",
+    eq: "Cable",
+    sets: 3,
+    reps: "12–15",
+    rest: 60,
+    cues: ["Arms behind head", "Full stretch at top", "Squeeze at lockout", "Elbows forward"],
+    mistakes: ["Elbows flaring", "Partial range", "Too heavy"]
+  },
+  skull: {
+    id: "skull",
+    name: "EZ Bar Skull Crusher",
+    muscle: "Triceps",
+    eq: "Barbell",
+    sets: 3,
+    reps: "10–12",
+    rest: 75,
+    cues: ["Upper arms vertical", "Lower to forehead", "Elbows in", "Full extension"],
+    mistakes: ["Elbows flaring", "Going behind head", "Too fast"]
+  },
+  tri_dips: {
+    id: "tri_dips",
+    name: "Bench Tricep Dips",
+    muscle: "Triceps",
+    eq: "Bodyweight",
+    sets: 3,
+    reps: "12–15",
+    rest: 60,
+    cues: ["Hands shoulder-width", "Stay upright", "Lower to 90°", "Full extension"],
+    mistakes: ["Wide grip", "Flaring elbows", "Partial range"]
+  },
+  curl_bb: {
+    id: "curl_bb",
+    name: "Barbell Curl",
+    muscle: "Biceps",
+    eq: "Barbell",
+    sets: 4,
+    reps: "8–10",
+    rest: 75,
+    cues: ["Elbows pinned", "Supinate at top", "Full stretch", "No swinging"],
+    mistakes: ["Swinging", "Partial range", "Elbows forward"]
+  },
+  curl_db: {
+    id: "curl_db",
+    name: "Dumbbell Curl",
+    muscle: "Biceps",
+    eq: "Dumbbells",
+    sets: 4,
+    reps: "10–12",
+    rest: 60,
+    cues: ["Alternate arms", "Supinate as you curl", "Full range", "Elbows back"],
+    mistakes: ["Swinging", "No supination", "Partial reps"]
+  },
+  cable_curl: {
+    id: "cable_curl",
+    name: "Cable Curl",
+    muscle: "Biceps",
+    eq: "Cable",
+    sets: 3,
+    reps: "12–15",
+    rest: 60,
+    cues: ["Constant tension", "Full stretch", "Squeeze at top", "Elbows still"],
+    mistakes: ["Too fast", "Elbows drifting", "Too heavy"]
+  },
+  hammer: {
+    id: "hammer",
+    name: "Hammer Curl",
+    muscle: "Biceps",
+    eq: "Dumbbells",
+    sets: 3,
+    reps: "10–12",
+    rest: 60,
+    cues: ["Neutral grip", "Don't rotate", "Full range", "Elbows by sides"],
+    mistakes: ["Swinging", "Partial reps", "Too heavy"]
+  },
+  cable_crunch: {
+    id: "cable_crunch",
+    name: "Cable Crunch",
+    muscle: "Abs",
+    eq: "Cable",
+    sets: 4,
+    reps: "15–20",
+    rest: 45,
+    cues: ["Kneel facing cable", "Hands by head", "Crunch to hips", "Round spine"],
+    mistakes: ["Hip flexors", "Pulling arms", "Not rounding"]
+  },
+  hang_raise: {
+    id: "hang_raise",
+    name: "Hanging Leg Raise",
+    muscle: "Abs",
+    eq: "Pull-up bar",
+    sets: 3,
+    reps: "12–15",
+    rest: 45,
+    cues: ["Dead hang", "Raise to 90°", "Control descent", "No swinging"],
+    mistakes: ["Swinging", "Momentum", "Dropping fast"]
+  },
+  plank: {
+    id: "plank",
+    name: "Plank",
+    muscle: "Abs",
+    eq: "Bodyweight",
+    sets: 3,
+    reps: "45–60s",
+    rest: 30,
+    cues: ["Forearms shoulder-width", "Hips level", "Squeeze glutes", "Breathe normally"],
+    mistakes: ["Hips sagging", "Hips too high", "Holding breath"]
+  },
+  ab_wheel: {
+    id: "ab_wheel",
+    name: "Ab Wheel Rollout",
+    muscle: "Abs",
+    eq: "Ab Wheel",
+    sets: 3,
+    reps: "10–12",
+    rest: 45,
+    cues: ["Brace core hard", "Extend as far stable", "Pull back with abs", "Kneel to start"],
+    mistakes: ["Hips sagging", "Going too far", "Not bracing"]
+  },
+  russian: {
+    id: "russian",
+    name: "Russian Twist",
+    muscle: "Abs",
+    eq: "Weight Plate",
+    sets: 3,
+    reps: "20 total",
+    rest: 30,
+    cues: ["Lean back 45°", "Feet off floor", "Rotate through torso", "Tap to floor"],
+    mistakes: ["Arms only", "Too fast", "No control"]
+  },
+  treadmill: {
+    id: "treadmill",
+    name: "Treadmill Intervals",
+    muscle: "Cardio",
+    eq: "Treadmill",
+    sets: 1,
+    reps: "20 min",
+    rest: 0,
+    cues: ["Warm 2 min", "30s sprint / 90s walk", "Repeat 8×", "Cool down 2 min"],
+    mistakes: ["Holding rails", "Starting too fast", "Skipping warmup"]
+  },
+  rower: {
+    id: "rower",
+    name: "Rowing Machine",
+    muscle: "Cardio",
+    eq: "Rower",
+    sets: 1,
+    reps: "20 min",
+    rest: 0,
+    cues: ["Drive with legs first", "Then lean back", "Then pull arms", "Reverse on return"],
+    mistakes: ["Hunching back", "Arms first", "No rhythm"]
+  },
+  bike: {
+    id: "bike",
+    name: "Stationary Bike",
+    muscle: "Cardio",
+    eq: "Bike",
+    sets: 1,
+    reps: "20 min",
+    rest: 0,
+    cues: ["Seat at hip height", "Slight forward lean", "70–90 RPM", "Breathe rhythmically"],
+    mistakes: ["Too low resistance", "Bouncing", "Hunching"]
+  },
+  stairmaster: {
+    id: "stairmaster",
+    name: "StairMaster",
+    muscle: "Cardio",
+    eq: "StairMaster",
+    sets: 1,
+    reps: "15 min",
+    rest: 0,
+    cues: ["Don't lean on rails", "Full foot contact", "Moderate pace", "Chest up"],
+    mistakes: ["Leaning on rails", "Too fast", "Partial steps"]
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 6-DAY PPL PROGRAM
+// ═══════════════════════════════════════════════════════════════════════════
+var PPL = [{
+  id: "push1",
+  name: "Push A",
+  day: "Monday",
+  label: "PUSH",
+  focus: "Chest · Shoulders · Triceps",
+  color: "#4a9eff",
+  dur: 80,
+  slots: [{
+    primary: "bench_bb",
+    alts: ["bench_db", "chest_machine"],
+    note: "Main chest compound"
+  }, {
+    primary: "incline_db",
+    alts: ["cable_fly", "chest_machine"],
+    note: "Upper chest"
+  }, {
+    primary: "ohp_db",
+    alts: ["ohp_bb", "shld_machine"],
+    note: "Shoulder press"
+  }, {
+    primary: "lat_raise",
+    alts: ["cable_lat", "face_pull"],
+    note: "Side delts"
+  }, {
+    primary: "pushdown",
+    alts: ["oh_tri", "skull"],
+    note: "Triceps"
+  }, {
+    primary: "cable_crunch",
+    alts: ["ab_wheel", "plank"],
+    note: "Abs"
+  }, {
+    primary: "treadmill",
+    alts: ["bike", "rower"],
+    note: "Cardio finisher"
+  }]
+}, {
+  id: "pull1",
+  name: "Pull A",
+  day: "Tuesday",
+  label: "PULL",
+  focus: "Back · Biceps · Rear Delts",
+  color: "#f5c400",
+  dur: 80,
+  slots: [{
+    primary: "pullup",
+    alts: ["lat_pulldown", "machine_row"],
+    note: "Main back compound"
+  }, {
+    primary: "cable_row",
+    alts: ["bb_row", "machine_row"],
+    note: "Horizontal pull"
+  }, {
+    primary: "lat_pulldown",
+    alts: ["pullup", "machine_row"],
+    note: "Lat width"
+  }, {
+    primary: "face_pull",
+    alts: ["cable_lat", "lat_raise"],
+    note: "Rear delts"
+  }, {
+    primary: "curl_bb",
+    alts: ["curl_db", "cable_curl"],
+    note: "Biceps"
+  }, {
+    primary: "hammer",
+    alts: ["curl_db", "cable_curl"],
+    note: "Brachialis"
+  }, {
+    primary: "hang_raise",
+    alts: ["cable_crunch", "plank"],
+    note: "Abs"
+  }]
+}, {
+  id: "legs1",
+  name: "Legs A",
+  day: "Wednesday",
+  label: "LEGS",
+  focus: "Quads · Hamstrings · Glutes",
+  color: "#9dd600",
+  dur: 85,
+  slots: [{
+    primary: "squat_bb",
+    alts: ["hack_squat", "leg_press"],
+    note: "Main quad compound"
+  }, {
+    primary: "rdl",
+    alts: ["leg_curl", "leg_press"],
+    note: "Posterior chain"
+  }, {
+    primary: "leg_press",
+    alts: ["hack_squat", "squat_bb"],
+    note: "Quad volume"
+  }, {
+    primary: "leg_curl",
+    alts: ["rdl", "lunge"],
+    note: "Hamstrings"
+  }, {
+    primary: "leg_ext",
+    alts: ["leg_press", "hack_squat"],
+    note: "Quad isolation"
+  }, {
+    primary: "lunge",
+    alts: ["leg_press", "hack_squat"],
+    note: "Unilateral"
+  }, {
+    primary: "russian",
+    alts: ["plank", "ab_wheel"],
+    note: "Core finisher"
+  }]
+}, {
+  id: "push2",
+  name: "Push B",
+  day: "Thursday",
+  label: "PUSH",
+  focus: "Chest · Shoulders · Triceps",
+  color: "#4a9eff",
+  dur: 80,
+  slots: [{
+    primary: "chest_machine",
+    alts: ["bench_bb", "bench_db"],
+    note: "Chest (machine option)"
+  }, {
+    primary: "cable_fly",
+    alts: ["incline_db", "bench_db"],
+    note: "Chest isolation"
+  }, {
+    primary: "shld_machine",
+    alts: ["ohp_db", "ohp_bb"],
+    note: "Shoulder press"
+  }, {
+    primary: "cable_lat",
+    alts: ["lat_raise", "face_pull"],
+    note: "Side delts"
+  }, {
+    primary: "oh_tri",
+    alts: ["pushdown", "skull"],
+    note: "Triceps long head"
+  }, {
+    primary: "tri_dips",
+    alts: ["pushdown", "oh_tri"],
+    note: "Triceps compound"
+  }, {
+    primary: "bike",
+    alts: ["treadmill", "stairmaster"],
+    note: "Cardio"
+  }]
+}, {
+  id: "pull2",
+  name: "Pull B",
+  day: "Friday",
+  label: "PULL",
+  focus: "Back · Biceps · Rear Delts",
+  color: "#f5c400",
+  dur: 80,
+  slots: [{
+    primary: "lat_pulldown",
+    alts: ["pullup", "machine_row"],
+    note: "Lat width"
+  }, {
+    primary: "bb_row",
+    alts: ["cable_row", "machine_row"],
+    note: "Back thickness"
+  }, {
+    primary: "machine_row",
+    alts: ["cable_row", "bb_row"],
+    note: "Mid-back"
+  }, {
+    primary: "face_pull",
+    alts: ["cable_lat", "lat_raise"],
+    note: "Rear delts"
+  }, {
+    primary: "curl_db",
+    alts: ["curl_bb", "cable_curl"],
+    note: "Biceps"
+  }, {
+    primary: "cable_curl",
+    alts: ["hammer", "curl_bb"],
+    note: "Biceps isolation"
+  }, {
+    primary: "ab_wheel",
+    alts: ["cable_crunch", "hang_raise"],
+    note: "Abs"
+  }]
+}, {
+  id: "legs2",
+  name: "Legs B",
+  day: "Saturday",
+  label: "LEGS",
+  focus: "Quads · Hamstrings · Glutes",
+  color: "#9dd600",
+  dur: 90,
+  slots: [{
+    primary: "hack_squat",
+    alts: ["squat_bb", "leg_press"],
+    note: "Quad compound"
+  }, {
+    primary: "rdl",
+    alts: ["leg_curl", "lunge"],
+    note: "Posterior chain"
+  }, {
+    primary: "leg_press",
+    alts: ["squat_bb", "hack_squat"],
+    note: "Volume"
+  }, {
+    primary: "leg_ext",
+    alts: ["hack_squat", "leg_press"],
+    note: "Quad isolation"
+  }, {
+    primary: "leg_curl",
+    alts: ["rdl", "lunge"],
+    note: "Hamstrings"
+  }, {
+    primary: "lunge",
+    alts: ["leg_press", "hack_squat"],
+    note: "Unilateral"
+  }, {
+    primary: "rower",
+    alts: ["bike", "stairmaster"],
+    note: "Cardio finisher"
+  }]
+}];
+var DAYS_OF_WEEK = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+function makeDefaultWeek() {
+  return PPL.map(function (w, i) {
+    return {
+      idx: i,
+      workoutId: w.id,
+      day: w.day,
+      done: i < 2,
+      today: i === 2,
+      skipped: false,
+      slotSelections: w.slots.map(function () {
+        return 0;
+      })
+    };
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// UI PRIMITIVES
+// ═══════════════════════════════════════════════════════════════════════════
+function Pill(_ref) {
+  var children = _ref.children,
+    _ref$color = _ref.color,
+    color = _ref$color === void 0 ? C.lime300 : _ref$color,
+    _ref$tc = _ref.tc,
+    tc = _ref$tc === void 0 ? C.bg950 : _ref$tc,
+    _ref$style = _ref.style,
+    style = _ref$style === void 0 ? {} : _ref$style;
+  return /*#__PURE__*/React.createElement("span", {
+    style: _objectSpread(_objectSpread({
+      display: "inline-flex",
+      alignItems: "center",
+      padding: "3px 9px",
+      borderRadius: 99,
+      backgroundColor: color,
+      color: tc
+    }, T.mono), {}, {
+      fontSize: 9,
+      letterSpacing: 1,
+      textTransform: "uppercase"
+    }, style)
+  }, children);
+}
+function Btn(_ref2) {
+  var children = _ref2.children,
+    _ref2$variant = _ref2.variant,
+    variant = _ref2$variant === void 0 ? "primary" : _ref2$variant,
+    onPress = _ref2.onPress,
+    _ref2$style = _ref2.style,
+    style = _ref2$style === void 0 ? {} : _ref2$style,
+    _ref2$small = _ref2.small,
+    small = _ref2$small === void 0 ? false : _ref2$small,
+    _ref2$disabled = _ref2.disabled,
+    disabled = _ref2$disabled === void 0 ? false : _ref2$disabled,
+    _ref2$full = _ref2.full,
+    full = _ref2$full === void 0 ? false : _ref2$full;
+  var _React$useState = React.useState(false),
+    _React$useState2 = _slicedToArray(_React$useState, 2),
+    p = _React$useState2[0],
+    setP = _React$useState2[1];
+  var vs = {
+    primary: {
+      backgroundColor: C.lime300,
+      color: C.bg950
+    },
+    secondary: {
+      backgroundColor: C.bg800,
+      color: C.text0,
+      border: "1px solid ".concat(C.bg600)
+    },
+    ghost: {
+      backgroundColor: "transparent",
+      color: C.lime300,
+      border: "1px solid ".concat(C.bg600)
+    },
+    danger: {
+      backgroundColor: C.danger,
+      color: "#fff"
+    },
+    warn: {
+      backgroundColor: C.warning,
+      color: C.bg950
+    }
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    onClick: disabled ? null : onPress,
+    onMouseDown: function onMouseDown() {
+      return setP(true);
+    },
+    onMouseUp: function onMouseUp() {
+      return setP(false);
+    },
+    onMouseLeave: function onMouseLeave() {
+      return setP(false);
+    },
+    onTouchStart: function onTouchStart() {
+      return setP(true);
+    },
+    onTouchEnd: function onTouchEnd() {
+      return setP(false);
+    },
+    style: _objectSpread(_objectSpread(_objectSpread({
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 12,
+      cursor: disabled ? "default" : "pointer",
+      padding: small ? "9px 14px" : "14px 20px",
+      fontSize: small ? 13 : 15,
+      fontWeight: 700
+    }, T.heading), {}, {
+      letterSpacing: 0.2,
+      transition: "transform 0.08s",
+      transform: p ? "scale(0.96)" : "scale(1)",
+      opacity: disabled ? 0.4 : 1,
+      width: full ? "100%" : "auto"
+    }, vs[variant]), style)
+  }, children);
+}
+function Card(_ref3) {
+  var children = _ref3.children,
+    _ref3$style = _ref3.style,
+    style = _ref3$style === void 0 ? {} : _ref3$style,
+    onClick = _ref3.onClick;
+  return /*#__PURE__*/React.createElement("div", {
+    onClick: onClick,
+    style: _objectSpread({
+      backgroundColor: C.bg900,
+      borderRadius: 16,
+      padding: 16
+    }, style)
+  }, children);
+}
+function Mono(_ref4) {
+  var children = _ref4.children,
+    _ref4$style = _ref4.style,
+    style = _ref4$style === void 0 ? {} : _ref4$style;
+  return /*#__PURE__*/React.createElement("span", {
+    style: _objectSpread(_objectSpread({}, T.mono), {}, {
+      fontSize: 9,
+      letterSpacing: 2,
+      textTransform: "uppercase",
+      color: C.text5
+    }, style)
+  }, children);
+}
+function BackBtn(_ref5) {
+  var onPress = _ref5.onPress,
+    _ref5$label = _ref5.label,
+    label = _ref5$label === void 0 ? "" : _ref5$label;
+  return /*#__PURE__*/React.createElement("div", {
+    onClick: onPress,
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+      cursor: "pointer",
+      minWidth: 36
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 36,
+      height: 36,
+      borderRadius: 10,
+      backgroundColor: C.bg800,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      flexShrink: 0
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 16 16",
+    fill: "none"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M10 3L5 8L10 13",
+    stroke: C.text0,
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }))), label && /*#__PURE__*/React.createElement("span", {
+    style: _objectSpread(_objectSpread({}, T.body), {}, {
+      fontSize: 14,
+      color: C.text3
+    })
+  }, label));
+}
+function CheckIcon(_ref6) {
+  var done = _ref6.done,
+    _ref6$color = _ref6.color,
+    color = _ref6$color === void 0 ? C.lime300 : _ref6$color;
+  return done ? /*#__PURE__*/React.createElement("svg", {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 14 14"
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: "7",
+    cy: "7",
+    r: "7",
+    fill: color
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M4 7l2 2 4-4",
+    stroke: C.bg950,
+    strokeWidth: "1.6",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  })) : null;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TOP BAR
+// ═══════════════════════════════════════════════════════════════════════════
+function TopBar(_ref7) {
+  var week = _ref7.week,
+    streak = _ref7.streak,
+    onStreakTap = _ref7.onStreakTap;
+  var done = week.filter(function (d) {
+    return d.done;
+  }).length;
+  var total = week.length;
+  var pct = Math.round(done / total * 100);
+  var today = new Date().toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric"
+  });
+  return /*#__PURE__*/React.createElement("div", {
+    className: "safe-top",
+    style: {
+      backgroundColor: C.bg900,
+      borderBottom: "1px solid ".concat(C.bg800),
+      flexShrink: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "10px 16px 12px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "baseline",
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: _objectSpread(_objectSpread({}, T.display), {}, {
+      fontSize: 26,
+      color: C.text0,
+      letterSpacing: -0.5
+    })
+  }, "LIFT"), /*#__PURE__*/React.createElement("span", {
+    style: _objectSpread(_objectSpread({}, T.mono), {}, {
+      fontSize: 9,
+      color: C.text5,
+      letterSpacing: 2
+    })
+  }, today.toUpperCase())), /*#__PURE__*/React.createElement("div", {
+    onClick: onStreakTap,
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 6,
+      cursor: "pointer",
+      backgroundColor: C.bg800,
+      padding: "6px 12px",
+      borderRadius: 99,
+      border: "1px solid ".concat(C.bg700)
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 14
+    }
+  }, "\uD83D\uDD25"), /*#__PURE__*/React.createElement("span", {
+    style: _objectSpread(_objectSpread({}, T.display), {}, {
+      fontSize: 16,
+      color: C.lime300
+    })
+  }, streak), /*#__PURE__*/React.createElement("span", {
+    style: _objectSpread(_objectSpread({}, T.mono), {}, {
+      fontSize: 9,
+      color: C.text5,
+      letterSpacing: 1
+    })
+  }, "WK"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 4,
+      marginBottom: 8
+    }
+  }, week.map(function (d, i) {
+    var wk = PPL[d.idx];
+    return /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 3
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: "100%",
+        height: 5,
+        borderRadius: 3,
+        backgroundColor: d.done ? wk.color : d.today ? wk.color + "44" : C.bg700,
+        transition: "background 0.4s"
+      }
+    }), /*#__PURE__*/React.createElement("span", {
+      style: _objectSpread(_objectSpread({}, T.mono), {}, {
+        fontSize: 7,
+        color: d.today ? C.text0 : d.done ? C.text5 : C.bg500
+      })
+    }, d.day.slice(0, 2).toUpperCase()));
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      height: 4,
+      backgroundColor: C.bg700,
+      borderRadius: 2
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: "100%",
+      width: "".concat(pct, "%"),
+      backgroundColor: C.lime300,
+      borderRadius: 2,
+      transition: "width 0.5s ease"
+    }
+  })), /*#__PURE__*/React.createElement("span", {
+    style: _objectSpread(_objectSpread({}, T.mono), {}, {
+      fontSize: 10,
+      color: C.lime300,
+      minWidth: 32,
+      textAlign: "right"
+    })
+  }, done, "/", total))));
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// VARIATION PICKER
+// ═══════════════════════════════════════════════════════════════════════════
+function VariationPicker(_ref8) {
+  var slot = _ref8.slot,
+    currentSel = _ref8.currentSel,
+    onSelect = _ref8.onSelect,
+    onDismiss = _ref8.onDismiss;
+  var opts = [slot.primary].concat(_toConsumableArray(slot.alts)).map(function (id) {
+    return EX[id];
+  }).filter(Boolean);
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "absolute",
+      inset: 0,
+      zIndex: 400,
+      backgroundColor: "rgba(8,8,8,0.9)",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "flex-end"
+    },
+    onClick: function onClick(e) {
+      if (e.target === e.currentTarget) onDismiss();
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "modal-enter",
+    style: {
+      backgroundColor: C.bg900,
+      borderRadius: "20px 20px 0 0",
+      maxHeight: "82%",
+      display: "flex",
+      flexDirection: "column"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 36,
+      height: 4,
+      borderRadius: 2,
+      backgroundColor: C.bg600,
+      margin: "10px auto 14px"
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "0 18px 14px",
+      borderBottom: "1px solid ".concat(C.bg800)
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.display), {}, {
+      fontSize: 20,
+      color: C.text0
+    })
+  }, "Choose Exercise"), /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.body), {}, {
+      fontSize: 13,
+      color: C.text4,
+      marginTop: 3
+    })
+  }, slot.note, " \xB7 pick whichever machine is free")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      overflowY: "auto",
+      padding: "14px 16px",
+      display: "flex",
+      flexDirection: "column",
+      gap: 10
+    }
+  }, opts.map(function (ex, i) {
+    var sel = i === currentSel;
+    var mc = MC[ex.muscle] || C.lime300;
+    return /*#__PURE__*/React.createElement("div", {
+      key: ex.id,
+      onClick: function onClick() {
+        return onSelect(i);
+      },
+      style: {
+        borderRadius: 14,
+        border: "2px solid ".concat(sel ? mc : C.bg700),
+        backgroundColor: sel ? mc + "15" : C.bg800,
+        padding: "14px 16px",
+        cursor: "pointer",
+        transition: "all 0.14s"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        marginBottom: 8
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 6,
+        marginBottom: 6,
+        flexWrap: "wrap"
+      }
+    }, i === 0 ? /*#__PURE__*/React.createElement(Pill, {
+      color: C.lime300,
+      tc: C.bg950,
+      style: {
+        fontSize: 7
+      }
+    }, "Primary") : /*#__PURE__*/React.createElement(Pill, {
+      color: C.bg700,
+      tc: C.text4,
+      style: {
+        fontSize: 7
+      }
+    }, "Alt ", i), /*#__PURE__*/React.createElement(Pill, {
+      color: mc + "22",
+      tc: mc,
+      style: {
+        fontSize: 7,
+        border: "1px solid ".concat(mc, "44")
+      }
+    }, ex.muscle), /*#__PURE__*/React.createElement(Pill, {
+      color: C.bg700,
+      tc: C.text5,
+      style: {
+        fontSize: 7
+      }
+    }, ex.eq)), /*#__PURE__*/React.createElement("div", {
+      style: _objectSpread(_objectSpread({}, T.heading), {}, {
+        fontSize: 16,
+        color: C.text0
+      })
+    }, ex.name), /*#__PURE__*/React.createElement("div", {
+      style: _objectSpread(_objectSpread({}, T.mono), {}, {
+        fontSize: 9,
+        color: C.text5,
+        marginTop: 3
+      })
+    }, ex.sets, " sets \xB7 ", ex.reps, " \xB7 ", ex.rest > 0 ? "".concat(ex.rest, "s rest") : "no rest")), sel && /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 24,
+        height: 24,
+        borderRadius: 99,
+        backgroundColor: mc,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexShrink: 0,
+        marginLeft: 8
+      }
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "12",
+      height: "12",
+      viewBox: "0 0 12 12"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M2 6l3 3 5-5",
+      stroke: C.bg950,
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    })))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexWrap: "wrap",
+        gap: 4
+      }
+    }, ex.cues.slice(0, 2).map(function (c, ci) {
+      return /*#__PURE__*/React.createElement("span", {
+        key: ci,
+        style: _objectSpread(_objectSpread({}, T.body), {}, {
+          fontSize: 11,
+          color: C.text4,
+          backgroundColor: C.bg900,
+          padding: "3px 8px",
+          borderRadius: 5
+        })
+      }, c);
+    })));
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "safe-bottom",
+    style: {
+      padding: "12px 16px 0"
+    }
+  }, /*#__PURE__*/React.createElement(Btn, {
+    onPress: onDismiss,
+    full: true
+  }, "Done"))));
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// RESCHEDULE MODAL
+// ═══════════════════════════════════════════════════════════════════════════
+function RescheduleModal(_ref9) {
+  var onConfirm = _ref9.onConfirm,
+    onDismiss = _ref9.onDismiss;
+  var _React$useState3 = React.useState(null),
+    _React$useState4 = _slicedToArray(_React$useState3, 2),
+    sel = _React$useState4[0],
+    setSel = _React$useState4[1];
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "absolute",
+      inset: 0,
+      zIndex: 300,
+      backgroundColor: "rgba(8,8,8,0.9)",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "flex-end"
+    },
+    onClick: function onClick(e) {
+      if (e.target === e.currentTarget) onDismiss();
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "modal-enter",
+    style: {
+      backgroundColor: C.bg900,
+      borderRadius: "20px 20px 0 0",
+      maxHeight: "88%",
+      display: "flex",
+      flexDirection: "column"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 36,
+      height: 4,
+      borderRadius: 2,
+      backgroundColor: C.bg600,
+      margin: "10px auto 14px"
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "0 18px 14px",
+      borderBottom: "1px solid ".concat(C.bg800)
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.display), {}, {
+      fontSize: 20,
+      color: C.text0
+    })
+  }, "Swap Today's Workout"), /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.body), {}, {
+      fontSize: 13,
+      color: C.text4,
+      marginTop: 4,
+      lineHeight: 1.5
+    })
+  }, "Missed a session or want a different body part? Pick one \u2014 remaining days shift forward.")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      overflowY: "auto",
+      padding: "14px 16px",
+      display: "flex",
+      flexDirection: "column",
+      gap: 10
+    }
+  }, PPL.map(function (w) {
+    var isSel = sel === w.id;
+    return /*#__PURE__*/React.createElement("div", {
+      key: w.id,
+      onClick: function onClick() {
+        return setSel(w.id);
+      },
+      style: {
+        borderRadius: 14,
+        border: "2px solid ".concat(isSel ? w.color : C.bg700),
+        backgroundColor: isSel ? w.color + "15" : C.bg800,
+        padding: "14px 16px",
+        cursor: "pointer",
+        transition: "all 0.14s"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 5
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 8
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 8,
+        height: 8,
+        borderRadius: 99,
+        backgroundColor: w.color
+      }
+    }), /*#__PURE__*/React.createElement("span", {
+      style: _objectSpread(_objectSpread({}, T.heading), {}, {
+        fontSize: 16,
+        color: C.text0
+      })
+    }, w.name), /*#__PURE__*/React.createElement(Pill, {
+      color: w.color + "22",
+      tc: w.color,
+      style: {
+        fontSize: 7
+      }
+    }, w.label)), /*#__PURE__*/React.createElement("span", {
+      style: _objectSpread(_objectSpread({}, T.mono), {}, {
+        fontSize: 10,
+        color: isSel ? w.color : C.text5
+      })
+    }, w.dur, "m")), /*#__PURE__*/React.createElement("div", {
+      style: _objectSpread(_objectSpread({}, T.body), {}, {
+        fontSize: 12,
+        color: C.text4
+      })
+    }, w.focus), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 4,
+        marginTop: 8,
+        flexWrap: "wrap"
+      }
+    }, w.slots.slice(0, 4).map(function (s, i) {
+      var ex = EX[s.primary];
+      return ex ? /*#__PURE__*/React.createElement("span", {
+        key: i,
+        style: _objectSpread(_objectSpread({}, T.body), {}, {
+          fontSize: 10,
+          color: C.text5,
+          backgroundColor: C.bg900,
+          padding: "2px 7px",
+          borderRadius: 4
+        })
+      }, ex.name) : null;
+    })));
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "safe-bottom",
+    style: {
+      padding: "12px 16px 0",
+      display: "flex",
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement(Btn, {
+    variant: "secondary",
+    onPress: onDismiss,
+    style: {
+      flex: 1
+    }
+  }, "Cancel"), /*#__PURE__*/React.createElement(Btn, {
+    onPress: function onPress() {
+      return sel && onConfirm(sel);
+    },
+    style: {
+      flex: 2,
+      opacity: sel ? 1 : 0.4
+    }
+  }, sel ? "Confirm Swap" : "Select workout"))));
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// WORKOUT SELECTION
+// ═══════════════════════════════════════════════════════════════════════════
+function WorkoutSelection(_ref0) {
+  var _PPL$find;
+  var week = _ref0.week,
+    setWeek = _ref0.setWeek,
+    onBack = _ref0.onBack,
+    onStart = _ref0.onStart;
+  var todayIdx = week.findIndex(function (d) {
+    return d.today;
+  });
+  var todaySlot = week[todayIdx];
+
+  // Pre-select today's scheduled workout, fall back to Push A
+  var defaultId = (todaySlot === null || todaySlot === void 0 ? void 0 : todaySlot.workoutId) || PPL[0].id;
+  var defaultGroup = ((_PPL$find = PPL.find(function (w) {
+    return w.id === defaultId;
+  })) === null || _PPL$find === void 0 ? void 0 : _PPL$find.label) || "PUSH";
+  var _React$useState5 = React.useState(defaultId),
+    _React$useState6 = _slicedToArray(_React$useState5, 2),
+    selectedId = _React$useState6[0],
+    setSelectedId = _React$useState6[1];
+  var _React$useState7 = React.useState(defaultGroup),
+    _React$useState8 = _slicedToArray(_React$useState7, 2),
+    expandedGroup = _React$useState8[0],
+    setExpandedGroup = _React$useState8[1];
+  var selectedWorkout = PPL.find(function (w) {
+    return w.id === selectedId;
+  });
+
+  // Grouped by muscle category
+  var GROUPS = [{
+    label: "PUSH",
+    color: "#4a9eff",
+    workouts: PPL.filter(function (w) {
+      return w.label === "PUSH";
+    })
+  }, {
+    label: "PULL",
+    color: "#f5c400",
+    workouts: PPL.filter(function (w) {
+      return w.label === "PULL";
+    })
+  }, {
+    label: "LEGS",
+    color: "#9dd600",
+    workouts: PPL.filter(function (w) {
+      return w.label === "LEGS";
+    })
+  }];
+  function handleStart() {
+    if (selectedId !== (todaySlot === null || todaySlot === void 0 ? void 0 : todaySlot.workoutId)) {
+      setWeek(function (prev) {
+        var next = prev.map(function (d) {
+          return _objectSpread({}, d);
+        });
+        next[todayIdx] = _objectSpread(_objectSpread({}, next[todayIdx]), {}, {
+          workoutId: selectedId
+        });
+        DB.set("week", next);
+        return next;
+      });
+    }
+    onStart();
+  }
+  function selectWorkout(wId) {
+    var _PPL$find2;
+    setSelectedId(wId);
+    var grp = (_PPL$find2 = PPL.find(function (w) {
+      return w.id === wId;
+    })) === null || _PPL$find2 === void 0 ? void 0 : _PPL$find2.label;
+    if (grp) setExpandedGroup(grp);
+  }
+  function toggleGroup(label) {
+    setExpandedGroup(function (prev) {
+      return prev === label ? null : label;
+    });
+  }
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      backgroundColor: C.bg950,
+      position: "relative"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "12px 16px",
+      display: "flex",
+      alignItems: "center",
+      gap: 12,
+      borderBottom: "1px solid ".concat(C.bg800),
+      flexShrink: 0
+    }
+  }, /*#__PURE__*/React.createElement(BackBtn, {
+    onPress: onBack
+  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.heading), {}, {
+      fontSize: 17,
+      color: C.text0
+    })
+  }, "Select Workout"), /*#__PURE__*/React.createElement(Mono, {
+    style: {
+      marginTop: 2
+    }
+  }, "Pick a muscle group \xB7 choose A or B"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      overflowY: "auto",
+      WebkitOverflowScrolling: "touch"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "12px 16px 140px",
+      display: "flex",
+      flexDirection: "column",
+      gap: 10
+    }
+  }, GROUPS.map(function (grp) {
+    var isOpen = expandedGroup === grp.label;
+    var grpSelected = grp.workouts.find(function (w) {
+      return w.id === selectedId;
+    });
+    return /*#__PURE__*/React.createElement("div", {
+      key: grp.label,
+      style: {
+        borderRadius: 14,
+        overflow: "hidden",
+        border: "2px solid ".concat(grpSelected ? grp.color : C.bg700),
+        transition: "border-color 0.15s"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      onClick: function onClick() {
+        return toggleGroup(grp.label);
+      },
+      style: {
+        backgroundColor: grpSelected ? grp.color + "18" : C.bg900,
+        padding: "14px 16px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        cursor: "pointer"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 10
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 10,
+        height: 10,
+        borderRadius: 99,
+        backgroundColor: grp.color,
+        flexShrink: 0
+      }
+    }), /*#__PURE__*/React.createElement("span", {
+      style: _objectSpread(_objectSpread({}, T.heading), {}, {
+        fontSize: 16,
+        color: C.text0
+      })
+    }, grp.label), grpSelected && /*#__PURE__*/React.createElement(Pill, {
+      color: grp.color + "22",
+      tc: grp.color,
+      style: {
+        fontSize: 7
+      }
+    }, grpSelected.name, " selected")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 8
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: _objectSpread(_objectSpread({}, T.body), {}, {
+        fontSize: 11,
+        color: C.text4
+      })
+    }, grp.workouts[0].focus), /*#__PURE__*/React.createElement("svg", {
+      width: "12",
+      height: "12",
+      viewBox: "0 0 12 12",
+      fill: "none",
+      style: {
+        transition: "transform 0.2s",
+        transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+        flexShrink: 0
+      }
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M2 4l4 4 4-4",
+      stroke: grpSelected ? grp.color : C.text5,
+      strokeWidth: "1.8",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    })))), isOpen && /*#__PURE__*/React.createElement("div", {
+      style: {
+        borderTop: "1px solid ".concat(grp.color, "33"),
+        backgroundColor: C.bg800
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        borderBottom: "1px solid ".concat(C.bg700)
+      }
+    }, grp.workouts.map(function (w, wi) {
+      var isSel = selectedId === w.id;
+      var isToday = (todaySlot === null || todaySlot === void 0 ? void 0 : todaySlot.workoutId) === w.id;
+      return /*#__PURE__*/React.createElement("div", {
+        key: w.id,
+        onClick: function onClick() {
+          return selectWorkout(w.id);
+        },
+        style: {
+          flex: 1,
+          padding: "13px 14px",
+          backgroundColor: isSel ? grp.color + "22" : C.bg850,
+          borderRight: wi === 0 ? "1px solid ".concat(C.bg700) : "none",
+          cursor: "pointer",
+          transition: "background 0.15s"
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 5
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 8
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 17,
+          height: 17,
+          borderRadius: 99,
+          border: "2px solid ".concat(isSel ? grp.color : C.bg600),
+          backgroundColor: isSel ? grp.color : "transparent",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          transition: "all 0.15s",
+          flexShrink: 0
+        }
+      }, isSel && /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 6,
+          height: 6,
+          borderRadius: 99,
+          backgroundColor: C.bg950
+        }
+      })), /*#__PURE__*/React.createElement("span", {
+        style: _objectSpread(_objectSpread({}, T.heading), {}, {
+          fontSize: 14,
+          color: isSel ? C.text0 : C.text3
+        })
+      }, w.name)), isToday && /*#__PURE__*/React.createElement(Pill, {
+        style: {
+          fontSize: 7,
+          flexShrink: 0
+        }
+      }, "Today")), /*#__PURE__*/React.createElement("div", {
+        style: _objectSpread(_objectSpread({}, T.mono), {}, {
+          fontSize: 9,
+          color: isSel ? grp.color : C.text5,
+          paddingLeft: 25
+        })
+      }, w.dur, "m \xB7 ", w.slots.length, " exercises"), /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 3,
+          marginTop: 7,
+          paddingLeft: 25
+        }
+      }, w.slots.slice(0, 4).map(function (slot, si) {
+        var ex = EX[slot.primary];
+        if (!ex) return null;
+        return /*#__PURE__*/React.createElement("span", {
+          key: si,
+          style: _objectSpread(_objectSpread({}, T.body), {}, {
+            fontSize: 9,
+            color: MC[ex.muscle] || C.lime300,
+            backgroundColor: (MC[ex.muscle] || C.lime300) + "15",
+            padding: "1px 6px",
+            borderRadius: 4,
+            border: "1px solid ".concat(MC[ex.muscle] || C.lime300, "33")
+          })
+        }, ex.name);
+      }), w.slots.length > 4 && /*#__PURE__*/React.createElement("span", {
+        style: _objectSpread(_objectSpread({}, T.body), {}, {
+          fontSize: 9,
+          color: C.text5
+        })
+      }, "+", w.slots.length - 4, " more")));
+    })), grpSelected && grpSelected.slots.map(function (slot, si) {
+      var ex = EX[slot.primary];
+      if (!ex) return null;
+      var mc = MC[ex.muscle] || C.lime300;
+      var isLast = si === grpSelected.slots.length - 1;
+      return /*#__PURE__*/React.createElement("div", {
+        key: si,
+        style: {
+          padding: "10px 16px",
+          borderBottom: isLast ? "none" : "1px solid ".concat(C.bg700)
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 7,
+          marginBottom: 7
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 5,
+          height: 5,
+          borderRadius: 99,
+          backgroundColor: mc,
+          flexShrink: 0
+        }
+      }), /*#__PURE__*/React.createElement("span", {
+        style: _objectSpread(_objectSpread({}, T.heading), {}, {
+          fontSize: 13,
+          color: C.text0
+        })
+      }, ex.name), /*#__PURE__*/React.createElement(Pill, {
+        color: mc + "22",
+        tc: mc,
+        style: {
+          fontSize: 7,
+          border: "1px solid ".concat(mc, "33")
+        }
+      }, ex.muscle), /*#__PURE__*/React.createElement("span", {
+        style: _objectSpread(_objectSpread({}, T.mono), {}, {
+          fontSize: 9,
+          color: C.text5,
+          marginLeft: "auto"
+        })
+      }, ex.sets, "\xD7", ex.reps, " \xB7 ", ex.eq)), /*#__PURE__*/React.createElement("div", {
+        style: {
+          marginBottom: 5
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: _objectSpread(_objectSpread({}, T.mono), {}, {
+          fontSize: 8,
+          color: C.lime300,
+          letterSpacing: 1.5,
+          marginBottom: 3
+        })
+      }, "KEY POINTS"), ex.cues.map(function (c, i) {
+        return /*#__PURE__*/React.createElement("div", {
+          key: i,
+          style: {
+            display: "flex",
+            gap: 6,
+            alignItems: "flex-start",
+            marginBottom: 2
+          }
+        }, /*#__PURE__*/React.createElement("span", {
+          style: {
+            color: C.lime300,
+            fontSize: 10,
+            lineHeight: 1.6,
+            flexShrink: 0
+          }
+        }, "\u2713"), /*#__PURE__*/React.createElement("span", {
+          style: _objectSpread(_objectSpread({}, T.body), {}, {
+            fontSize: 11,
+            color: C.text3,
+            lineHeight: 1.6
+          })
+        }, c));
+      })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+        style: _objectSpread(_objectSpread({}, T.mono), {}, {
+          fontSize: 8,
+          color: C.danger,
+          letterSpacing: 1.5,
+          marginBottom: 3
+        })
+      }, "AVOID"), ex.mistakes.map(function (m, i) {
+        return /*#__PURE__*/React.createElement("div", {
+          key: i,
+          style: {
+            display: "flex",
+            gap: 6,
+            alignItems: "flex-start",
+            marginBottom: 2
+          }
+        }, /*#__PURE__*/React.createElement("span", {
+          style: {
+            color: C.danger,
+            fontSize: 10,
+            lineHeight: 1.6,
+            flexShrink: 0
+          }
+        }, "\u2717"), /*#__PURE__*/React.createElement("span", {
+          style: _objectSpread(_objectSpread({}, T.body), {}, {
+            fontSize: 11,
+            color: C.text4,
+            lineHeight: 1.6
+          })
+        }, m));
+      })));
+    })));
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "safe-bottom",
+    style: {
+      padding: "12px 16px 0",
+      backgroundColor: C.bg950,
+      borderTop: "1px solid ".concat(C.bg800),
+      flexShrink: 0
+    }
+  }, /*#__PURE__*/React.createElement(Btn, {
+    onPress: handleStart,
+    full: true
+  }, "Begin ", selectedWorkout === null || selectedWorkout === void 0 ? void 0 : selectedWorkout.name, " \u2192")));
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ONBOARDING
+// ═══════════════════════════════════════════════════════════════════════════
+function Onboarding(_ref1) {
+  var onDone = _ref1.onDone;
+  var _React$useState9 = React.useState(0),
+    _React$useState0 = _slicedToArray(_React$useState9, 2),
+    step = _React$useState0[0],
+    setStep = _React$useState0[1];
+  var _React$useState1 = React.useState({}),
+    _React$useState10 = _slicedToArray(_React$useState1, 2),
+    ans = _React$useState10[0],
+    setAns = _React$useState10[1];
+  var steps = [{
+    type: "welcome"
+  }, {
+    type: "q",
+    key: "exp",
+    label: "01/05",
+    title: "Training experience",
+    opts: [{
+      v: "new",
+      l: "Brand new",
+      s: "< 3 months"
+    }, {
+      v: "some",
+      l: "Some experience",
+      s: "3–12 months"
+    }, {
+      v: "reg",
+      l: "Regular",
+      s: "1+ year"
+    }, {
+      v: "adv",
+      l: "Advanced",
+      s: "3+ years"
+    }]
+  }, {
+    type: "q",
+    key: "goal",
+    label: "02/05",
+    title: "Primary goal",
+    opts: [{
+      v: "muscle",
+      l: "Build Muscle"
+    }, {
+      v: "fat",
+      l: "Lose Fat"
+    }, {
+      v: "strong",
+      l: "Get Stronger"
+    }, {
+      v: "general",
+      l: "General Fitness"
+    }]
+  }, {
+    type: "q",
+    key: "loc",
+    label: "03/05",
+    title: "Where do you train?",
+    opts: [{
+      v: "gym",
+      l: "Gym",
+      s: "Full equipment"
+    }, {
+      v: "home",
+      l: "Home",
+      s: "Minimal gear"
+    }, {
+      v: "both",
+      l: "Both"
+    }]
+  }, {
+    type: "q",
+    key: "dur",
+    label: "04/05",
+    title: "Session length",
+    opts: [{
+      v: "60",
+      l: "1 hour"
+    }, {
+      v: "75",
+      l: "75 min"
+    }, {
+      v: "90",
+      l: "90 min",
+      s: "Your pick"
+    }, {
+      v: "120",
+      l: "2 hours"
+    }]
+  }, {
+    type: "q",
+    key: "days",
+    label: "05/05",
+    title: "Days per week",
+    opts: [{
+      v: "3",
+      l: "3 days"
+    }, {
+      v: "4",
+      l: "4 days"
+    }, {
+      v: "5",
+      l: "5 days"
+    }, {
+      v: "6",
+      l: "6 days",
+      s: "Push · Pull · Legs ×2"
+    }]
+  }, {
+    type: "disclaimer"
+  }, {
+    type: "plan"
+  }];
+  var qSteps = steps.filter(function (s) {
+    return s.type === "q";
+  });
+  var cur = steps[step];
+  var qIdx = qSteps.indexOf(cur);
+  function next(_x) {
+    return _next2.apply(this, arguments);
+  }
+  function _next2() {
+    _next2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(val) {
+      return _regenerator().w(function (_context6) {
+        while (1) switch (_context6.n) {
+          case 0:
+            if (val !== undefined) setAns(function (a) {
+              return _objectSpread(_objectSpread({}, a), {}, _defineProperty({}, cur.key, val));
+            });
+            if (!(step < steps.length - 1)) {
+              _context6.n = 1;
+              break;
+            }
+            setStep(function (s) {
+              return s + 1;
+            });
+            _context6.n = 4;
+            break;
+          case 1:
+            _context6.n = 2;
+            return DB.set("onboarded", true);
+          case 2:
+            _context6.n = 3;
+            return DB.set("answers", ans);
+          case 3:
+            onDone();
+          case 4:
+            return _context6.a(2);
+        }
+      }, _callee6);
+    }));
+    return _next2.apply(this, arguments);
+  }
+  if (cur.type === "welcome") return /*#__PURE__*/React.createElement("div", {
+    className: "screen-enter",
+    style: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      backgroundColor: C.bg950,
+      padding: "32px 24px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      gap: 28
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 72,
+      height: 72,
+      borderRadius: 20,
+      backgroundColor: C.lime300,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "36",
+    height: "36",
+    viewBox: "0 0 36 36",
+    fill: "none"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M4 18h5l5-12 6 24 5-16 3 4h4",
+    stroke: C.bg950,
+    strokeWidth: "2.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.display), {}, {
+      fontSize: 38,
+      color: C.text0,
+      lineHeight: 1.08,
+      letterSpacing: -1
+    })
+  }, "Your coach.", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: C.lime300
+    }
+  }, "No excuses.")), /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.body), {}, {
+      fontSize: 15,
+      color: C.text4,
+      marginTop: 14,
+      lineHeight: 1.7
+    })
+  }, "Answer 5 questions. Get a real 6-day Push / Pull / Legs program. Built around your schedule and available equipment.")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 8
+    }
+  }, [["6-day PPL split", "Progressive 8-week program"], ["3 exercise variations", "Switch if a machine is busy"], ["Abs + Cardio", "Included every session"], ["Full offline support", "Works without internet"]].map(function (_ref10) {
+    var _ref11 = _slicedToArray(_ref10, 2),
+      t = _ref11[0],
+      s = _ref11[1];
+    return /*#__PURE__*/React.createElement("div", {
+      key: t,
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        padding: "10px 14px",
+        backgroundColor: C.bg900,
+        borderRadius: 10
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 6,
+        height: 6,
+        borderRadius: 99,
+        backgroundColor: C.lime300,
+        flexShrink: 0
+      }
+    }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: _objectSpread(_objectSpread({}, T.body), {}, {
+        fontSize: 13,
+        color: C.text0
+      })
+    }, t), /*#__PURE__*/React.createElement("div", {
+      style: _objectSpread(_objectSpread({}, T.body), {}, {
+        fontSize: 11,
+        color: C.text5
+      })
+    }, s)));
+  }))), /*#__PURE__*/React.createElement(Btn, {
+    onPress: function onPress() {
+      return next();
+    },
+    full: true
+  }, "Get Started \u2192"));
+  if (cur.type === "q") return /*#__PURE__*/React.createElement("div", {
+    className: "screen-enter",
+    style: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      backgroundColor: C.bg950,
+      padding: "24px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 24
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 5,
+      marginBottom: 16
+    }
+  }, qSteps.map(function (_, i) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        flex: 1,
+        height: 3,
+        borderRadius: 2,
+        backgroundColor: i <= qIdx ? C.lime300 : C.bg700,
+        transition: "background 0.3s"
+      }
+    });
+  })), /*#__PURE__*/React.createElement(Mono, {
+    style: {
+      marginBottom: 8
+    }
+  }, cur.label), /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.display), {}, {
+      fontSize: 26,
+      color: C.text0,
+      marginTop: 6
+    })
+  }, cur.title)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 10,
+      flex: 1,
+      overflowY: "auto"
+    }
+  }, cur.opts.map(function (opt) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: opt.v,
+      onClick: function onClick() {
+        return next(opt.v);
+      },
+      style: {
+        backgroundColor: ans[cur.key] === opt.v ? C.lime300 : C.bg900,
+        borderRadius: 14,
+        padding: "16px 18px",
+        cursor: "pointer",
+        transition: "all 0.14s",
+        border: "1px solid ".concat(ans[cur.key] === opt.v ? C.lime300 : C.bg700)
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: _objectSpread(_objectSpread({}, T.heading), {}, {
+        fontSize: 17,
+        color: ans[cur.key] === opt.v ? C.bg950 : C.text0
+      })
+    }, opt.l), opt.s && /*#__PURE__*/React.createElement("div", {
+      style: _objectSpread(_objectSpread({}, T.body), {}, {
+        fontSize: 12,
+        color: ans[cur.key] === opt.v ? C.bg700 : C.text4,
+        marginTop: 3
+      })
+    }, opt.s));
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      paddingTop: 16,
+      display: "flex",
+      gap: 10
+    }
+  }, step > 0 && /*#__PURE__*/React.createElement(Btn, {
+    variant: "secondary",
+    onPress: function onPress() {
+      return setStep(function (s) {
+        return s - 1;
+      });
+    },
+    style: {
+      flex: 1
+    }
+  }, "Back"), ans[cur.key] && /*#__PURE__*/React.createElement(Btn, {
+    onPress: function onPress() {
+      return next();
+    },
+    style: {
+      flex: 2
+    }
+  }, "Continue \u2192")));
+  if (cur.type === "disclaimer") return /*#__PURE__*/React.createElement("div", {
+    className: "screen-enter",
+    style: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      backgroundColor: C.bg950,
+      padding: "24px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      gap: 20
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 56,
+      height: 56,
+      borderRadius: 14,
+      backgroundColor: C.bg800,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "26",
+    height: "26",
+    viewBox: "0 0 26 26",
+    fill: "none"
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: "13",
+    cy: "13",
+    r: "11",
+    stroke: C.warning,
+    strokeWidth: "2"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M13 9v4.5m0 3h.01",
+    stroke: C.warning,
+    strokeWidth: "2",
+    strokeLinecap: "round"
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.display), {}, {
+      fontSize: 26,
+      color: C.text0
+    })
+  }, "Before you begin"), /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.body), {}, {
+      fontSize: 14,
+      color: C.text3,
+      lineHeight: 1.7
+    })
+  }, "This app provides general fitness guidance, not medical advice. If you have any heart, joint, or serious health condition, consult a doctor before starting any exercise program."), /*#__PURE__*/React.createElement(Card, {
+    style: {
+      borderLeft: "3px solid ".concat(C.warning)
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.body), {}, {
+      fontSize: 13,
+      color: C.text4,
+      lineHeight: 1.6
+    })
+  }, "By continuing you confirm you understand this and accept full responsibility for your training. Start light. Progress gradually. Listen to your body."))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement(Btn, {
+    variant: "secondary",
+    onPress: function onPress() {
+      return setStep(function (s) {
+        return s - 1;
+      });
+    },
+    style: {
+      flex: 1
+    }
+  }, "Back"), /*#__PURE__*/React.createElement(Btn, {
+    onPress: function onPress() {
+      return next();
+    },
+    style: {
+      flex: 2
+    }
+  }, "I Understand \u2192")));
+  if (cur.type === "plan") return /*#__PURE__*/React.createElement("div", {
+    className: "screen-enter",
+    style: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      backgroundColor: C.bg950,
+      padding: "24px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      gap: 18
+    }
+  }, /*#__PURE__*/React.createElement(Pill, {
+    style: {
+      alignSelf: "flex-start",
+      fontSize: 10
+    }
+  }, "Your Program"), /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.display), {}, {
+      fontSize: 32,
+      color: C.text0,
+      lineHeight: 1.15,
+      letterSpacing: -0.5
+    })
+  }, "Push / Pull / Legs", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: C.lime300
+    }
+  }, "6-Day Split")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 8
+    }
+  }, [["6 days / week", "Mon → Sat · Sun rest"], ["75–90 min", "Per session"], ["8 weeks", "Progressive load increases"], ["3 variations each", "Swap if machine is busy"], ["Abs + Cardio", "Included every session"]].map(function (_ref12) {
+    var _ref13 = _slicedToArray(_ref12, 2),
+      v = _ref13[0],
+      l = _ref13[1];
+    return /*#__PURE__*/React.createElement("div", {
+      key: v,
+      style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        backgroundColor: C.bg900,
+        borderRadius: 10,
+        padding: "12px 16px"
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: _objectSpread(_objectSpread({}, T.body), {}, {
+        fontSize: 13,
+        color: C.text4
+      })
+    }, l), /*#__PURE__*/React.createElement("span", {
+      style: _objectSpread(_objectSpread({}, T.heading), {}, {
+        fontSize: 14,
+        color: C.text0
+      })
+    }, v));
+  })), /*#__PURE__*/React.createElement(Card, {
+    style: {
+      borderLeft: "3px solid ".concat(C.lime300)
+    }
+  }, /*#__PURE__*/React.createElement(Mono, {
+    style: {
+      marginBottom: 4
+    }
+  }, "Week 1\u20132"), /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.body), {}, {
+      fontSize: 13,
+      color: C.text3,
+      marginTop: 6,
+      lineHeight: 1.6
+    })
+  }, "Learn the movements. Build the habit. Volume increases from week 3 onwards."))), /*#__PURE__*/React.createElement(Btn, {
+    onPress: function onPress() {
+      return next();
+    },
+    full: true
+  }, "Start My Program \u2192"));
+  return null;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════════════════════
+function Dashboard(_ref14) {
+  var week = _ref14.week,
+    setWeek = _ref14.setWeek,
+    onStart = _ref14.onStart;
+  var _React$useState11 = React.useState(false),
+    _React$useState12 = _slicedToArray(_React$useState11, 2),
+    showReschedule = _React$useState12[0],
+    setShowReschedule = _React$useState12[1];
+  var _React$useState13 = React.useState(null),
+    _React$useState14 = _slicedToArray(_React$useState13, 2),
+    rescheduleIdx = _React$useState14[0],
+    setRescheduleIdx = _React$useState14[1];
+  var todayIdx = week.findIndex(function (d) {
+    return d.today;
+  });
+  var todaySlot = week[todayIdx];
+  var todayWk = PPL.find(function (w) {
+    return w.id === (todaySlot === null || todaySlot === void 0 ? void 0 : todaySlot.workoutId);
+  });
+  var prevSlot = week[todayIdx - 1];
+  var missedYest = prevSlot && !prevSlot.done && prevSlot.workoutId;
+  function confirmReschedule(newId) {
+    setWeek(function (prev) {
+      var next = prev.map(function (d) {
+        return _objectSpread({}, d);
+      });
+      var idx = rescheduleIdx !== null ? rescheduleIdx : todayIdx;
+      next[idx] = _objectSpread(_objectSpread({}, next[idx]), {}, {
+        workoutId: newId
+      });
+      DB.set("week", next);
+      return next;
+    });
+    setShowReschedule(false);
+    setRescheduleIdx(null);
+  }
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      overflowY: "auto",
+      backgroundColor: C.bg950,
+      position: "relative"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "16px 16px 100px",
+      display: "flex",
+      flexDirection: "column",
+      gap: 12
+    }
+  }, missedYest && /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "12px 14px",
+      borderRadius: 14,
+      backgroundColor: C.warning + "10",
+      border: "1px solid ".concat(C.warning, "33"),
+      display: "flex",
+      alignItems: "center",
+      gap: 12
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "20",
+    height: "20",
+    viewBox: "0 0 20 20",
+    fill: "none"
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: "10",
+    cy: "10",
+    r: "9",
+    stroke: C.warning,
+    strokeWidth: "1.5"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M10 7v3.5m0 2.5h.01",
+    stroke: C.warning,
+    strokeWidth: "1.5",
+    strokeLinecap: "round"
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.heading), {}, {
+      fontSize: 13,
+      color: C.warning
+    })
+  }, "Missed yesterday's session"), /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.body), {}, {
+      fontSize: 11,
+      color: C.text4
+    })
+  }, "Want to do it today instead?")), /*#__PURE__*/React.createElement(Btn, {
+    variant: "warn",
+    small: true,
+    onPress: function onPress() {
+      setRescheduleIdx(todayIdx);
+      setShowReschedule(true);
+    }
+  }, "Reschedule")), todayWk && /*#__PURE__*/React.createElement(Card, {
+    style: {
+      border: "1px solid ".concat(todayWk.color, "33"),
+      background: "linear-gradient(145deg,".concat(C.bg900, ",#141414)")
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 6,
+      flexWrap: "wrap",
+      marginBottom: 8
+    }
+  }, /*#__PURE__*/React.createElement(Pill, null, "Today"), /*#__PURE__*/React.createElement(Pill, {
+    color: todayWk.color + "22",
+    tc: todayWk.color,
+    style: {
+      border: "1px solid ".concat(todayWk.color, "33")
+    }
+  }, todayWk.label)), /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.display), {}, {
+      fontSize: 22,
+      color: C.text0,
+      letterSpacing: -0.3
+    })
+  }, todayWk.name), /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.body), {}, {
+      fontSize: 13,
+      color: C.text4,
+      marginTop: 3
+    })
+  }, todayWk.focus)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "right",
+      flexShrink: 0,
+      marginLeft: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.display), {}, {
+      fontSize: 28,
+      color: todayWk.color
+    })
+  }, todayWk.dur), /*#__PURE__*/React.createElement(Mono, null, "MIN"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 5,
+      marginBottom: 14
+    }
+  }, todayWk.slots.map(function (slot, si) {
+    var _todaySlot$slotSelect;
+    var selIdx = (todaySlot === null || todaySlot === void 0 || (_todaySlot$slotSelect = todaySlot.slotSelections) === null || _todaySlot$slotSelect === void 0 ? void 0 : _todaySlot$slotSelect[si]) || 0;
+    var exId = [slot.primary].concat(_toConsumableArray(slot.alts))[selIdx];
+    var ex = EX[exId];
+    if (!ex) return null;
+    var mc = MC[ex.muscle] || C.lime300;
+    return /*#__PURE__*/React.createElement("div", {
+      key: si,
+      style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "8px 12px",
+        backgroundColor: C.bg800,
+        borderRadius: 10
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 8
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 5,
+        height: 5,
+        borderRadius: 99,
+        backgroundColor: mc,
+        flexShrink: 0
+      }
+    }), /*#__PURE__*/React.createElement("span", {
+      style: _objectSpread(_objectSpread({}, T.body), {}, {
+        fontSize: 13,
+        color: C.text2
+      })
+    }, ex.name), selIdx > 0 && /*#__PURE__*/React.createElement(Pill, {
+      color: C.bg700,
+      tc: C.text5,
+      style: {
+        fontSize: 7
+      }
+    }, "Alt")), /*#__PURE__*/React.createElement("span", {
+      style: _objectSpread(_objectSpread({}, T.mono), {}, {
+        fontSize: 9,
+        color: C.text5,
+        letterSpacing: 1
+      })
+    }, ex.sets, "\xD7", ex.reps));
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement(Btn, {
+    onPress: onStart,
+    style: {
+      flex: 1
+    }
+  }, "Start Workout \u2192"), /*#__PURE__*/React.createElement("div", {
+    onClick: function onClick() {
+      setRescheduleIdx(todayIdx);
+      setShowReschedule(true);
+    },
+    style: {
+      width: 46,
+      height: 46,
+      borderRadius: 12,
+      backgroundColor: C.bg700,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      cursor: "pointer",
+      flexShrink: 0
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 18 18",
+    fill: "none"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M2 9a7 7 0 017-7",
+    stroke: C.lime300,
+    strokeWidth: "1.8",
+    strokeLinecap: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M16 9a7 7 0 01-7 7",
+    stroke: C.text5,
+    strokeWidth: "1.8",
+    strokeLinecap: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M2 6v3h3",
+    stroke: C.lime300,
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }))))), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement(Mono, null, "This Week"), /*#__PURE__*/React.createElement(Mono, {
+    style: {
+      color: C.lime300
+    }
+  }, "PPL \xD72")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 6
+    }
+  }, week.map(function (slot, i) {
+    var wk = PPL.find(function (w) {
+      return w.id === slot.workoutId;
+    });
+    var isToday = slot.today;
+    var isMissed = !slot.done && !isToday && i < todayIdx;
+    var isFuture = !slot.done && !isToday && i > todayIdx;
+    return /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        padding: "10px 12px",
+        backgroundColor: isToday ? C.bg800 : "transparent",
+        borderRadius: 12,
+        border: isToday ? "1px solid ".concat((wk === null || wk === void 0 ? void 0 : wk.color) || C.bg600, "33") : "1px solid transparent",
+        transition: "background 0.2s"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 32,
+        height: 32,
+        borderRadius: 9,
+        flexShrink: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: slot.done ? C.lime300 : isMissed ? C.danger + "22" : C.bg700,
+        border: isMissed ? "1px solid ".concat(C.danger, "44") : "none"
+      }
+    }, slot.done ? /*#__PURE__*/React.createElement("svg", {
+      width: "14",
+      height: "14",
+      viewBox: "0 0 14 14"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M3 7l3 3 5-5",
+      stroke: C.bg950,
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    })) : isMissed ? /*#__PURE__*/React.createElement("svg", {
+      width: "12",
+      height: "12",
+      viewBox: "0 0 12 12"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M3 3l6 6M9 3L3 9",
+      stroke: C.danger,
+      strokeWidth: "1.5",
+      strokeLinecap: "round"
+    })) : /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 8,
+        height: 8,
+        borderRadius: 2,
+        backgroundColor: isToday ? (wk === null || wk === void 0 ? void 0 : wk.color) || C.lime300 : C.bg500
+      }
+    })), /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1,
+        minWidth: 0
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 6
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: _objectSpread(_objectSpread({}, T.body), {}, {
+        fontSize: 13,
+        color: slot.done ? C.text4 : isToday ? C.text0 : isMissed ? C.danger : C.text2,
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis"
+      })
+    }, (wk === null || wk === void 0 ? void 0 : wk.name) || "—"), wk && /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 5,
+        height: 5,
+        borderRadius: 99,
+        backgroundColor: wk.color,
+        flexShrink: 0
+      }
+    })), /*#__PURE__*/React.createElement(Mono, {
+      style: {
+        marginTop: 1,
+        letterSpacing: 1
+      }
+    }, slot.day, wk ? " \xB7 ".concat(wk.dur, "m") : "")), isToday && /*#__PURE__*/React.createElement(Pill, {
+      style: {
+        fontSize: 8
+      }
+    }, "Today"), (isMissed || isFuture) && /*#__PURE__*/React.createElement("div", {
+      onClick: function onClick() {
+        setRescheduleIdx(i);
+        setShowReschedule(true);
+      },
+      style: {
+        padding: "5px 10px",
+        borderRadius: 8,
+        backgroundColor: C.bg700,
+        cursor: "pointer"
+      }
+    }, /*#__PURE__*/React.createElement(Mono, {
+      style: {
+        color: isMissed ? C.lime300 : C.text5,
+        letterSpacing: 1,
+        fontSize: 9
+      }
+    }, isMissed ? "MOVE" : "SWAP")));
+  })))), showReschedule && /*#__PURE__*/React.createElement(RescheduleModal, {
+    onConfirm: confirmReschedule,
+    onDismiss: function onDismiss() {
+      setShowReschedule(false);
+      setRescheduleIdx(null);
+    }
+  }));
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// WORKOUT
+// ═══════════════════════════════════════════════════════════════════════════
+function Workout(_ref15) {
+  var week = _ref15.week,
+    setWeek = _ref15.setWeek,
+    onBack = _ref15.onBack,
+    onDone = _ref15.onDone;
+  var todaySlot = week.find(function (d) {
+    return d.today;
+  }) || week[0];
+  var workout = PPL.find(function (w) {
+    return w.id === todaySlot.workoutId;
+  }) || PPL[0];
+  var _React$useState15 = React.useState(_toConsumableArray(todaySlot.slotSelections || workout.slots.map(function () {
+      return 0;
+    }))),
+    _React$useState16 = _slicedToArray(_React$useState15, 2),
+    localSels = _React$useState16[0],
+    setLocalSels = _React$useState16[1];
+  var LSKEY = "logs_".concat(workout.id, "_").concat(new Date().toDateString());
+  var _React$useState17 = React.useState(function () {
+      var saved = LS.get(LSKEY);
+      if (saved) return saved;
+      return Object.fromEntries(workout.slots.map(function (slot, si) {
+        var exId = [slot.primary].concat(_toConsumableArray(slot.alts))[localSels[si] || 0];
+        var ex = EX[exId];
+        return [exId, Array.from({
+          length: (ex === null || ex === void 0 ? void 0 : ex.sets) || 3
+        }, function () {
+          return {
+            weight: "",
+            reps: "",
+            feel: "",
+            done: false
+          };
+        })];
+      }));
+    }),
+    _React$useState18 = _slicedToArray(_React$useState17, 2),
+    logs = _React$useState18[0],
+    setLogs = _React$useState18[1];
+  var _React$useState19 = React.useState(null),
+    _React$useState20 = _slicedToArray(_React$useState19, 2),
+    activeSlot = _React$useState20[0],
+    setActiveSlot = _React$useState20[1];
+  var _React$useState21 = React.useState(null),
+    _React$useState22 = _slicedToArray(_React$useState21, 2),
+    varPicker = _React$useState22[0],
+    setVarPicker = _React$useState22[1];
+  var _React$useState23 = React.useState(0),
+    _React$useState24 = _slicedToArray(_React$useState23, 2),
+    timerSec = _React$useState24[0],
+    setTimerSec = _React$useState24[1];
+  var _React$useState25 = React.useState(1),
+    _React$useState26 = _slicedToArray(_React$useState25, 2),
+    timerMax = _React$useState26[0],
+    setTimerMax = _React$useState26[1];
+  var _React$useState27 = React.useState(0),
+    _React$useState28 = _slicedToArray(_React$useState27, 2),
+    elapsed = _React$useState28[0],
+    setElapsed = _React$useState28[1];
+  var _React$useState29 = React.useState(Date.now()),
+    _React$useState30 = _slicedToArray(_React$useState29, 1),
+    started = _React$useState30[0];
+  var _React$useState31 = React.useState(false),
+    _React$useState32 = _slicedToArray(_React$useState31, 2),
+    showFinish = _React$useState32[0],
+    setShowFinish = _React$useState32[1];
+  React.useEffect(function () {
+    var iv = setInterval(function () {
+      return setElapsed(Math.floor((Date.now() - started) / 1000));
+    }, 1000);
+    return function () {
+      return clearInterval(iv);
+    };
+  }, [started]);
+  React.useEffect(function () {
+    if (timerSec <= 0) return;
+    var t = setTimeout(function () {
+      return setTimerSec(function (s) {
+        return Math.max(0, s - 1);
+      });
+    }, 1000);
+    return function () {
+      return clearTimeout(t);
+    };
+  }, [timerSec]);
+  function getEx(si) {
+    var slot = workout.slots[si];
+    var exId = [slot.primary].concat(_toConsumableArray(slot.alts))[localSels[si] || 0];
+    return {
+      exId: exId,
+      ex: EX[exId],
+      slot: slot
+    };
+  }
+  function swapVar(slotIdx, newSel) {
+    var newSels = _toConsumableArray(localSels);
+    newSels[slotIdx] = newSel;
+    setLocalSels(newSels);
+    setWeek(function (prev) {
+      var next = prev.map(function (d) {
+        return _objectSpread({}, d);
+      });
+      var ti = next.findIndex(function (d) {
+        return d.today;
+      });
+      if (ti >= 0) next[ti] = _objectSpread(_objectSpread({}, next[ti]), {}, {
+        slotSelections: _toConsumableArray(newSels)
+      });
+      DB.set("week", next);
+      return next;
+    });
+    setVarPicker(null);
+  }
+  function updateSet(exId, si, field, val) {
+    var next = _objectSpread(_objectSpread({}, logs), {}, _defineProperty({}, exId, logs[exId].map(function (s, i) {
+      return i === si ? _objectSpread(_objectSpread({}, s), {}, _defineProperty({}, field, val)) : s;
+    })));
+    setLogs(next);
+    LS.set(LSKEY, next);
+  }
+  function markDone(exId, si, rest) {
+    var _logs$exId, _EX$exId;
+    var wasDone = (_logs$exId = logs[exId]) === null || _logs$exId === void 0 || (_logs$exId = _logs$exId[si]) === null || _logs$exId === void 0 ? void 0 : _logs$exId.done;
+    // auto-fill reps from target if still 0
+    var targetReps = parseInt((_EX$exId = EX[exId]) === null || _EX$exId === void 0 ? void 0 : _EX$exId.reps) || 8;
+    var next = _objectSpread(_objectSpread({}, logs), {}, _defineProperty({}, exId, logs[exId].map(function (s, i) {
+      if (i !== si) return s;
+      var reps = s.reps || targetReps;
+      var weight = s.weight || (si > 0 ? logs[exId][si - 1].weight : 0);
+      return _objectSpread(_objectSpread({}, s), {}, {
+        done: !s.done,
+        reps: reps,
+        weight: weight
+      });
+    })));
+    setLogs(next);
+    LS.set(LSKEY, next);
+    if (!wasDone && rest > 0) {
+      setTimerSec(rest);
+      setTimerMax(rest);
+    }
+  }
+  var fmtT = function fmtT(s) {
+    return "".concat(String(Math.floor(s / 60)).padStart(2, "0"), ":").concat(String(s % 60).padStart(2, "0"));
+  };
+  var allSets = Object.values(logs).flat();
+  var doneSets = allSets.filter(function (s) {
+    return s.done;
+  }).length;
+  var allDone = doneSets === allSets.length && allSets.length > 0;
+  if (showFinish) return /*#__PURE__*/React.createElement(Finish, {
+    workout: workout,
+    elapsed: elapsed,
+    doneSets: doneSets,
+    week: week,
+    setWeek: setWeek,
+    logs: logs,
+    onDone: onDone
+  });
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      backgroundColor: C.bg950,
+      position: "relative"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "12px 16px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      borderBottom: "1px solid ".concat(C.bg800),
+      flexShrink: 0
+    }
+  }, /*#__PURE__*/React.createElement(BackBtn, {
+    onPress: onBack
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.heading), {}, {
+      fontSize: 15,
+      color: C.text0
+    })
+  }, workout.name), /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.mono), {}, {
+      fontSize: 13,
+      color: C.lime300
+    })
+  }, fmtT(elapsed))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "right",
+      minWidth: 36
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.display), {}, {
+      fontSize: 16,
+      color: doneSets === allSets.length && allSets.length > 0 ? C.lime300 : C.text0
+    })
+  }, doneSets), /*#__PURE__*/React.createElement(Mono, null, "/", allSets.length))), timerSec > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      backgroundColor: C.bg900,
+      padding: "8px 16px",
+      display: "flex",
+      alignItems: "center",
+      gap: 12,
+      borderBottom: "1px solid ".concat(C.bg700),
+      flexShrink: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      height: 4,
+      backgroundColor: C.bg700,
+      borderRadius: 2
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: "100%",
+      borderRadius: 2,
+      backgroundColor: C.lime300,
+      transition: "width 1s linear",
+      width: "".concat(timerSec / timerMax * 100, "%")
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.display), {}, {
+      fontSize: 18,
+      color: C.lime300,
+      minWidth: 44,
+      textAlign: "right"
+    })
+  }, timerSec, "s")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      overflowY: "auto"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "12px 16px 100px",
+      display: "flex",
+      flexDirection: "column",
+      gap: 10
+    }
+  }, workout.slots.map(function (_, si) {
+    var _getEx = getEx(si),
+      exId = _getEx.exId,
+      ex = _getEx.ex,
+      slot = _getEx.slot;
+    if (!ex) return null;
+    var mc = MC[ex.muscle] || C.lime300;
+    var isActive = activeSlot === si;
+    var sets = logs[exId] || [];
+    var allSetsDone = sets.length > 0 && sets.every(function (s) {
+      return s.done;
+    });
+    var selIdx = localSels[si] || 0;
+    return /*#__PURE__*/React.createElement(Card, {
+      key: si,
+      style: {
+        border: "1px solid ".concat(isActive ? mc + "55" : C.bg700),
+        transition: "border 0.2s"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-start"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1,
+        paddingRight: 8
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 6,
+        flexWrap: "wrap",
+        marginBottom: 3
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 6,
+        height: 6,
+        borderRadius: 99,
+        backgroundColor: mc,
+        flexShrink: 0
+      }
+    }), /*#__PURE__*/React.createElement("span", {
+      style: _objectSpread(_objectSpread({}, T.heading), {}, {
+        fontSize: 15,
+        color: allSetsDone ? C.text5 : C.text0
+      })
+    }, ex.name), allSetsDone && /*#__PURE__*/React.createElement(CheckIcon, {
+      done: true,
+      color: C.lime300
+    }), selIdx > 0 && /*#__PURE__*/React.createElement(Pill, {
+      color: C.bg700,
+      tc: C.text5,
+      style: {
+        fontSize: 7
+      }
+    }, "Alt ", selIdx)), /*#__PURE__*/React.createElement(Mono, {
+      style: {
+        letterSpacing: 1
+      }
+    }, ex.sets, "s \xB7 ", ex.reps, " \xB7 ", ex.rest > 0 ? "".concat(ex.rest, "s rest") : "no rest", " \xB7 ", ex.eq)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 5,
+        flexShrink: 0
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      onClick: function onClick() {
+        return setVarPicker(si);
+      },
+      style: {
+        padding: "6px 10px",
+        borderRadius: 8,
+        backgroundColor: C.bg700,
+        cursor: "pointer"
+      }
+    }, /*#__PURE__*/React.createElement(Mono, {
+      style: {
+        color: C.lime300,
+        fontSize: 9
+      }
+    }, "SWAP")), /*#__PURE__*/React.createElement("div", {
+      onClick: function onClick() {
+        return setActiveSlot(isActive ? null : si);
+      },
+      style: {
+        padding: "6px 10px",
+        borderRadius: 8,
+        backgroundColor: isActive ? C.lime300 : C.bg700,
+        cursor: "pointer"
+      }
+    }, /*#__PURE__*/React.createElement(Mono, {
+      style: {
+        color: isActive ? C.bg950 : C.text4,
+        fontSize: 9
+      }
+    }, isActive ? "▲" : "LOG")))), isActive && /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 12
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        padding: "8px 12px",
+        backgroundColor: C.bg800,
+        borderRadius: 10,
+        marginBottom: 12
+      }
+    }, /*#__PURE__*/React.createElement(Mono, {
+      style: {
+        color: mc,
+        marginBottom: 5
+      }
+    }, "Key Cues"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 6,
+        display: "flex",
+        flexDirection: "column",
+        gap: 3
+      }
+    }, ex.cues.map(function (c, i) {
+      return /*#__PURE__*/React.createElement("div", {
+        key: i,
+        style: _objectSpread(_objectSpread({}, T.body), {}, {
+          fontSize: 12,
+          color: C.text4,
+          lineHeight: 1.5
+        })
+      }, "\xB7 ", c);
+    }))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "grid",
+        gridTemplateColumns: "28px 1fr 1fr",
+        gap: 8,
+        padding: "0 4px",
+        marginBottom: 6
+      }
+    }, ["SET", "WEIGHT (kg)", "REPS DONE"].map(function (h) {
+      return /*#__PURE__*/React.createElement(Mono, {
+        key: h,
+        style: {
+          fontSize: 8
+        }
+      }, h);
+    })), sets.map(function (s, si2) {
+      var isDone = s.done;
+      return /*#__PURE__*/React.createElement("div", {
+        key: si2,
+        onClick: function onClick() {
+          if (!isDone) markDone(exId, si2, ex.rest);
+        },
+        style: {
+          display: "grid",
+          gridTemplateColumns: "28px 1fr 1fr",
+          gap: 8,
+          alignItems: "center",
+          padding: "10px 4px",
+          marginBottom: 6,
+          borderRadius: 12,
+          backgroundColor: isDone ? C.lime300 + "18" : C.bg800,
+          border: "1px solid ".concat(isDone ? C.lime300 + "55" : C.bg600),
+          transition: "all 0.15s",
+          cursor: isDone ? "default" : "pointer"
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 24,
+          height: 24,
+          borderRadius: 7,
+          backgroundColor: isDone ? C.lime300 : C.bg700,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0
+        }
+      }, isDone ? /*#__PURE__*/React.createElement("svg", {
+        width: "12",
+        height: "12",
+        viewBox: "0 0 12 12"
+      }, /*#__PURE__*/React.createElement("path", {
+        d: "M2 6l3 3 5-5",
+        stroke: C.bg950,
+        strokeWidth: "2",
+        strokeLinecap: "round",
+        strokeLinejoin: "round"
+      })) : /*#__PURE__*/React.createElement("span", {
+        style: _objectSpread(_objectSpread({}, T.mono), {}, {
+          fontSize: 10,
+          color: C.text4
+        })
+      }, si2 + 1)), /*#__PURE__*/React.createElement("div", {
+        onClick: function onClick(e) {
+          return e.stopPropagation();
+        },
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 6
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        onClick: function onClick() {
+          return updateSet(exId, si2, "weight", Math.max(0, (parseFloat(s.weight) || 0) - 2.5));
+        },
+        style: {
+          width: 32,
+          height: 36,
+          borderRadius: 8,
+          backgroundColor: C.bg700,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          flexShrink: 0
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: _objectSpread(_objectSpread({}, T.display), {}, {
+          fontSize: 18,
+          color: C.text3,
+          lineHeight: 1
+        })
+      }, "\u2212")), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flex: 1,
+          textAlign: "center"
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: _objectSpread(_objectSpread({}, T.display), {}, {
+          fontSize: 18,
+          color: isDone ? C.lime300 : C.text0
+        })
+      }, s.weight || 0), /*#__PURE__*/React.createElement(Mono, {
+        style: {
+          fontSize: 7
+        }
+      }, "kg")), /*#__PURE__*/React.createElement("div", {
+        onClick: function onClick() {
+          return updateSet(exId, si2, "weight", (parseFloat(s.weight) || 0) + 2.5);
+        },
+        style: {
+          width: 32,
+          height: 36,
+          borderRadius: 8,
+          backgroundColor: C.bg700,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          flexShrink: 0
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: _objectSpread(_objectSpread({}, T.display), {}, {
+          fontSize: 18,
+          color: C.lime300,
+          lineHeight: 1
+        })
+      }, "+"))), /*#__PURE__*/React.createElement("div", {
+        onClick: function onClick(e) {
+          return e.stopPropagation();
+        },
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 6
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        onClick: function onClick() {
+          return updateSet(exId, si2, "reps", Math.max(0, (parseInt(s.reps) || 0) - 1));
+        },
+        style: {
+          width: 32,
+          height: 36,
+          borderRadius: 8,
+          backgroundColor: C.bg700,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          flexShrink: 0
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: _objectSpread(_objectSpread({}, T.display), {}, {
+          fontSize: 18,
+          color: C.text3,
+          lineHeight: 1
+        })
+      }, "\u2212")), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flex: 1,
+          textAlign: "center"
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: _objectSpread(_objectSpread({}, T.display), {}, {
+          fontSize: 18,
+          color: isDone ? C.lime300 : C.text0
+        })
+      }, s.reps || 0), /*#__PURE__*/React.createElement(Mono, {
+        style: {
+          fontSize: 7
+        }
+      }, "reps")), /*#__PURE__*/React.createElement("div", {
+        onClick: function onClick() {
+          return updateSet(exId, si2, "reps", (parseInt(s.reps) || 0) + 1);
+        },
+        style: {
+          width: 32,
+          height: 36,
+          borderRadius: 8,
+          backgroundColor: C.bg700,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          flexShrink: 0
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: _objectSpread(_objectSpread({}, T.display), {}, {
+          fontSize: 18,
+          color: C.lime300,
+          lineHeight: 1
+        })
+      }, "+"))));
+    }), /*#__PURE__*/React.createElement("div", {
+      onClick: function onClick() {
+        sets.forEach(function (_, si2) {
+          if (!sets[si2].done) markDone(exId, si2, 0);
+        });
+      },
+      style: {
+        padding: "10px",
+        borderRadius: 10,
+        backgroundColor: C.bg700,
+        textAlign: "center",
+        cursor: "pointer",
+        marginTop: 4
+      }
+    }, /*#__PURE__*/React.createElement(Mono, {
+      style: {
+        color: C.lime300,
+        fontSize: 10
+      }
+    }, "Tap a set row to mark it done \xB7 Tap again to undo"))));
+  }), allDone && /*#__PURE__*/React.createElement(Btn, {
+    onPress: function onPress() {
+      return setShowFinish(true);
+    },
+    full: true
+  }, "Finish Workout \u2713"))), varPicker !== null && /*#__PURE__*/React.createElement(VariationPicker, {
+    slot: workout.slots[varPicker],
+    currentSel: localSels[varPicker] || 0,
+    onSelect: function onSelect(i) {
+      return swapVar(varPicker, i);
+    },
+    onDismiss: function onDismiss() {
+      return setVarPicker(null);
+    }
+  }));
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// FINISH
+// ═══════════════════════════════════════════════════════════════════════════
+function Finish(_ref16) {
+  var workout = _ref16.workout,
+    elapsed = _ref16.elapsed,
+    doneSets = _ref16.doneSets,
+    week = _ref16.week,
+    setWeek = _ref16.setWeek,
+    logs = _ref16.logs,
+    onDone = _ref16.onDone;
+  var _React$useState33 = React.useState(""),
+    _React$useState34 = _slicedToArray(_React$useState33, 2),
+    feel = _React$useState34[0],
+    setFeel = _React$useState34[1];
+  var _React$useState35 = React.useState(""),
+    _React$useState36 = _slicedToArray(_React$useState35, 2),
+    pain = _React$useState36[0],
+    setPain = _React$useState36[1];
+  function submit() {
+    return _submit.apply(this, arguments);
+  }
+  function _submit() {
+    _submit = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7() {
+      var vol, streak;
+      return _regenerator().w(function (_context7) {
+        while (1) switch (_context7.n) {
+          case 0:
+            if (!(!feel || !pain)) {
+              _context7.n = 1;
+              break;
+            }
+            return _context7.a(2);
+          case 1:
+            // Calculate volume
+            vol = 0;
+            Object.entries(logs).forEach(function (_ref21) {
+              var _ref22 = _slicedToArray(_ref21, 2),
+                _ = _ref22[0],
+                sets = _ref22[1];
+              return sets.forEach(function (s) {
+                if (s.done && s.weight && s.reps) vol += parseFloat(s.weight) * parseFloat(s.reps);
+              });
+            });
+            // Save workout to DB
+            _context7.n = 2;
+            return DB.addWorkout({
+              workoutId: workout.id,
+              workoutName: workout.name,
+              date: new Date().toISOString(),
+              dateStr: new Date().toDateString(),
+              duration: Math.floor(elapsed / 60),
+              sets: doneSets,
+              volume: Math.round(vol),
+              feel: feel,
+              pain: pain,
+              logs: logs
+            });
+          case 2:
+            // Mark today done & update streak
+            setWeek(function (prev) {
+              var next = prev.map(function (d) {
+                return _objectSpread({}, d);
+              });
+              var ti = next.findIndex(function (d) {
+                return d.today;
+              });
+              if (ti >= 0) next[ti] = _objectSpread(_objectSpread({}, next[ti]), {}, {
+                done: true
+              });
+              DB.set("week", next);
+              return next;
+            });
+            streak = LS.get("streak", 0);
+            LS.set("streak", streak + 1);
+            onDone();
+          case 3:
+            return _context7.a(2);
+        }
+      }, _callee7);
+    }));
+    return _submit.apply(this, arguments);
+  }
+  var fmtT = function fmtT(s) {
+    return "".concat(Math.floor(s / 60), "m ").concat(s % 60, "s");
+  };
+  // Volume
+  var vol = 0;
+  Object.entries(logs).forEach(function (_ref17) {
+    var _ref18 = _slicedToArray(_ref17, 2),
+      _ = _ref18[0],
+      sets = _ref18[1];
+    return sets.forEach(function (s) {
+      if (s.done && s.weight && s.reps) vol += parseFloat(s.weight) * parseFloat(s.reps);
+    });
+  });
+  return /*#__PURE__*/React.createElement("div", {
+    className: "screen-enter",
+    style: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      backgroundColor: C.bg950,
+      padding: "24px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      gap: 22
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 64,
+      height: 64,
+      borderRadius: 18,
+      backgroundColor: C.lime300,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "32",
+    height: "32",
+    viewBox: "0 0 32 32",
+    fill: "none"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M6 16l7 7 13-13",
+    stroke: C.bg950,
+    strokeWidth: "3",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.display), {}, {
+      fontSize: 32,
+      color: C.text0,
+      letterSpacing: -0.5
+    })
+  }, "Done."), /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.body), {}, {
+      fontSize: 14,
+      color: C.text4,
+      marginTop: 4
+    })
+  }, workout.name, " \xB7 ", new Date().toLocaleDateString("en-US", {
+    weekday: "long"
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10
+    }
+  }, [["Time", fmtT(elapsed || 2700)], ["Sets", doneSets], ["".concat(Math.round(vol / 1000 * 10) / 10 || "–", "t"), "Volume"]].map(function (_ref19) {
+    var _ref20 = _slicedToArray(_ref19, 2),
+      v = _ref20[0],
+      l = _ref20[1];
+    return /*#__PURE__*/React.createElement(Card, {
+      key: l,
+      style: {
+        flex: 1,
+        textAlign: "center",
+        padding: "14px 8px"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: _objectSpread(_objectSpread({}, T.display), {}, {
+        fontSize: 20,
+        color: C.lime300
+      })
+    }, v), /*#__PURE__*/React.createElement(Mono, {
+      style: {
+        marginTop: 3
+      }
+    }, l.toUpperCase()));
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Mono, {
+    style: {
+      marginBottom: 10
+    }
+  }, "How did it feel?"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      marginTop: 8
+    }
+  }, ["Easy", "Just right", "Too hard"].map(function (f) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: f,
+      onClick: function onClick() {
+        return setFeel(f);
+      },
+      style: {
+        flex: 1,
+        padding: "11px 4px",
+        borderRadius: 11,
+        backgroundColor: feel === f ? C.lime300 : C.bg900,
+        border: "1px solid ".concat(feel === f ? C.lime300 : C.bg700),
+        cursor: "pointer",
+        textAlign: "center",
+        transition: "all 0.14s"
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: _objectSpread(_objectSpread({}, T.body), {}, {
+        fontSize: 12,
+        color: feel === f ? C.bg950 : C.text3
+      })
+    }, f));
+  }))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Mono, {
+    style: {
+      marginBottom: 10
+    }
+  }, "Any pain or injury?"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      marginTop: 8
+    }
+  }, ["No", "Yes – flag it"].map(function (p) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: p,
+      onClick: function onClick() {
+        return setPain(p);
+      },
+      style: {
+        flex: 1,
+        padding: "11px 8px",
+        borderRadius: 11,
+        backgroundColor: pain === p ? p === "No" ? C.lime300 : C.danger : C.bg900,
+        border: "1px solid ".concat(pain === p ? p === "No" ? C.lime300 : C.danger : C.bg700),
+        cursor: "pointer",
+        textAlign: "center",
+        transition: "all 0.14s"
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: _objectSpread(_objectSpread({}, T.body), {}, {
+        fontSize: 12,
+        color: pain === p ? p === "No" ? C.bg950 : "#fff" : C.text3
+      })
+    }, p));
+  })))), /*#__PURE__*/React.createElement(Btn, {
+    onPress: submit,
+    full: true,
+    disabled: !feel || !pain
+  }, "Back to Dashboard"));
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PROGRESS
+// ═══════════════════════════════════════════════════════════════════════════
+function Progress() {
+  var _React$useState37 = React.useState([]),
+    _React$useState38 = _slicedToArray(_React$useState37, 2),
+    hist = _React$useState38[0],
+    setHist = _React$useState38[1];
+  var streak = LS.get("streak", 0);
+  React.useEffect(function () {
+    DB.getWorkouts().then(function (h) {
+      return setHist(h.slice(0, 20));
+    });
+  }, []);
+  var totalW = hist.length;
+  var totalSets = hist.reduce(function (a, h) {
+    return a + (h.sets || 0);
+  }, 0);
+  var totalVol = hist.reduce(function (a, h) {
+    return a + (h.volume || 0);
+  }, 0);
+
+  // Workouts by day of week
+  var byDay = {
+    "Mon": 0,
+    "Tue": 0,
+    "Wed": 0,
+    "Thu": 0,
+    "Fri": 0,
+    "Sat": 0,
+    "Sun": 0
+  };
+  hist.forEach(function (h) {
+    var d = new Date(h.date);
+    var key = d.toLocaleDateString("en-US", {
+      weekday: "short"
+    });
+    if (byDay[key] !== undefined) byDay[key]++;
+  });
+  var maxByDay = Math.max.apply(Math, _toConsumableArray(Object.values(byDay)).concat([1]));
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      overflowY: "auto",
+      backgroundColor: C.bg950
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "16px 16px 100px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.display), {}, {
+      fontSize: 26,
+      color: C.text0,
+      marginBottom: 18,
+      letterSpacing: -0.5
+    })
+  }, "Progress"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      marginBottom: 12
+    }
+  }, [[streak, "Streak", "weeks"], [totalW, "Total", "sessions"], ["".concat(Math.round(totalVol / 1000), "t"), "Volume", "lifted"]].map(function (_ref23) {
+    var _ref24 = _slicedToArray(_ref23, 3),
+      v = _ref24[0],
+      l = _ref24[1],
+      s = _ref24[2];
+    return /*#__PURE__*/React.createElement(Card, {
+      key: l,
+      style: {
+        flex: 1,
+        textAlign: "center",
+        padding: "14px 6px"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: _objectSpread(_objectSpread({}, T.display), {}, {
+        fontSize: 22,
+        color: C.lime300
+      })
+    }, v || 0), /*#__PURE__*/React.createElement(Mono, {
+      style: {
+        marginTop: 3
+      }
+    }, l.toUpperCase()), /*#__PURE__*/React.createElement("div", {
+      style: _objectSpread(_objectSpread({}, T.body), {}, {
+        fontSize: 10,
+        color: C.text5,
+        marginTop: 2
+      })
+    }, s));
+  })), /*#__PURE__*/React.createElement(Card, {
+    style: {
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement(Mono, {
+    style: {
+      marginBottom: 14
+    }
+  }, "Most Active Days"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "flex-end",
+      gap: 6,
+      height: 64,
+      marginBottom: 8
+    }
+  }, Object.entries(byDay).map(function (_ref25, i) {
+    var _ref26 = _slicedToArray(_ref25, 2),
+      d = _ref26[0],
+      n = _ref26[1];
+    return /*#__PURE__*/React.createElement("div", {
+      key: d,
+      style: {
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 3
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: "100%",
+        borderRadius: "3px 3px 0 0",
+        backgroundColor: n > 0 ? C.lime300 : C.bg700,
+        height: "".concat(n / maxByDay * 56, "px"),
+        minHeight: 3,
+        transition: "height 0.4s"
+      }
+    }), /*#__PURE__*/React.createElement(Mono, {
+      style: {
+        fontSize: 7
+      }
+    }, d.toUpperCase()));
+  }))), /*#__PURE__*/React.createElement(Mono, {
+    style: {
+      marginBottom: 12
+    }
+  }, "Workout History"), hist.length === 0 ? /*#__PURE__*/React.createElement(Card, {
+    style: {
+      textAlign: "center",
+      padding: "32px 16px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.body), {}, {
+      fontSize: 14,
+      color: C.text5
+    })
+  }, "No workouts yet. Complete your first session!")) : /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 8
+    }
+  }, hist.map(function (h, i) {
+    var wk = PPL.find(function (w) {
+      return w.id === h.workoutId;
+    });
+    return /*#__PURE__*/React.createElement(Card, {
+      key: i,
+      style: {
+        padding: "12px 14px"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 12
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 40,
+        height: 40,
+        borderRadius: 11,
+        backgroundColor: C.bg800,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexShrink: 0,
+        border: "1px solid ".concat((wk === null || wk === void 0 ? void 0 : wk.color) || C.bg600, "44")
+      }
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 16 16",
+      fill: "none"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M2 12h2.5l2.5-6 3 9 2.5-6 1 3H16",
+      stroke: (wk === null || wk === void 0 ? void 0 : wk.color) || C.lime300,
+      strokeWidth: "1.5",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: _objectSpread(_objectSpread({}, T.heading), {}, {
+        fontSize: 14,
+        color: C.text0
+      })
+    }, h.workoutName), /*#__PURE__*/React.createElement(Mono, {
+      style: {
+        marginTop: 2,
+        letterSpacing: 1
+      }
+    }, h.dateStr, " \xB7 ", h.duration, "min \xB7 ", h.sets, " sets")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        textAlign: "right"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: _objectSpread(_objectSpread({}, T.mono), {}, {
+        fontSize: 11,
+        color: h.feel === "Easy" ? C.lime300 : h.feel === "Too hard" ? C.danger : C.text4
+      })
+    }, h.feel), h.pain && h.pain !== "No" && /*#__PURE__*/React.createElement("div", {
+      style: _objectSpread(_objectSpread({}, T.mono), {}, {
+        fontSize: 9,
+        color: C.danger,
+        marginTop: 2
+      })
+    }, "\u26A0 pain"))));
+  }))));
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// STREAKS
+// ═══════════════════════════════════════════════════════════════════════════
+function Streaks(_ref27) {
+  var onBack = _ref27.onBack;
+  var streak = LS.get("streak", 0);
+  var best = LS.get("bestStreak", streak);
+  var milestones = [1, 3, 6, 12, 24, 52];
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      backgroundColor: C.bg950
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "12px 16px",
+      display: "flex",
+      alignItems: "center",
+      gap: 12,
+      borderBottom: "1px solid ".concat(C.bg800),
+      flexShrink: 0
+    }
+  }, /*#__PURE__*/React.createElement(BackBtn, {
+    onPress: onBack
+  }), /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.heading), {}, {
+      fontSize: 17,
+      color: C.text0
+    })
+  }, "Streaks")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      overflowY: "auto",
+      padding: "24px 16px 90px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      marginBottom: 32
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({
+      fontSize: 96
+    }, T.display), {}, {
+      color: C.lime300,
+      lineHeight: 1,
+      letterSpacing: -4
+    })
+  }, streak), /*#__PURE__*/React.createElement(Mono, {
+    style: {
+      marginTop: 6
+    }
+  }, "Week Streak"), /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.body), {}, {
+      fontSize: 13,
+      color: C.text4,
+      marginTop: 8
+    })
+  }, "Consecutive weeks completing all sessions"), best > streak && /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.mono), {}, {
+      fontSize: 11,
+      color: C.text5,
+      marginTop: 4
+    })
+  }, "Best: ", best, " weeks")), /*#__PURE__*/React.createElement(Mono, {
+    style: {
+      marginBottom: 12
+    }
+  }, "Milestones"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 8
+    }
+  }, milestones.map(function (m) {
+    return /*#__PURE__*/React.createElement(Card, {
+      key: m,
+      style: {
+        padding: "12px 14px"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 12
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 44,
+        height: 44,
+        borderRadius: 12,
+        backgroundColor: streak >= m ? C.lime300 : C.bg800,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexShrink: 0,
+        border: "1px solid ".concat(streak >= m ? C.lime300 : C.bg700)
+      }
+    }, streak >= m ? /*#__PURE__*/React.createElement("svg", {
+      width: "20",
+      height: "20",
+      viewBox: "0 0 20 20"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M4 10l5 5 7-7",
+      stroke: C.bg950,
+      strokeWidth: "2.5",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    })) : /*#__PURE__*/React.createElement("span", {
+      style: _objectSpread(_objectSpread({}, T.mono), {}, {
+        fontSize: 13,
+        color: C.text5
+      })
+    }, m)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: _objectSpread(_objectSpread({}, T.heading), {}, {
+        fontSize: 14,
+        color: streak >= m ? C.text0 : C.text4
+      })
+    }, m, " Week", m > 1 ? "s" : ""), /*#__PURE__*/React.createElement(Mono, {
+      style: {
+        marginTop: 2,
+        letterSpacing: 1
+      }
+    }, streak >= m ? "Achieved ✓" : "".concat(m - streak, " more week").concat(m - streak !== 1 ? "s" : "", " to go"))), streak >= m && /*#__PURE__*/React.createElement(Pill, {
+      style: {
+        fontSize: 8
+      }
+    }, "Done")));
+  }))));
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════════════════════════════════════
+function Settings() {
+  var _React$useState39 = React.useState(function () {
+      return LS.get("unit", "kg");
+    }),
+    _React$useState40 = _slicedToArray(_React$useState39, 2),
+    unit = _React$useState40[0],
+    setUnit = _React$useState40[1];
+  var _React$useState41 = React.useState(function () {
+      return LS.get("notifs", true);
+    }),
+    _React$useState42 = _slicedToArray(_React$useState41, 2),
+    notifs = _React$useState42[0],
+    setNotifs = _React$useState42[1];
+  var _React$useState43 = React.useState(function () {
+      return LS.get("remTime", "19:00");
+    }),
+    _React$useState44 = _slicedToArray(_React$useState43, 2),
+    time = _React$useState44[0],
+    setTime = _React$useState44[1];
+  var _React$useState45 = React.useState("…"),
+    _React$useState46 = _slicedToArray(_React$useState45, 2),
+    dbSize = _React$useState46[0],
+    setDbSize = _React$useState46[1];
+  React.useEffect(function () {
+    DB.getWorkouts().then(function (h) {
+      return setDbSize("".concat(h.length, " workouts logged"));
+    });
+  }, []);
+  function save(k, v) {
+    LS.set(k, v);
+  }
+  function Toggle(_ref28) {
+    var value = _ref28.value,
+      onChange = _ref28.onChange;
+    return /*#__PURE__*/React.createElement("div", {
+      onClick: function onClick() {
+        return onChange(!value);
+      },
+      style: {
+        width: 48,
+        height: 28,
+        borderRadius: 14,
+        backgroundColor: value ? C.lime300 : C.bg700,
+        position: "relative",
+        cursor: "pointer",
+        transition: "background 0.2s",
+        flexShrink: 0
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "absolute",
+        top: 3,
+        left: value ? 23 : 3,
+        width: 22,
+        height: 22,
+        borderRadius: 11,
+        backgroundColor: value ? C.bg950 : C.text4,
+        transition: "left 0.2s",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.3)"
+      }
+    }));
+  }
+  function Row(_ref29) {
+    var label = _ref29.label,
+      sub = _ref29.sub,
+      right = _ref29.right,
+      accent = _ref29.accent;
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "14px 16px",
+        borderBottom: "1px solid ".concat(C.bg800)
+      }
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: _objectSpread(_objectSpread({}, T.body), {}, {
+        fontSize: 14,
+        color: accent || C.text0
+      })
+    }, label), sub && /*#__PURE__*/React.createElement("div", {
+      style: _objectSpread(_objectSpread({}, T.body), {}, {
+        fontSize: 11,
+        color: C.text5,
+        marginTop: 2
+      })
+    }, sub)), right && /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginLeft: 12,
+        flexShrink: 0
+      }
+    }, right));
+  }
+  function Section(_ref30) {
+    var label = _ref30.label;
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        padding: "18px 16px 6px"
+      }
+    }, /*#__PURE__*/React.createElement(Mono, null, label));
+  }
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      overflowY: "auto",
+      backgroundColor: C.bg950
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "16px 16px 0"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.display), {}, {
+      fontSize: 26,
+      color: C.text0,
+      marginBottom: 20,
+      letterSpacing: -0.5
+    })
+  }, "Settings")), /*#__PURE__*/React.createElement(Section, {
+    label: "Program"
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      backgroundColor: C.bg900
+    }
+  }, /*#__PURE__*/React.createElement(Row, {
+    label: "Current Plan",
+    sub: "Push \xB7 Pull \xB7 Legs \xD72"
+  }), /*#__PURE__*/React.createElement(Row, {
+    label: "Schedule",
+    sub: "Mon \xB7 Tue \xB7 Wed \xB7 Thu \xB7 Fri \xB7 Sat"
+  }), /*#__PURE__*/React.createElement(Row, {
+    label: "Duration",
+    sub: "75\u201390 min per session"
+  }), /*#__PURE__*/React.createElement(Row, {
+    label: "Week",
+    sub: "Week 4 of 8"
+  })), /*#__PURE__*/React.createElement(Section, {
+    label: "Preferences"
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      backgroundColor: C.bg900
+    }
+  }, /*#__PURE__*/React.createElement(Row, {
+    label: "Units",
+    right: /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 6
+      }
+    }, ["kg", "lb"].map(function (u) {
+      return /*#__PURE__*/React.createElement("div", {
+        key: u,
+        onClick: function onClick() {
+          setUnit(u);
+          save("unit", u);
+        },
+        style: {
+          padding: "5px 16px",
+          borderRadius: 8,
+          backgroundColor: unit === u ? C.lime300 : C.bg700,
+          cursor: "pointer"
+        }
+      }, /*#__PURE__*/React.createElement(Mono, {
+        style: {
+          fontSize: 10,
+          color: unit === u ? C.bg950 : C.text4,
+          letterSpacing: 0
+        }
+      }, u));
+    }))
+  }), /*#__PURE__*/React.createElement(Row, {
+    label: "Reminders",
+    sub: "Daily workout notification",
+    right: /*#__PURE__*/React.createElement(Toggle, {
+      value: notifs,
+      onChange: function onChange(v) {
+        setNotifs(v);
+        save("notifs", v);
+      }
+    })
+  }), notifs && /*#__PURE__*/React.createElement(Row, {
+    label: "Reminder time",
+    right: /*#__PURE__*/React.createElement("input", {
+      type: "time",
+      value: time,
+      onChange: function onChange(e) {
+        setTime(e.target.value);
+        save("remTime", e.target.value);
+      },
+      style: {
+        backgroundColor: C.bg700,
+        border: "1px solid ".concat(C.bg600),
+        borderRadius: 8,
+        padding: "7px 10px",
+        color: C.text0,
+        fontSize: 13,
+        fontFamily: "'Space Grotesk',sans-serif",
+        outline: "none"
+      }
+    })
+  })), /*#__PURE__*/React.createElement(Section, {
+    label: "Data & Storage"
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      backgroundColor: C.bg900,
+      marginBottom: 100
+    }
+  }, /*#__PURE__*/React.createElement(Row, {
+    label: "Storage",
+    sub: "IndexedDB \u2014 data stays on this device"
+  }), /*#__PURE__*/React.createElement(Row, {
+    label: "Database",
+    sub: dbSize
+  }), /*#__PURE__*/React.createElement(Row, {
+    label: "Export data",
+    sub: "Coming soon",
+    right: /*#__PURE__*/React.createElement("svg", {
+      width: "14",
+      height: "14",
+      viewBox: "0 0 14 14"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M5 3l4 4-4 4",
+      stroke: C.text5,
+      strokeWidth: "1.5",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }))
+  }), /*#__PURE__*/React.createElement("div", {
+    onClick: function onClick() {
+      if (window.confirm("This will delete ALL your workout history and reset the app. Are you sure?")) {
+        indexedDB.deleteDatabase("lift_db");
+        localStorage.clear();
+        window.location.reload();
+      }
+    },
+    style: {
+      padding: "14px 16px",
+      cursor: "pointer"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.body), {}, {
+      fontSize: 13,
+      color: C.danger
+    })
+  }, "Clear all data & reset\u2026"))));
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// BOTTOM NAV
+// ═══════════════════════════════════════════════════════════════════════════
+function Nav(_ref31) {
+  var active = _ref31.active,
+    onNav = _ref31.onNav;
+  var tabs = [{
+    id: "dashboard",
+    label: "Today",
+    icon: /*#__PURE__*/React.createElement("svg", {
+      width: "22",
+      height: "22",
+      viewBox: "0 0 22 22",
+      fill: "none"
+    }, /*#__PURE__*/React.createElement("rect", {
+      x: "2",
+      y: "2",
+      width: "8.5",
+      height: "8.5",
+      rx: "2.5",
+      stroke: "currentColor",
+      strokeWidth: "1.8"
+    }), /*#__PURE__*/React.createElement("rect", {
+      x: "11.5",
+      y: "2",
+      width: "8.5",
+      height: "8.5",
+      rx: "2.5",
+      stroke: "currentColor",
+      strokeWidth: "1.8"
+    }), /*#__PURE__*/React.createElement("rect", {
+      x: "2",
+      y: "11.5",
+      width: "8.5",
+      height: "8.5",
+      rx: "2.5",
+      stroke: "currentColor",
+      strokeWidth: "1.8"
+    }), /*#__PURE__*/React.createElement("rect", {
+      x: "11.5",
+      y: "11.5",
+      width: "8.5",
+      height: "8.5",
+      rx: "2.5",
+      stroke: "currentColor",
+      strokeWidth: "1.8"
+    }))
+  }, {
+    id: "progress",
+    label: "Progress",
+    icon: /*#__PURE__*/React.createElement("svg", {
+      width: "22",
+      height: "22",
+      viewBox: "0 0 22 22",
+      fill: "none"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M2 18h3l3-8 4 11 3-9 2 6h3",
+      stroke: "currentColor",
+      strokeWidth: "1.8",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }))
+  }, {
+    id: "settings",
+    label: "Settings",
+    icon: /*#__PURE__*/React.createElement("svg", {
+      width: "22",
+      height: "22",
+      viewBox: "0 0 22 22",
+      fill: "none"
+    }, /*#__PURE__*/React.createElement("circle", {
+      cx: "11",
+      cy: "11",
+      r: "3.5",
+      stroke: "currentColor",
+      strokeWidth: "1.8"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M11 2v2.5M11 17.5V20M2 11h2.5M17.5 11H20M4.93 4.93l1.77 1.77M15.3 15.3l1.77 1.77M4.93 17.07l1.77-1.77M15.3 6.7l1.77-1.77",
+      stroke: "currentColor",
+      strokeWidth: "1.8",
+      strokeLinecap: "round"
+    }))
+  }];
+  return /*#__PURE__*/React.createElement("div", {
+    className: "safe-bottom",
+    style: {
+      flexShrink: 0,
+      backgroundColor: C.bg950,
+      borderTop: "1px solid ".concat(C.bg800),
+      display: "flex",
+      alignItems: "flex-start",
+      zIndex: 100
+    }
+  }, tabs.map(function (tab) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: tab.id,
+      onClick: function onClick() {
+        return onNav(tab.id);
+      },
+      style: {
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 3,
+        cursor: "pointer",
+        paddingTop: 10,
+        color: active === tab.id ? C.lime300 : C.text5,
+        transition: "color 0.15s"
+      }
+    }, tab.icon, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: "'Space Grotesk',sans-serif",
+        fontSize: 10,
+        fontWeight: 600,
+        letterSpacing: 0.2
+      }
+    }, tab.label));
+  }));
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ROOT APP
+// ═══════════════════════════════════════════════════════════════════════════
+function App() {
+  var _React$useState47 = React.useState(false),
+    _React$useState48 = _slicedToArray(_React$useState47, 2),
+    ready = _React$useState48[0],
+    setReady = _React$useState48[1];
+  var _React$useState49 = React.useState(false),
+    _React$useState50 = _slicedToArray(_React$useState49, 2),
+    onboarded = _React$useState50[0],
+    setOnboarded = _React$useState50[1];
+  var _React$useState51 = React.useState("dashboard"),
+    _React$useState52 = _slicedToArray(_React$useState51, 2),
+    screen = _React$useState52[0],
+    setScreen = _React$useState52[1];
+  var _React$useState53 = React.useState(null),
+    _React$useState54 = _slicedToArray(_React$useState53, 2),
+    sub = _React$useState54[0],
+    setSub = _React$useState54[1]; // "workout"|"streaks"
+  var _React$useState55 = React.useState(makeDefaultWeek()),
+    _React$useState56 = _slicedToArray(_React$useState55, 2),
+    week = _React$useState56[0],
+    setWeekState = _React$useState56[1];
+  var _React$useState57 = React.useState(0),
+    _React$useState58 = _slicedToArray(_React$useState57, 2),
+    streak = _React$useState58[0],
+    setStreak = _React$useState58[1];
+
+  // Persist week
+  function setWeek(fn) {
+    setWeekState(function (prev) {
+      var next = typeof fn === "function" ? fn(prev) : fn;
+      DB.set("week", next);
+      return next;
+    });
+  }
+
+  // Load persisted state on mount
+  React.useEffect(function () {
+    _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8() {
+      var _yield$Promise$all, _yield$Promise$all2, ob, savedWeek, savedStreak;
+      return _regenerator().w(function (_context8) {
+        while (1) switch (_context8.n) {
+          case 0:
+            _context8.n = 1;
+            return Promise.all([DB.get("onboarded"), DB.get("week"), null]);
+          case 1:
+            _yield$Promise$all = _context8.v;
+            _yield$Promise$all2 = _slicedToArray(_yield$Promise$all, 3);
+            ob = _yield$Promise$all2[0];
+            savedWeek = _yield$Promise$all2[1];
+            savedStreak = _yield$Promise$all2[2];
+            if (ob) setOnboarded(true);
+            if (savedWeek && Array.isArray(savedWeek)) setWeekState(savedWeek);
+            setStreak(LS.get("streak", 0));
+            setReady(true);
+          case 2:
+            return _context8.a(2);
+        }
+      }, _callee8);
+    }))();
+  }, []);
+
+  // Keep streak in sync
+  React.useEffect(function () {
+    setStreak(LS.get("streak", 0));
+  }, [sub]);
+  if (!ready) return /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: C.bg950
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 56,
+      height: 56,
+      borderRadius: 16,
+      backgroundColor: C.lime300,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "28",
+    height: "28",
+    viewBox: "0 0 28 28",
+    fill: "none"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M4 14h4l4-10 5 20 4-14 3 4h4",
+    stroke: C.bg950,
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, T.display), {}, {
+      fontSize: 22,
+      color: C.lime300,
+      letterSpacing: -0.5
+    })
+  }, "LIFT")));
+
+  // Onboarding skipped — go straight to dashboard
+
+  var showNav = !sub;
+  function render() {
+    if (sub === "workout-select") return /*#__PURE__*/React.createElement(WorkoutSelection, {
+      week: week,
+      setWeek: setWeek,
+      onBack: function onBack() {
+        return setSub(null);
+      },
+      onStart: function onStart() {
+        return setSub("workout");
+      }
+    });
+    if (sub === "workout") return /*#__PURE__*/React.createElement(Workout, {
+      week: week,
+      setWeek: setWeek,
+      onBack: function onBack() {
+        return setSub("workout-select");
+      },
+      onDone: function onDone() {
+        setSub(null);
+        setStreak(LS.get("streak", 0));
+      }
+    });
+    if (sub === "streaks") return /*#__PURE__*/React.createElement(Streaks, {
+      onBack: function onBack() {
+        return setSub(null);
+      }
+    });
+    if (screen === "dashboard") return /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden"
+      }
+    }, /*#__PURE__*/React.createElement(TopBar, {
+      week: week,
+      streak: streak,
+      onStreakTap: function onStreakTap() {
+        return setSub("streaks");
+      }
+    }), /*#__PURE__*/React.createElement(Dashboard, {
+      week: week,
+      setWeek: setWeek,
+      onStart: function onStart() {
+        return setSub("workout-select");
+      }
+    }));
+    if (screen === "progress") return /*#__PURE__*/React.createElement(Progress, null);
+    if (screen === "settings") return /*#__PURE__*/React.createElement(Settings, null);
+  }
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: "100%",
+      height: "100%",
+      display: "flex",
+      flexDirection: "column",
+      backgroundColor: C.bg950,
+      overflow: "hidden"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      overflow: "hidden"
+    },
+    className: "screen-enter"
+  }, render()), showNav && /*#__PURE__*/React.createElement(Nav, {
+    active: screen,
+    onNav: function onNav(s) {
+      setScreen(s);
+      setSub(null);
+    }
+  }));
+}
+ReactDOM.createRoot(document.getElementById("root")).render(/*#__PURE__*/React.createElement(App, null));
+</script>
+</body>
+</html>
