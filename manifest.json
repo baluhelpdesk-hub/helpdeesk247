@@ -1,0 +1,22 @@
+{
+  "name": "Balu's Workout Plan",
+  "short_name": "Workout",
+  "description": "Push Pull Legs 6-day gym plan with XP tracking",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0D1117",
+  "theme_color": "#0D1117",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
