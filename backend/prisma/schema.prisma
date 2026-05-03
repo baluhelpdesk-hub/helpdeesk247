@@ -1,0 +1,275 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── USERS & AUTH ────────────────────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  profile         Profile?
+  userPrograms    UserProgram[]
+  workoutSessions WorkoutSession[]
+  habitSettings   HabitSettings?
+  streakStats     StreakStats?
+  llmJobs         LlmJob[]
+  refreshTokens   RefreshToken[]
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+// ─── ONBOARDING & PROFILE ────────────────────────────────────────────────────
+
+model Profile {
+  id                String   @id @default(uuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ageRange          String   // "18-24" | "25-34" | "35-44" | "45-54" | "55+"
+  sex               String   // "male" | "female" | "prefer_not_to_say"
+  trainingExp       String   // "new" | "some" | "regular"
+  goal              String   // "lose_fat" | "build_muscle" | "get_stronger" | "general_fitness"
+  location          String   // "gym" | "home" | "both"
+  equipment         String[] // ["barbell","dumbbells","cables","bodyweight",...]
+  daysPerWeek       Int      // 2-5
+  minutesPerSession Int      // 30 | 45 | 60
+  units             String   @default("kg") // "kg" | "lb"
+  expoPushToken     String?
+  onboardingDone    Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+// ─── EXERCISE LIBRARY ────────────────────────────────────────────────────────
+
+model Exercise {
+  id               String   @id @default(uuid())
+  slug             String   @unique
+  name             String
+  primaryMuscles   String[]
+  secondaryMuscles String[]
+  equipment        String[]
+  difficulty       String   // "beginner" | "intermediate" | "advanced"
+  videoUrl         String?
+  instructions     String[]
+  commonMistakes   String[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  workoutExerciseTemplates  WorkoutExerciseTemplate[]
+  setLogs                   SetLog[]
+  exercisePerformanceCaches ExercisePerformanceCache[]
+  cuesCache                 ExerciseCuesCache?
+  alternatives              ExerciseAlternative[]     @relation("primary")
+  alternativeFor            ExerciseAlternative[]     @relation("alternative")
+}
+
+model ExerciseAlternative {
+  primaryId     String
+  alternativeId String
+  primary       Exercise @relation("primary", fields: [primaryId], references: [id])
+  alternative   Exercise @relation("alternative", fields: [alternativeId], references: [id])
+
+  @@id([primaryId, alternativeId])
+}
+
+model ExerciseCuesCache {
+  exerciseId  String   @id
+  exercise    Exercise @relation(fields: [exerciseId], references: [id])
+  cues        String   // JSON array of tip strings
+  generatedAt DateTime @default(now())
+}
+
+// ─── PROGRAM TEMPLATES ───────────────────────────────────────────────────────
+
+model ProgramTemplate {
+  id               String   @id @default(uuid())
+  name             String
+  description      String
+  goal             String   // "any" | "lose_fat" | "build_muscle" | "get_stronger" | "general_fitness"
+  experience       String[] // ["new","some","regular"]
+  location         String   // "gym" | "home" | "both"
+  daysPerWeek      Int
+  durationWeeks    Int      @default(8)
+  progressionModel String   // "linear" | "volume_phases"
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  workoutTemplates WorkoutTemplate[]
+  userPrograms     UserProgram[]
+}
+
+model WorkoutTemplate {
+  id                String          @id @default(uuid())
+  programTemplateId String
+  programTemplate   ProgramTemplate @relation(fields: [programTemplateId], references: [id], onDelete: Cascade)
+  label             String          // "A" | "B" | "C"
+  name              String          // e.g. "Full Body A", "Push Day"
+  order             Int
+
+  exercises       WorkoutExerciseTemplate[]
+  workoutSessions WorkoutSession[]
+}
+
+model WorkoutExerciseTemplate {
+  id                String          @id @default(uuid())
+  workoutTemplateId String
+  workoutTemplate   WorkoutTemplate @relation(fields: [workoutTemplateId], references: [id], onDelete: Cascade)
+  exerciseId        String
+  exercise          Exercise        @relation(fields: [exerciseId], references: [id])
+  order             Int
+  sets              Int
+  repsMin           Int
+  repsMax           Int
+  restSeconds       Int
+  rpe               Float?
+  notes             String?
+}
+
+// ─── USER PROGRAMS ───────────────────────────────────────────────────────────
+
+model UserProgram {
+  id                String          @id @default(uuid())
+  userId            String
+  user              User            @relation(fields: [userId], references: [id])
+  programTemplateId String
+  programTemplate   ProgramTemplate @relation(fields: [programTemplateId], references: [id])
+  startDate         DateTime
+  endDate           DateTime?
+  isActive          Boolean         @default(true)
+  currentWeek       Int             @default(1)
+  createdAt         DateTime        @default(now())
+
+  weeks UserProgramWeek[]
+}
+
+model UserProgramWeek {
+  id            String      @id @default(uuid())
+  userProgramId String
+  userProgram   UserProgram @relation(fields: [userProgramId], references: [id], onDelete: Cascade)
+  weekNumber    Int         // 1–8
+  phase         String      // "low_volume" | "high_volume" | "deload"
+  startDate     DateTime
+  endDate       DateTime
+
+  workoutSessions WorkoutSession[]
+}
+
+// ─── WORKOUT EXECUTION & LOGGING ─────────────────────────────────────────────
+
+model WorkoutSession {
+  id                String           @id @default(uuid())
+  userId            String
+  user              User             @relation(fields: [userId], references: [id])
+  userProgramWeekId String?
+  userProgramWeek   UserProgramWeek? @relation(fields: [userProgramWeekId], references: [id])
+  workoutTemplateId String?
+  workoutTemplate   WorkoutTemplate? @relation(fields: [workoutTemplateId], references: [id])
+  label             String?          // "A" | "B" | "C"
+  startedAt         DateTime         @default(now())
+  completedAt       DateTime?
+  durationSeconds   Int?
+  overallRpe        Float?
+  feelRating        String?          // "easy" | "just_right" | "too_hard"
+  hasPain           Boolean?
+  painNotes         String?
+  notes             String?
+  status            String           @default("in_progress") // "in_progress" | "completed" | "skipped"
+  createdAt         DateTime         @default(now())
+
+  setLogs SetLog[]
+  llmJobs LlmJob[]
+}
+
+model SetLog {
+  id               String         @id @default(uuid())
+  workoutSessionId String
+  workoutSession   WorkoutSession @relation(fields: [workoutSessionId], references: [id], onDelete: Cascade)
+  exerciseId       String
+  exercise         Exercise       @relation(fields: [exerciseId], references: [id])
+  setNumber        Int
+  weight           Float?         // always in kg
+  reps             Int?
+  rpe              Float?         // 1–10
+  isWarmup         Boolean        @default(false)
+  notes            String?
+  loggedAt         DateTime       @default(now())
+}
+
+// ─── PROGRESSION CACHE ───────────────────────────────────────────────────────
+
+model ExercisePerformanceCache {
+  id              String   @id @default(uuid())
+  userId          String
+  exerciseId      String
+  exercise        Exercise @relation(fields: [exerciseId], references: [id])
+  sessionDate     DateTime
+  avgWeight       Float?
+  totalVolume     Float?
+  hitTargets      Boolean  @default(false)
+  markedEasy      Boolean  @default(false)
+  suggestedLoadKg Float?
+  updatedAt       DateTime @updatedAt
+
+  @@unique([userId, exerciseId, sessionDate])
+  @@index([userId, exerciseId])
+}
+
+// ─── HABITS & STREAKS ────────────────────────────────────────────────────────
+
+model HabitSettings {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trainingDays   Int[]    // 0=Mon … 6=Sun
+  reminderHour   Int      @default(18)
+  reminderMinute Int      @default(0)
+  timezone       String   @default("UTC")
+  remindersOn    Boolean  @default(true)
+  updatedAt      DateTime @updatedAt
+}
+
+model StreakStats {
+  id                     String    @id @default(uuid())
+  userId                 String    @unique
+  user                   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currentStreak          Int       @default(0)
+  longestStreak          Int       @default(0)
+  lastCompletedWeekStart DateTime?
+  updatedAt              DateTime  @updatedAt
+}
+
+// ─── ASYNC LLM JOBS ──────────────────────────────────────────────────────────
+
+model LlmJob {
+  id               String         @id @default(uuid())
+  userId           String
+  user             User           @relation(fields: [userId], references: [id])
+  jobType          String         // "post_workout_coach" | "weekly_summary_insights" | "exercise_cues" | "user_qa"
+  status           String         @default("queued") // "queued" | "processing" | "done" | "failed"
+  inputData        Json
+  outputText       String?
+  errorMessage     String?
+  bullJobId        String?
+  workoutSessionId String?
+  workoutSession   WorkoutSession? @relation(fields: [workoutSessionId], references: [id])
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@index([userId, status])
+}
