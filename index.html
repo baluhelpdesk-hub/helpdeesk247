@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="theme-color" content="#080808"/>
+<title>LIFT — AI Fitness Coach</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body,#root{width:100%;height:100%;overflow:hidden;background:#080808}
+body{font-family:'Space Grotesk',sans-serif;overscroll-behavior:none}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield}
+::-webkit-scrollbar{width:0;height:0}
+select{-webkit-appearance:none;appearance:none}
+input,select,button{font-family:'Space Grotesk',sans-serif}
+/* Safe area insets for iPhone notch */
+.safe-top{padding-top:env(safe-area-inset-top,0px)}
+.safe-bottom{padding-bottom:max(env(safe-area-inset-bottom,0px),12px)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.screen-enter{animation:fadeUp 0.22s cubic-bezier(0.22,1,0.36,1)}
+.modal-enter{animation:slideUp 0.28s cubic-bezier(0.22,1,0.36,1)}
+.fade-enter{animation:fadeIn 0.18s ease-out}
+</style>
+
+<template id="__bundler_thumbnail" data-bg-color="#080808">
+<svg viewBox="0 0 390 844" xmlns="http://www.w3.org/2000/svg">
+  <rect width="390" height="844" fill="#080808"/>
+  <rect x="16" y="16" width="358" height="72" rx="14" fill="#111"/>
+  <rect x="28" y="30" width="90" height="16" rx="4" fill="#b8f500"/>
+  <rect x="28" y="54" width="200" height="8" rx="3" fill="#242424"/>
+  <rect x="16" y="104" width="358" height="220" rx="14" fill="#111"/>
+  <rect x="28" y="120" width="60" height="10" rx="3" fill="#b8f500"/>
+  <rect x="28" y="138" width="180" height="24" rx="5" fill="#f5f5f5"/>
+  <rect x="28" y="170" width="358" height="1" fill="#1a1a1a"/>
+  <rect x="28" y="180" width="326" height="36" rx="8" fill="#1a1a1a"/>
+  <rect x="28" y="222" width="326" height="36" rx="8" fill="#1a1a1a"/>
+  <rect x="28" y="282" width="326" height="28" rx="8" fill="#b8f500"/>
+  <rect x="16" y="340" width="358" height="360" rx="14" fill="#111"/>
+  <rect x="28" y="356" width="80" height="8" rx="3" fill="#242424"/>
+  <rect x="28" y="374" width="326" height="40" rx="8" fill="#1a1a1a"/>
+  <rect x="28" y="420" width="326" height="40" rx="8" fill="#1a1a1a"/>
+  <rect x="28" y="466" width="326" height="40" rx="8" fill="#1a1a1a"/>
+  <rect x="28" y="512" width="326" height="40" rx="8" fill="#1a1a1a"/>
+  <rect x="28" y="558" width="326" height="40" rx="8" fill="#1a1a1a"/>
+  <rect x="28" y="604" width="326" height="40" rx="8" fill="#9dd600" opacity="0.3"/>
+  <rect x="0" y="770" width="390" height="74" fill="#111"/>
+  <rect x="40" y="782" width="50" height="44" rx="8" fill="#b8f500" opacity="0.25"/>
+  <rect x="170" y="782" width="50" height="44" rx="8" fill="#1a1a1a"/>
+  <rect x="300" y="782" width="50" height="44" rx="8" fill="#1a1a1a"/>
+</svg>
+</template>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+// ═══════════════════════════════════════════════════════════════════════════
+// DESIGN TOKENS
+// ═══════════════════════════════════════════════════════════════════════════
+const C = {
+  bg950:"#080808",bg900:"#111111",bg800:"#1a1a1a",
+  bg700:"#242424",bg600:"#2e2e2e",bg500:"#3d3d3d",
+  lime300:"#b8f500",lime400:"#9dd600",lime200:"#c8ff52",
+  text0:"#f5f5f5",text1:"#e8e8e8",text2:"#cccccc",
+  text3:"#aaaaaa",text4:"#888888",text5:"#666666",
+  danger:"#f54040",warning:"#f5c400",info:"#4a9eff",
+};
+const T = {
+  display:{fontFamily:"'Space Grotesk',sans-serif",fontWeight:700},
+  heading:{fontFamily:"'Space Grotesk',sans-serif",fontWeight:600},
+  body:   {fontFamily:"'Space Grotesk',sans-serif",fontWeight:400},
+  mono:   {fontFamily:"'Space Mono',monospace",    fontWeight:400},
+};
+const MC = {Chest:"#4a9eff",Back:"#f5c400",Legs:"#9dd600",Shoulders:"#c8ff52",Triceps:"#b8f500",Biceps:"#7aab00",Abs:"#f54040",Cardio:"#ff7a2f"};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DATABASE (IndexedDB + localStorage fallback)
+// ═══════════════════════════════════════════════════════════════════════════
+const DB = {
+  _db: null,
+  async open() {
+    if (this._db) return this._db;
+    return new Promise((res, rej) => {
+      const req = indexedDB.open("lift_db", 2);
+      req.onupgradeneeded = e => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains("kv"))      db.createObjectStore("kv",      {keyPath:"k"});
+        if (!db.objectStoreNames.contains("workouts")) db.createObjectStore("workouts",{keyPath:"id",autoIncrement:true});
+        if (!db.objectStoreNames.contains("sets"))     db.createObjectStore("sets",    {keyPath:"id",autoIncrement:true});
+        if (!db.objectStoreNames.contains("logs"))     db.createObjectStore("logs",    {keyPath:"id",autoIncrement:true});
+      };
+      req.onsuccess = e => { this._db = e.target.result; res(this._db); };
+      req.onerror = () => rej(req.error);
+    });
+  },
+  async get(key) {
+    try {
+      const db = await this.open();
+      return new Promise((res,rej) => {
+        const tx = db.transaction("kv","readonly");
+        const req = tx.objectStore("kv").get(key);
+        req.onsuccess = () => res(req.result?.v ?? null);
+        req.onerror = () => rej(req.error);
+      });
+    } catch { return JSON.parse(localStorage.getItem(key)) ?? null; }
+  },
+  async set(key, val) {
+    try {
+      const db = await this.open();
+      return new Promise((res,rej) => {
+        const tx = db.transaction("kv","readwrite");
+        tx.objectStore("kv").put({k:key,v:val});
+        tx.oncomplete = () => res();
+        tx.onerror = () => rej(tx.error);
+      });
+    } catch { localStorage.setItem(key, JSON.stringify(val)); }
+  },
+  async addWorkout(entry) {
+    try {
+      const db = await this.open();
+      return new Promise((res,rej) => {
+        const tx = db.transaction("workouts","readwrite");
+        const req = tx.objectStore("workouts").add(entry);
+        req.onsuccess = () => res(req.result);
+        req.onerror = () => rej(req.error);
+      });
+    } catch {
+      const hist = JSON.parse(localStorage.getItem("hist")||"[]");
+      hist.unshift(entry); localStorage.setItem("hist", JSON.stringify(hist.slice(0,100)));
+    }
+  },
+  async getWorkouts() {
+    try {
+      const db = await this.open();
+      return new Promise((res,rej) => {
+        const tx = db.transaction("workouts","readonly");
+        const req = tx.objectStore("workouts").getAll();
+        req.onsuccess = () => res((req.result||[]).reverse());
+        req.onerror = () => rej(req.error);
+      });
+    } catch { return JSON.parse(localStorage.getItem("hist")||"[]"); }
+  },
+};
+
+// Simple sync wrapper for non-critical state
+const LS = {
+  get:(k,fb=null)=>{ try{const v=localStorage.getItem(k);return v?JSON.parse(v):fb}catch{return fb} },
+  set:(k,v)=>{ try{localStorage.setItem(k,JSON.stringify(v))}catch{} },
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// EXERCISE LIBRARY
+// ═══════════════════════════════════════════════════════════════════════════
+const EX = {
+  bench_bb:   {id:"bench_bb",   name:"Barbell Bench Press",       muscle:"Chest",     eq:"Barbell",    sets:4,reps:"6–8", rest:150,cues:["Retract shoulder blades","Bar to lower chest","Drive feet into floor","Press in slight arc"],mistakes:["Flaring elbows","Bouncing off chest","Losing upper back"]},
+  bench_db:   {id:"bench_db",   name:"Dumbbell Bench Press",      muscle:"Chest",     eq:"Dumbbells",  sets:4,reps:"8–10",rest:120,cues:["Full stretch at bottom","Squeeze at top","Control descent","Neutral grip option"],mistakes:["Drifting too wide","No full ROM","Rushing eccentric"]},
+  chest_machine:{id:"chest_machine",name:"Chest Press Machine",   muscle:"Chest",     eq:"Machine",    sets:4,reps:"10–12",rest:90,cues:["Handles at lower chest","Full extension","3-sec negative","Back flat on pad"],mistakes:["Seat too high","Using momentum","Shrugging"]},
+  cable_fly:  {id:"cable_fly",  name:"Cable Chest Fly",           muscle:"Chest",     eq:"Cable",      sets:3,reps:"12–15",rest:75,cues:["Slight forward lean","Slight elbow bend","Meet at chest height","1-sec squeeze"],mistakes:["Straightening arms","Too heavy","No peak contraction"]},
+  incline_db: {id:"incline_db", name:"Incline Dumbbell Press",    muscle:"Chest",     eq:"Dumbbells",  sets:3,reps:"8–10",rest:120,cues:["30–45° incline","Full ROM","Don't flare elbows","Control descent"],mistakes:["Too steep","Partial reps","Dropping quickly"]},
+  pullup:     {id:"pullup",     name:"Pull-Up",                   muscle:"Back",      eq:"Bodyweight", sets:4,reps:"6–8", rest:150,cues:["Dead hang start","Depress scapula","Pull elbows to hips","Chin over bar"],mistakes:["Kipping","Partial range","Shrugging at top"]},
+  lat_pulldown:{id:"lat_pulldown",name:"Lat Pulldown",            muscle:"Back",      eq:"Cable",      sets:4,reps:"8–10",rest:120,cues:["Slight back lean","Pull to upper chest","Lead with elbows","Full stretch at top"],mistakes:["Behind neck","Momentum","Not stretching"]},
+  cable_row:  {id:"cable_row",  name:"Seated Cable Row",          muscle:"Back",      eq:"Cable",      sets:4,reps:"10–12",rest:90,cues:["Upright torso","Pull to navel","Squeeze scapula","Slow eccentric"],mistakes:["Rounding","Body swing","No scapula retraction"]},
+  bb_row:     {id:"bb_row",     name:"Barbell Row",               muscle:"Back",      eq:"Barbell",    sets:4,reps:"6–8", rest:150,cues:["Hip hinge 45°","Pull to lower sternum","Elbows back","Brace core"],mistakes:["Too upright","Jerking","Hips rising"]},
+  machine_row:{id:"machine_row",name:"Machine Row",               muscle:"Back",      eq:"Machine",    sets:4,reps:"10–12",rest:90,cues:["Chest on pad","Full stretch","Retract scapula","Squeeze at peak"],mistakes:["Partial range","Too heavy","Hunching"]},
+  squat_bb:   {id:"squat_bb",   name:"Barbell Back Squat",        muscle:"Legs",      eq:"Barbell",    sets:4,reps:"5–6", rest:180,cues:["Feet shoulder-width","Break hips and knees together","Chest tall","Drive through full foot"],mistakes:["Knees caving","Heels rising","Good morning"]},
+  leg_press:  {id:"leg_press",  name:"Leg Press",                 muscle:"Legs",      eq:"Machine",    sets:4,reps:"8–10",rest:150,cues:["Mid-platform feet","Lower to 90°","Don't lock knees","Push through heels"],mistakes:["Too low foot","Locking knees","Shallow range"]},
+  hack_squat: {id:"hack_squat", name:"Hack Squat",                muscle:"Legs",      eq:"Machine",    sets:4,reps:"8–10",rest:150,cues:["Shoulder-width","Full ROM","Knees track toes","Don't round back"],mistakes:["Half reps","Knees caving","Rising onto toes"]},
+  rdl:        {id:"rdl",        name:"Romanian Deadlift",         muscle:"Legs",      eq:"Barbell",    sets:3,reps:"8–10",rest:120,cues:["Soft knee bend","Push hips back","Bar stays close","Hamstring stretch"],mistakes:["Rounding back","Squatting it","Bar drifting"]},
+  leg_curl:   {id:"leg_curl",   name:"Lying Leg Curl",            muscle:"Legs",      eq:"Machine",    sets:3,reps:"10–12",rest:90,cues:["Hips flat","Full contraction","3-sec eccentric","Don't arch"],mistakes:["Raising hips","Swinging","Too fast"]},
+  leg_ext:    {id:"leg_ext",    name:"Leg Extension",             muscle:"Legs",      eq:"Machine",    sets:3,reps:"12–15",rest:75,cues:["Full extension","1-sec hold","Controlled descent","Back flat"],mistakes:["Partial reps","Too fast","Jerking"]},
+  lunge:      {id:"lunge",      name:"Dumbbell Lunge",            muscle:"Legs",      eq:"Dumbbells",  sets:3,reps:"10ea",rest:90,cues:["Big step","Back knee near floor","Front shin vertical","Drive through heel"],mistakes:["Knee caving","Leaning forward","Short step"]},
+  ohp_bb:     {id:"ohp_bb",     name:"Barbell Overhead Press",    muscle:"Shoulders", eq:"Barbell",    sets:4,reps:"6–8", rest:150,cues:["Bar on front delts","Press straight up","Full lockout","Head back slightly"],mistakes:["Excessive arch","Bar drifting","Incomplete lockout"]},
+  ohp_db:     {id:"ohp_db",     name:"Dumbbell Shoulder Press",   muscle:"Shoulders", eq:"Dumbbells",  sets:4,reps:"8–10",rest:120,cues:["Neutral spine","Full lockout","Don't arch","Control descent"],mistakes:["Back arch","Partial range","Too heavy"]},
+  shld_machine:{id:"shld_machine",name:"Machine Shoulder Press",  muscle:"Shoulders", eq:"Machine",    sets:4,reps:"10–12",rest:90,cues:["Grip outside shoulders","Full extension","Slow negative","Core tight"],mistakes:["Too narrow","Partial reps","Momentum"]},
+  lat_raise:  {id:"lat_raise",  name:"Dumbbell Lateral Raise",    muscle:"Shoulders", eq:"Dumbbells",  sets:4,reps:"12–15",rest:60,cues:["Slight forward lean","Lead with elbows","Stop at shoulder","3-sec down"],mistakes:["Swinging","Too high","Too heavy"]},
+  cable_lat:  {id:"cable_lat",  name:"Cable Lateral Raise",       muscle:"Shoulders", eq:"Cable",      sets:4,reps:"12–15",rest:60,cues:["Cross-body cable","Constant tension","Shoulder height max","Control always"],mistakes:["Too fast","Elbow bending","Too heavy"]},
+  face_pull:  {id:"face_pull",  name:"Face Pull",                 muscle:"Shoulders", eq:"Cable",      sets:3,reps:"15–20",rest:45,cues:["Rope at eye level","Pull to ears","External rotate","Elbows high"],mistakes:["Elbows dropping","No rotation","Too heavy"]},
+  pushdown:   {id:"pushdown",   name:"Tricep Pushdown",           muscle:"Triceps",   eq:"Cable",      sets:4,reps:"10–12",rest:60,cues:["Elbows pinned","Full extension","Squeeze bottom","Upper arm still"],mistakes:["Leaning forward","Elbows drifting","Partial reps"]},
+  oh_tri:     {id:"oh_tri",     name:"Overhead Tricep Extension", muscle:"Triceps",   eq:"Cable",      sets:3,reps:"12–15",rest:60,cues:["Arms behind head","Full stretch at top","Squeeze at lockout","Elbows forward"],mistakes:["Elbows flaring","Partial range","Too heavy"]},
+  skull:      {id:"skull",      name:"EZ Bar Skull Crusher",      muscle:"Triceps",   eq:"Barbell",    sets:3,reps:"10–12",rest:75,cues:["Upper arms vertical","Lower to forehead","Elbows in","Full extension"],mistakes:["Elbows flaring","Going behind head","Too fast"]},
+  tri_dips:   {id:"tri_dips",   name:"Bench Tricep Dips",         muscle:"Triceps",   eq:"Bodyweight", sets:3,reps:"12–15",rest:60,cues:["Hands shoulder-width","Stay upright","Lower to 90°","Full extension"],mistakes:["Wide grip","Flaring elbows","Partial range"]},
+  curl_bb:    {id:"curl_bb",    name:"Barbell Curl",              muscle:"Biceps",    eq:"Barbell",    sets:4,reps:"8–10",rest:75,cues:["Elbows pinned","Supinate at top","Full stretch","No swinging"],mistakes:["Swinging","Partial range","Elbows forward"]},
+  curl_db:    {id:"curl_db",    name:"Dumbbell Curl",             muscle:"Biceps",    eq:"Dumbbells",  sets:4,reps:"10–12",rest:60,cues:["Alternate arms","Supinate as you curl","Full range","Elbows back"],mistakes:["Swinging","No supination","Partial reps"]},
+  cable_curl: {id:"cable_curl", name:"Cable Curl",                muscle:"Biceps",    eq:"Cable",      sets:3,reps:"12–15",rest:60,cues:["Constant tension","Full stretch","Squeeze at top","Elbows still"],mistakes:["Too fast","Elbows drifting","Too heavy"]},
+  hammer:     {id:"hammer",     name:"Hammer Curl",               muscle:"Biceps",    eq:"Dumbbells",  sets:3,reps:"10–12",rest:60,cues:["Neutral grip","Don't rotate","Full range","Elbows by sides"],mistakes:["Swinging","Partial reps","Too heavy"]},
+  cable_crunch:{id:"cable_crunch",name:"Cable Crunch",            muscle:"Abs",       eq:"Cable",      sets:4,reps:"15–20",rest:45,cues:["Kneel facing cable","Hands by head","Crunch to hips","Round spine"],mistakes:["Hip flexors","Pulling arms","Not rounding"]},
+  hang_raise: {id:"hang_raise", name:"Hanging Leg Raise",         muscle:"Abs",       eq:"Pull-up bar",sets:3,reps:"12–15",rest:45,cues:["Dead hang","Raise to 90°","Control descent","No swinging"],mistakes:["Swinging","Momentum","Dropping fast"]},
+  plank:      {id:"plank",      name:"Plank",                     muscle:"Abs",       eq:"Bodyweight", sets:3,reps:"45–60s",rest:30,cues:["Forearms shoulder-width","Hips level","Squeeze glutes","Breathe normally"],mistakes:["Hips sagging","Hips too high","Holding breath"]},
+  ab_wheel:   {id:"ab_wheel",   name:"Ab Wheel Rollout",          muscle:"Abs",       eq:"Ab Wheel",   sets:3,reps:"10–12",rest:45,cues:["Brace core hard","Extend as far stable","Pull back with abs","Kneel to start"],mistakes:["Hips sagging","Going too far","Not bracing"]},
+  russian:    {id:"russian",    name:"Russian Twist",             muscle:"Abs",       eq:"Weight Plate",sets:3,reps:"20 total",rest:30,cues:["Lean back 45°","Feet off floor","Rotate through torso","Tap to floor"],mistakes:["Arms only","Too fast","No control"]},
+  treadmill:  {id:"treadmill",  name:"Treadmill Intervals",       muscle:"Cardio",    eq:"Treadmill",  sets:1,reps:"20 min",rest:0,cues:["Warm 2 min","30s sprint / 90s walk","Repeat 8×","Cool down 2 min"],mistakes:["Holding rails","Starting too fast","Skipping warmup"]},
+  rower:      {id:"rower",      name:"Rowing Machine",            muscle:"Cardio",    eq:"Rower",      sets:1,reps:"20 min",rest:0,cues:["Drive with legs first","Then lean back","Then pull arms","Reverse on return"],mistakes:["Hunching back","Arms first","No rhythm"]},
+  bike:       {id:"bike",       name:"Stationary Bike",           muscle:"Cardio",    eq:"Bike",       sets:1,reps:"20 min",rest:0,cues:["Seat at hip height","Slight forward lean","70–90 RPM","Breathe rhythmically"],mistakes:["Too low resistance","Bouncing","Hunching"]},
+  stairmaster:{id:"stairmaster",name:"StairMaster",               muscle:"Cardio",    eq:"StairMaster",sets:1,reps:"15 min",rest:0,cues:["Don't lean on rails","Full foot contact","Moderate pace","Chest up"],mistakes:["Leaning on rails","Too fast","Partial steps"]},
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 6-DAY PPL PROGRAM
+// ═══════════════════════════════════════════════════════════════════════════
+const PPL = [
+  { id:"push1", name:"Push A",  day:"Monday",    label:"PUSH", focus:"Chest · Shoulders · Triceps",      color:"#4a9eff", dur:80,
+    slots:[
+      {primary:"bench_bb",  alts:["bench_db","chest_machine"],    note:"Main chest compound"},
+      {primary:"incline_db",alts:["cable_fly","chest_machine"],   note:"Upper chest"},
+      {primary:"ohp_db",    alts:["ohp_bb","shld_machine"],       note:"Shoulder press"},
+      {primary:"lat_raise", alts:["cable_lat","face_pull"],       note:"Side delts"},
+      {primary:"pushdown",  alts:["oh_tri","skull"],              note:"Triceps"},
+      {primary:"cable_crunch",alts:["ab_wheel","plank"],          note:"Abs"},
+      {primary:"treadmill", alts:["bike","rower"],                note:"Cardio finisher"},
+    ]},
+  { id:"pull1", name:"Pull A",  day:"Tuesday",   label:"PULL", focus:"Back · Biceps · Rear Delts",        color:"#f5c400", dur:80,
+    slots:[
+      {primary:"pullup",    alts:["lat_pulldown","machine_row"],  note:"Main back compound"},
+      {primary:"cable_row", alts:["bb_row","machine_row"],        note:"Horizontal pull"},
+      {primary:"lat_pulldown",alts:["pullup","machine_row"],      note:"Lat width"},
+      {primary:"face_pull", alts:["cable_lat","lat_raise"],       note:"Rear delts"},
+      {primary:"curl_bb",   alts:["curl_db","cable_curl"],        note:"Biceps"},
+      {primary:"hammer",    alts:["curl_db","cable_curl"],        note:"Brachialis"},
+      {primary:"hang_raise",alts:["cable_crunch","plank"],        note:"Abs"},
+    ]},
+  { id:"legs1", name:"Legs A",  day:"Wednesday", label:"LEGS", focus:"Quads · Hamstrings · Glutes",       color:"#9dd600", dur:85,
+    slots:[
+      {primary:"squat_bb",  alts:["hack_squat","leg_press"],      note:"Main quad compound"},
+      {primary:"rdl",       alts:["leg_curl","leg_press"],        note:"Posterior chain"},
+      {primary:"leg_press", alts:["hack_squat","squat_bb"],       note:"Quad volume"},
+      {primary:"leg_curl",  alts:["rdl","lunge"],                 note:"Hamstrings"},
+      {primary:"leg_ext",   alts:["leg_press","hack_squat"],      note:"Quad isolation"},
+      {primary:"lunge",     alts:["leg_press","hack_squat"],      note:"Unilateral"},
+      {primary:"russian",   alts:["plank","ab_wheel"],            note:"Core finisher"},
+    ]},
+  { id:"push2", name:"Push B",  day:"Thursday",  label:"PUSH", focus:"Chest · Shoulders · Triceps",      color:"#4a9eff", dur:80,
+    slots:[
+      {primary:"chest_machine",alts:["bench_bb","bench_db"],      note:"Chest (machine option)"},
+      {primary:"cable_fly", alts:["incline_db","bench_db"],       note:"Chest isolation"},
+      {primary:"shld_machine",alts:["ohp_db","ohp_bb"],           note:"Shoulder press"},
+      {primary:"cable_lat", alts:["lat_raise","face_pull"],       note:"Side delts"},
+      {primary:"oh_tri",    alts:["pushdown","skull"],             note:"Triceps long head"},
+      {primary:"tri_dips",  alts:["pushdown","oh_tri"],           note:"Triceps compound"},
+      {primary:"bike",      alts:["treadmill","stairmaster"],     note:"Cardio"},
+    ]},
+  { id:"pull2", name:"Pull B",  day:"Friday",    label:"PULL", focus:"Back · Biceps · Rear Delts",        color:"#f5c400", dur:80,
+    slots:[
+      {primary:"lat_pulldown",alts:["pullup","machine_row"],      note:"Lat width"},
+      {primary:"bb_row",    alts:["cable_row","machine_row"],     note:"Back thickness"},
+      {primary:"machine_row",alts:["cable_row","bb_row"],         note:"Mid-back"},
+      {primary:"face_pull", alts:["cable_lat","lat_raise"],       note:"Rear delts"},
+      {primary:"curl_db",   alts:["curl_bb","cable_curl"],        note:"Biceps"},
+      {primary:"cable_curl",alts:["hammer","curl_bb"],            note:"Biceps isolation"},
+      {primary:"ab_wheel",  alts:["cable_crunch","hang_raise"],   note:"Abs"},
+    ]},
+  { id:"legs2", name:"Legs B",  day:"Saturday",  label:"LEGS", focus:"Quads · Hamstrings · Glutes",       color:"#9dd600", dur:90,
+    slots:[
+      {primary:"hack_squat",alts:["squat_bb","leg_press"],        note:"Quad compound"},
+      {primary:"rdl",       alts:["leg_curl","lunge"],            note:"Posterior chain"},
+      {primary:"leg_press", alts:["squat_bb","hack_squat"],       note:"Volume"},
+      {primary:"leg_ext",   alts:["hack_squat","leg_press"],      note:"Quad isolation"},
+      {primary:"leg_curl",  alts:["rdl","lunge"],                 note:"Hamstrings"},
+      {primary:"lunge",     alts:["leg_press","hack_squat"],      note:"Unilateral"},
+      {primary:"rower",     alts:["bike","stairmaster"],          note:"Cardio finisher"},
+    ]},
+];
+
+const DAYS_OF_WEEK = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+function makeDefaultWeek() {
+  return PPL.map((w,i) => ({
+    idx:i, workoutId:w.id, day:w.day,
+    done: i<2, today: i===2, skipped:false,
+    slotSelections: w.slots.map(()=>0),
+  }));
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// UI PRIMITIVES
+// ═══════════════════════════════════════════════════════════════════════════
+function Pill({children,color=C.lime300,tc=C.bg950,style={}}) {
+  return <span style={{display:"inline-flex",alignItems:"center",padding:"3px 9px",borderRadius:99,backgroundColor:color,color:tc,...T.mono,fontSize:9,letterSpacing:1,textTransform:"uppercase",...style}}>{children}</span>;
+}
+
+function Btn({children,variant="primary",onPress,style={},small=false,disabled=false,full=false}) {
+  const [p,setP]=React.useState(false);
+  const vs={
+    primary:{backgroundColor:C.lime300,color:C.bg950},
+    secondary:{backgroundColor:C.bg800,color:C.text0,border:`1px solid ${C.bg600}`},
+    ghost:{backgroundColor:"transparent",color:C.lime300,border:`1px solid ${C.bg600}`},
+    danger:{backgroundColor:C.danger,color:"#fff"},
+    warn:{backgroundColor:C.warning,color:C.bg950},
+  };
+  return (
+    <div onClick={disabled?null:onPress}
+      onMouseDown={()=>setP(true)} onMouseUp={()=>setP(false)} onMouseLeave={()=>setP(false)}
+      onTouchStart={()=>setP(true)} onTouchEnd={()=>setP(false)}
+      style={{display:"flex",alignItems:"center",justifyContent:"center",borderRadius:12,cursor:disabled?"default":"pointer",
+        padding:small?"9px 14px":"14px 20px",fontSize:small?13:15,fontWeight:700,...T.heading,letterSpacing:0.2,
+        transition:"transform 0.08s",transform:p?"scale(0.96)":"scale(1)",opacity:disabled?0.4:1,
+        width:full?"100%":"auto",...vs[variant],...style}}>{children}</div>
+  );
+}
+
+function Card({children,style={},onClick}) {
+  return <div onClick={onClick} style={{backgroundColor:C.bg900,borderRadius:16,padding:16,...style}}>{children}</div>;
+}
+
+function Mono({children,style={}}) {
+  return <span style={{...T.mono,fontSize:9,letterSpacing:2,textTransform:"uppercase",color:C.text5,...style}}>{children}</span>;
+}
+
+function BackBtn({onPress,label=""}) {
+  return (
+    <div onClick={onPress} style={{display:"flex",alignItems:"center",gap:8,cursor:"pointer",minWidth:36}}>
+      <div style={{width:36,height:36,borderRadius:10,backgroundColor:C.bg800,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke={C.text0} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+      </div>
+      {label&&<span style={{...T.body,fontSize:14,color:C.text3}}>{label}</span>}
+    </div>
+  );
+}
+
+function CheckIcon({done,color=C.lime300}) {
+  return done
+    ? <svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill={color}/><path d="M4 7l2 2 4-4" stroke={C.bg950} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+    : null;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TOP BAR
+// ═══════════════════════════════════════════════════════════════════════════
+function TopBar({week,streak,onStreakTap}) {
+  const done = week.filter(d=>d.done).length;
+  const total = week.length;
+  const pct = Math.round((done/total)*100);
+  const today = new Date().toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});
+
+  return (
+    <div className="safe-top" style={{backgroundColor:C.bg900,borderBottom:`1px solid ${C.bg800}`,flexShrink:0}}>
+      <div style={{padding:"10px 16px 12px"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+          <div style={{display:"flex",alignItems:"baseline",gap:8}}>
+            <span style={{...T.display,fontSize:26,color:C.text0,letterSpacing:-0.5}}>LIFT</span>
+            <span style={{...T.mono,fontSize:9,color:C.text5,letterSpacing:2}}>{today.toUpperCase()}</span>
+          </div>
+          <div onClick={onStreakTap} style={{display:"flex",alignItems:"center",gap:6,cursor:"pointer",backgroundColor:C.bg800,padding:"6px 12px",borderRadius:99,border:`1px solid ${C.bg700}`}}>
+            <span style={{fontSize:14}}>🔥</span>
+            <span style={{...T.display,fontSize:16,color:C.lime300}}>{streak}</span>
+            <span style={{...T.mono,fontSize:9,color:C.text5,letterSpacing:1}}>WK</span>
+          </div>
+        </div>
+        {/* Week progress dots */}
+        <div style={{display:"flex",gap:4,marginBottom:8}}>
+          {week.map((d,i)=>{
+            const wk=PPL[d.idx];
+            return (
+              <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
+                <div style={{width:"100%",height:5,borderRadius:3,backgroundColor:d.done?wk.color:d.today?wk.color+"44":C.bg700,transition:"background 0.4s"}}/>
+                <span style={{...T.mono,fontSize:7,color:d.today?C.text0:d.done?C.text5:C.bg500}}>{d.day.slice(0,2).toUpperCase()}</span>
+              </div>
+            );
+          })}
+        </div>
+        {/* Progress bar */}
+        <div style={{display:"flex",alignItems:"center",gap:10}}>
+          <div style={{flex:1,height:4,backgroundColor:C.bg700,borderRadius:2}}>
+            <div style={{height:"100%",width:`${pct}%`,backgroundColor:C.lime300,borderRadius:2,transition:"width 0.5s ease"}}/>
+          </div>
+          <span style={{...T.mono,fontSize:10,color:C.lime300,minWidth:32,textAlign:"right"}}>{done}/{total}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// VARIATION PICKER
+// ═══════════════════════════════════════════════════════════════════════════
+function VariationPicker({slot,currentSel,onSelect,onDismiss}) {
+  const opts = [slot.primary,...slot.alts].map(id=>EX[id]).filter(Boolean);
+  return (
+    <div style={{position:"absolute",inset:0,zIndex:400,backgroundColor:"rgba(8,8,8,0.9)",display:"flex",flexDirection:"column",justifyContent:"flex-end"}}
+      onClick={e=>{if(e.target===e.currentTarget)onDismiss();}}>
+      <div className="modal-enter" style={{backgroundColor:C.bg900,borderRadius:"20px 20px 0 0",maxHeight:"82%",display:"flex",flexDirection:"column"}}>
+        <div style={{width:36,height:4,borderRadius:2,backgroundColor:C.bg600,margin:"10px auto 14px"}}/>
+        <div style={{padding:"0 18px 14px",borderBottom:`1px solid ${C.bg800}`}}>
+          <div style={{...T.display,fontSize:20,color:C.text0}}>Choose Exercise</div>
+          <div style={{...T.body,fontSize:13,color:C.text4,marginTop:3}}>{slot.note} · pick whichever machine is free</div>
+        </div>
+        <div style={{overflowY:"auto",padding:"14px 16px",display:"flex",flexDirection:"column",gap:10}}>
+          {opts.map((ex,i)=>{
+            const sel=i===currentSel;
+            const mc=MC[ex.muscle]||C.lime300;
+            return (
+              <div key={ex.id} onClick={()=>onSelect(i)}
+                style={{borderRadius:14,border:`2px solid ${sel?mc:C.bg700}`,backgroundColor:sel?mc+"15":C.bg800,padding:"14px 16px",cursor:"pointer",transition:"all 0.14s"}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
+                  <div style={{flex:1}}>
+                    <div style={{display:"flex",gap:6,marginBottom:6,flexWrap:"wrap"}}>
+                      {i===0?<Pill color={C.lime300} tc={C.bg950} style={{fontSize:7}}>Primary</Pill>:<Pill color={C.bg700} tc={C.text4} style={{fontSize:7}}>Alt {i}</Pill>}
+                      <Pill color={mc+"22"} tc={mc} style={{fontSize:7,border:`1px solid ${mc}44`}}>{ex.muscle}</Pill>
+                      <Pill color={C.bg700} tc={C.text5} style={{fontSize:7}}>{ex.eq}</Pill>
+                    </div>
+                    <div style={{...T.heading,fontSize:16,color:C.text0}}>{ex.name}</div>
+                    <div style={{...T.mono,fontSize:9,color:C.text5,marginTop:3}}>{ex.sets} sets · {ex.reps} · {ex.rest>0?`${ex.rest}s rest`:"no rest"}</div>
+                  </div>
+                  {sel&&<div style={{width:24,height:24,borderRadius:99,backgroundColor:mc,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginLeft:8}}>
+                    <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke={C.bg950} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  </div>}
+                </div>
+                <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
+                  {ex.cues.slice(0,2).map((c,ci)=><span key={ci} style={{...T.body,fontSize:11,color:C.text4,backgroundColor:C.bg900,padding:"3px 8px",borderRadius:5}}>{c}</span>)}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="safe-bottom" style={{padding:"12px 16px 0"}}>
+          <Btn onPress={onDismiss} full>Done</Btn>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// RESCHEDULE MODAL
+// ═══════════════════════════════════════════════════════════════════════════
+function RescheduleModal({onConfirm,onDismiss}) {
+  const [sel,setSel]=React.useState(null);
+  return (
+    <div style={{position:"absolute",inset:0,zIndex:300,backgroundColor:"rgba(8,8,8,0.9)",display:"flex",flexDirection:"column",justifyContent:"flex-end"}}
+      onClick={e=>{if(e.target===e.currentTarget)onDismiss();}}>
+      <div className="modal-enter" style={{backgroundColor:C.bg900,borderRadius:"20px 20px 0 0",maxHeight:"88%",display:"flex",flexDirection:"column"}}>
+        <div style={{width:36,height:4,borderRadius:2,backgroundColor:C.bg600,margin:"10px auto 14px"}}/>
+        <div style={{padding:"0 18px 14px",borderBottom:`1px solid ${C.bg800}`}}>
+          <div style={{...T.display,fontSize:20,color:C.text0}}>Swap Today's Workout</div>
+          <div style={{...T.body,fontSize:13,color:C.text4,marginTop:4,lineHeight:1.5}}>Missed a session or want a different body part? Pick one — remaining days shift forward.</div>
+        </div>
+        <div style={{overflowY:"auto",padding:"14px 16px",display:"flex",flexDirection:"column",gap:10}}>
+          {PPL.map(w=>{
+            const isSel=sel===w.id;
+            return (
+              <div key={w.id} onClick={()=>setSel(w.id)}
+                style={{borderRadius:14,border:`2px solid ${isSel?w.color:C.bg700}`,backgroundColor:isSel?w.color+"15":C.bg800,padding:"14px 16px",cursor:"pointer",transition:"all 0.14s"}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:5}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8}}>
+                    <div style={{width:8,height:8,borderRadius:99,backgroundColor:w.color}}/>
+                    <span style={{...T.heading,fontSize:16,color:C.text0}}>{w.name}</span>
+                    <Pill color={w.color+"22"} tc={w.color} style={{fontSize:7}}>{w.label}</Pill>
+                  </div>
+                  <span style={{...T.mono,fontSize:10,color:isSel?w.color:C.text5}}>{w.dur}m</span>
+                </div>
+                <div style={{...T.body,fontSize:12,color:C.text4}}>{w.focus}</div>
+                <div style={{display:"flex",gap:4,marginTop:8,flexWrap:"wrap"}}>
+                  {w.slots.slice(0,4).map((s,i)=>{
+                    const ex=EX[s.primary];
+                    return ex?<span key={i} style={{...T.body,fontSize:10,color:C.text5,backgroundColor:C.bg900,padding:"2px 7px",borderRadius:4}}>{ex.name}</span>:null;
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="safe-bottom" style={{padding:"12px 16px 0",display:"flex",gap:10}}>
+          <Btn variant="secondary" onPress={onDismiss} style={{flex:1}}>Cancel</Btn>
+          <Btn onPress={()=>sel&&onConfirm(sel)} style={{flex:2,opacity:sel?1:0.4}}>{sel?"Confirm Swap":"Select workout"}</Btn>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// WORKOUT SELECTION
+// ═══════════════════════════════════════════════════════════════════════════
+function WorkoutSelection({week,setWeek,onBack,onStart}) {
+  const todayIdx=week.findIndex(d=>d.today);
+  const todaySlot=week[todayIdx];
+  const [selectedId,setSelectedId]=React.useState(todaySlot?.workoutId||PPL[0].id);
+  const [expandedId,setExpandedId]=React.useState(todaySlot?.workoutId||PPL[0].id);
+
+  const selectedWorkout=PPL.find(w=>w.id===selectedId);
+
+  function handleStart() {
+    if(selectedId!==todaySlot?.workoutId) {
+      setWeek(prev=>{
+        const next=prev.map(d=>({...d}));
+        next[todayIdx]={...next[todayIdx],workoutId:selectedId};
+        DB.set("week",next);
+        return next;
+      });
+    }
+    onStart();
+  }
+
+  function toggleCard(wId) {
+    setSelectedId(wId);
+    setExpandedId(prev=>prev===wId?null:wId);
+  }
+
+  return (
+    <div style={{flex:1,display:"flex",flexDirection:"column",backgroundColor:C.bg950,position:"relative"}}>
+      {/* Header */}
+      <div style={{padding:"12px 16px",display:"flex",alignItems:"center",gap:12,borderBottom:`1px solid ${C.bg800}`,flexShrink:0}}>
+        <BackBtn onPress={onBack}/>
+        <div>
+          <div style={{...T.heading,fontSize:17,color:C.text0}}>Select Workout</div>
+          <Mono style={{marginTop:2}}>Tap to preview · tap again to collapse</Mono>
+        </div>
+      </div>
+
+      {/* Cards */}
+      <div style={{flex:1,overflowY:"auto"}}>
+        <div style={{padding:"12px 16px 120px",display:"flex",flexDirection:"column",gap:8}}>
+          {PPL.map(w=>{
+            const isSel=selectedId===w.id;
+            const isExp=expandedId===w.id;
+            const isToday=todaySlot?.workoutId===w.id;
+            return (
+              <div key={w.id} style={{borderRadius:14,overflow:"hidden"}}>
+                {/* Card header */}
+                <div
+                  onClick={()=>toggleCard(w.id)}
+                  style={{
+                    border:`2px solid ${isSel?w.color:C.bg700}`,
+                    borderBottom:isExp?`1px solid ${w.color}44`:`2px solid ${isSel?w.color:C.bg700}`,
+                    borderRadius:isExp?"14px 14px 0 0":14,
+                    backgroundColor:isSel?w.color+"12":C.bg900,
+                    padding:"13px 16px",cursor:"pointer",transition:"all 0.15s"
+                  }}>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:5}}>
+                    <div style={{display:"flex",alignItems:"center",gap:8}}>
+                      <div style={{width:8,height:8,borderRadius:99,backgroundColor:w.color,flexShrink:0}}/>
+                      <span style={{...T.heading,fontSize:16,color:C.text0}}>{w.name}</span>
+                      <Pill color={w.color+"22"} tc={w.color} style={{fontSize:7}}>{w.label}</Pill>
+                      {isToday&&<Pill style={{fontSize:7}}>Scheduled</Pill>}
+                    </div>
+                    <div style={{display:"flex",alignItems:"center",gap:8}}>
+                      <span style={{...T.mono,fontSize:10,color:isSel?w.color:C.text5}}>{w.dur}m</span>
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{transition:"transform 0.2s",transform:isExp?"rotate(180deg)":"rotate(0deg)"}}>
+                        <path d="M2 4l4 4 4-4" stroke={isSel?w.color:C.text5} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <div style={{...T.body,fontSize:12,color:C.text4}}>{w.focus}</div>
+                  {/* Exercise name pills */}
+                  <div style={{display:"flex",flexWrap:"wrap",gap:4,marginTop:8}}>
+                    {w.slots.map((slot,si)=>{
+                      const ex=EX[slot.primary];
+                      const mc=MC[ex?.muscle]||C.lime300;
+                      return ex?(
+                        <span key={si} style={{...T.body,fontSize:10,color:MC[ex.muscle]||C.lime300,backgroundColor:(MC[ex.muscle]||C.lime300)+"15",padding:"2px 8px",borderRadius:5,border:`1px solid ${MC[ex.muscle]||C.lime300}33`}}>{ex.name}</span>
+                      ):null;
+                    })}
+                  </div>
+                </div>
+
+                {/* Expanded detail */}
+                {isExp&&(
+                  <div className="fade-enter" style={{border:`2px solid ${w.color}`,borderTop:"none",borderRadius:"0 0 14px 14px",backgroundColor:C.bg800,padding:"4px 0 8px"}}>
+                    {w.slots.map((slot,si)=>{
+                      const ex=EX[slot.primary];
+                      if(!ex) return null;
+                      const mc=MC[ex.muscle]||C.lime300;
+                      const isLast=si===w.slots.length-1;
+                      return (
+                        <div key={si} style={{padding:"10px 16px",borderBottom:isLast?"none":`1px solid ${C.bg700}`}}>
+                          {/* Exercise header */}
+                          <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:7}}>
+                            <div style={{width:5,height:5,borderRadius:99,backgroundColor:mc,flexShrink:0}}/>
+                            <span style={{...T.heading,fontSize:14,color:C.text0}}>{ex.name}</span>
+                            <Pill color={mc+"22"} tc={mc} style={{fontSize:7,border:`1px solid ${mc}33`}}>{ex.muscle}</Pill>
+                            <span style={{...T.mono,fontSize:9,color:C.text5,marginLeft:"auto"}}>{ex.sets}×{ex.reps} · {ex.eq}</span>
+                          </div>
+
+                          {/* Key points */}
+                          <div style={{marginBottom:6}}>
+                            <div style={{...T.mono,fontSize:8,color:C.lime300,letterSpacing:1.5,marginBottom:4}}>KEY POINTS</div>
+                            {ex.cues.map((c,i)=>(
+                              <div key={i} style={{display:"flex",gap:6,alignItems:"flex-start",marginBottom:2}}>
+                                <span style={{color:C.lime300,fontSize:10,lineHeight:1.6,flexShrink:0}}>✓</span>
+                                <span style={{...T.body,fontSize:11,color:C.text3,lineHeight:1.6}}>{c}</span>
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Mistakes to avoid */}
+                          <div>
+                            <div style={{...T.mono,fontSize:8,color:C.danger,letterSpacing:1.5,marginBottom:4}}>AVOID THESE MISTAKES</div>
+                            {ex.mistakes.map((m,i)=>(
+                              <div key={i} style={{display:"flex",gap:6,alignItems:"flex-start",marginBottom:2}}>
+                                <span style={{color:C.danger,fontSize:10,lineHeight:1.6,flexShrink:0}}>✗</span>
+                                <span style={{...T.body,fontSize:11,color:C.text4,lineHeight:1.6}}>{m}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Start button */}
+      <div className="safe-bottom" style={{padding:"12px 16px 0",backgroundColor:C.bg950,borderTop:`1px solid ${C.bg800}`,flexShrink:0}}>
+        <Btn onPress={handleStart} full>Begin {selectedWorkout?.name} →</Btn>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ONBOARDING
+// ═══════════════════════════════════════════════════════════════════════════
+function Onboarding({onDone}) {
+  const [step,setStep]=React.useState(0);
+  const [ans,setAns]=React.useState({});
+  const steps=[
+    {type:"welcome"},
+    {type:"q",key:"exp",  label:"01/05",title:"Training experience",opts:[{v:"new",l:"Brand new",s:"< 3 months"},{v:"some",l:"Some experience",s:"3–12 months"},{v:"reg",l:"Regular",s:"1+ year"},{v:"adv",l:"Advanced",s:"3+ years"}]},
+    {type:"q",key:"goal", label:"02/05",title:"Primary goal",opts:[{v:"muscle",l:"Build Muscle"},{v:"fat",l:"Lose Fat"},{v:"strong",l:"Get Stronger"},{v:"general",l:"General Fitness"}]},
+    {type:"q",key:"loc",  label:"03/05",title:"Where do you train?",opts:[{v:"gym",l:"Gym",s:"Full equipment"},{v:"home",l:"Home",s:"Minimal gear"},{v:"both",l:"Both"}]},
+    {type:"q",key:"dur",  label:"04/05",title:"Session length",opts:[{v:"60",l:"1 hour"},{v:"75",l:"75 min"},{v:"90",l:"90 min",s:"Your pick"},{v:"120",l:"2 hours"}]},
+    {type:"q",key:"days", label:"05/05",title:"Days per week",opts:[{v:"3",l:"3 days"},{v:"4",l:"4 days"},{v:"5",l:"5 days"},{v:"6",l:"6 days",s:"Push · Pull · Legs ×2"}]},
+    {type:"disclaimer"},
+    {type:"plan"},
+  ];
+  const qSteps=steps.filter(s=>s.type==="q");
+  const cur=steps[step];
+  const qIdx=qSteps.indexOf(cur);
+
+  async function next(val) {
+    if(val!==undefined) setAns(a=>({...a,[cur.key]:val}));
+    if(step<steps.length-1) setStep(s=>s+1);
+    else { await DB.set("onboarded",true); await DB.set("answers",ans); onDone(); }
+  }
+
+  if(cur.type==="welcome") return (
+    <div className="screen-enter" style={{flex:1,display:"flex",flexDirection:"column",backgroundColor:C.bg950,padding:"32px 24px"}}>
+      <div style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"center",gap:28}}>
+        <div style={{width:72,height:72,borderRadius:20,backgroundColor:C.lime300,display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <path d="M4 18h5l5-12 6 24 5-16 3 4h4" stroke={C.bg950} strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <div style={{...T.display,fontSize:38,color:C.text0,lineHeight:1.08,letterSpacing:-1}}>Your coach.<br/><span style={{color:C.lime300}}>No excuses.</span></div>
+          <div style={{...T.body,fontSize:15,color:C.text4,marginTop:14,lineHeight:1.7}}>Answer 5 questions. Get a real 6-day Push / Pull / Legs program. Built around your schedule and available equipment.</div>
+        </div>
+        <div style={{display:"flex",flexDirection:"column",gap:8}}>
+          {[["6-day PPL split","Progressive 8-week program"],["3 exercise variations","Switch if a machine is busy"],["Abs + Cardio","Included every session"],["Full offline support","Works without internet"]].map(([t,s])=>(
+            <div key={t} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",backgroundColor:C.bg900,borderRadius:10}}>
+              <div style={{width:6,height:6,borderRadius:99,backgroundColor:C.lime300,flexShrink:0}}/>
+              <div><div style={{...T.body,fontSize:13,color:C.text0}}>{t}</div><div style={{...T.body,fontSize:11,color:C.text5}}>{s}</div></div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <Btn onPress={()=>next()} full>Get Started →</Btn>
+    </div>
+  );
+
+  if(cur.type==="q") return (
+    <div className="screen-enter" style={{flex:1,display:"flex",flexDirection:"column",backgroundColor:C.bg950,padding:"24px"}}>
+      <div style={{marginBottom:24}}>
+        <div style={{display:"flex",gap:5,marginBottom:16}}>
+          {qSteps.map((_,i)=><div key={i} style={{flex:1,height:3,borderRadius:2,backgroundColor:i<=qIdx?C.lime300:C.bg700,transition:"background 0.3s"}}/>)}
+        </div>
+        <Mono style={{marginBottom:8}}>{cur.label}</Mono>
+        <div style={{...T.display,fontSize:26,color:C.text0,marginTop:6}}>{cur.title}</div>
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:10,flex:1,overflowY:"auto"}}>
+        {cur.opts.map(opt=>(
+          <div key={opt.v} onClick={()=>next(opt.v)}
+            style={{backgroundColor:ans[cur.key]===opt.v?C.lime300:C.bg900,borderRadius:14,padding:"16px 18px",cursor:"pointer",transition:"all 0.14s",border:`1px solid ${ans[cur.key]===opt.v?C.lime300:C.bg700}`}}>
+            <div style={{...T.heading,fontSize:17,color:ans[cur.key]===opt.v?C.bg950:C.text0}}>{opt.l}</div>
+            {opt.s&&<div style={{...T.body,fontSize:12,color:ans[cur.key]===opt.v?C.bg700:C.text4,marginTop:3}}>{opt.s}</div>}
+          </div>
+        ))}
+      </div>
+      <div style={{paddingTop:16,display:"flex",gap:10}}>
+        {step>0&&<Btn variant="secondary" onPress={()=>setStep(s=>s-1)} style={{flex:1}}>Back</Btn>}
+        {ans[cur.key]&&<Btn onPress={()=>next()} style={{flex:2}}>Continue →</Btn>}
+      </div>
+    </div>
+  );
+
+  if(cur.type==="disclaimer") return (
+    <div className="screen-enter" style={{flex:1,display:"flex",flexDirection:"column",backgroundColor:C.bg950,padding:"24px"}}>
+      <div style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"center",gap:20}}>
+        <div style={{width:56,height:56,borderRadius:14,backgroundColor:C.bg800,display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="11" stroke={C.warning} strokeWidth="2"/><path d="M13 9v4.5m0 3h.01" stroke={C.warning} strokeWidth="2" strokeLinecap="round"/></svg>
+        </div>
+        <div style={{...T.display,fontSize:26,color:C.text0}}>Before you begin</div>
+        <div style={{...T.body,fontSize:14,color:C.text3,lineHeight:1.7}}>This app provides general fitness guidance, not medical advice. If you have any heart, joint, or serious health condition, consult a doctor before starting any exercise program.</div>
+        <Card style={{borderLeft:`3px solid ${C.warning}`}}>
+          <div style={{...T.body,fontSize:13,color:C.text4,lineHeight:1.6}}>By continuing you confirm you understand this and accept full responsibility for your training. Start light. Progress gradually. Listen to your body.</div>
+        </Card>
+      </div>
+      <div style={{display:"flex",gap:10}}>
+        <Btn variant="secondary" onPress={()=>setStep(s=>s-1)} style={{flex:1}}>Back</Btn>
+        <Btn onPress={()=>next()} style={{flex:2}}>I Understand →</Btn>
+      </div>
+    </div>
+  );
+
+  if(cur.type==="plan") return (
+    <div className="screen-enter" style={{flex:1,display:"flex",flexDirection:"column",backgroundColor:C.bg950,padding:"24px"}}>
+      <div style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"center",gap:18}}>
+        <Pill style={{alignSelf:"flex-start",fontSize:10}}>Your Program</Pill>
+        <div style={{...T.display,fontSize:32,color:C.text0,lineHeight:1.15,letterSpacing:-0.5}}>Push / Pull / Legs<br/><span style={{color:C.lime300}}>6-Day Split</span></div>
+        <div style={{display:"flex",flexDirection:"column",gap:8}}>
+          {[["6 days / week","Mon → Sat · Sun rest"],["75–90 min","Per session"],["8 weeks","Progressive load increases"],["3 variations each","Swap if machine is busy"],["Abs + Cardio","Included every session"]].map(([v,l])=>(
+            <div key={v} style={{display:"flex",justifyContent:"space-between",alignItems:"center",backgroundColor:C.bg900,borderRadius:10,padding:"12px 16px"}}>
+              <span style={{...T.body,fontSize:13,color:C.text4}}>{l}</span>
+              <span style={{...T.heading,fontSize:14,color:C.text0}}>{v}</span>
+            </div>
+          ))}
+        </div>
+        <Card style={{borderLeft:`3px solid ${C.lime300}`}}>
+          <Mono style={{marginBottom:4}}>Week 1–2</Mono>
+          <div style={{...T.body,fontSize:13,color:C.text3,marginTop:6,lineHeight:1.6}}>Learn the movements. Build the habit. Volume increases from week 3 onwards.</div>
+        </Card>
+      </div>
+      <Btn onPress={()=>next()} full>Start My Program →</Btn>
+    </div>
+  );
+  return null;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════════════════════
+function Dashboard({week,setWeek,onStart}) {
+  const [showReschedule,setShowReschedule]=React.useState(false);
+  const [rescheduleIdx,setRescheduleIdx]=React.useState(null);
+  const todayIdx=week.findIndex(d=>d.today);
+  const todaySlot=week[todayIdx];
+  const todayWk=PPL.find(w=>w.id===todaySlot?.workoutId);
+  const prevSlot=week[todayIdx-1];
+  const missedYest=prevSlot&&!prevSlot.done&&prevSlot.workoutId;
+
+  function confirmReschedule(newId) {
+    setWeek(prev=>{
+      const next=prev.map(d=>({...d}));
+      const idx=rescheduleIdx!==null?rescheduleIdx:todayIdx;
+      next[idx]={...next[idx],workoutId:newId};
+      DB.set("week",next);
+      return next;
+    });
+    setShowReschedule(false); setRescheduleIdx(null);
+  }
+
+  return (
+    <div style={{flex:1,overflowY:"auto",backgroundColor:C.bg950,position:"relative"}}>
+      <div style={{padding:"16px 16px 100px",display:"flex",flexDirection:"column",gap:12}}>
+
+        {/* Missed day banner */}
+        {missedYest&&(
+          <div style={{padding:"12px 14px",borderRadius:14,backgroundColor:C.warning+"10",border:`1px solid ${C.warning}33`,display:"flex",alignItems:"center",gap:12}}>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke={C.warning} strokeWidth="1.5"/><path d="M10 7v3.5m0 2.5h.01" stroke={C.warning} strokeWidth="1.5" strokeLinecap="round"/></svg>
+            <div style={{flex:1}}>
+              <div style={{...T.heading,fontSize:13,color:C.warning}}>Missed yesterday's session</div>
+              <div style={{...T.body,fontSize:11,color:C.text4}}>Want to do it today instead?</div>
+            </div>
+            <Btn variant="warn" small onPress={()=>{setRescheduleIdx(todayIdx);setShowReschedule(true);}}>Reschedule</Btn>
+          </div>
+        )}
+
+        {/* Today card */}
+        {todayWk&&(
+          <Card style={{border:`1px solid ${todayWk.color}33`,background:`linear-gradient(145deg,${C.bg900},#141414)`}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:12}}>
+              <div style={{flex:1}}>
+                <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:8}}>
+                  <Pill>Today</Pill>
+                  <Pill color={todayWk.color+"22"} tc={todayWk.color} style={{border:`1px solid ${todayWk.color}33`}}>{todayWk.label}</Pill>
+                </div>
+                <div style={{...T.display,fontSize:22,color:C.text0,letterSpacing:-0.3}}>{todayWk.name}</div>
+                <div style={{...T.body,fontSize:13,color:C.text4,marginTop:3}}>{todayWk.focus}</div>
+              </div>
+              <div style={{textAlign:"right",flexShrink:0,marginLeft:12}}>
+                <div style={{...T.display,fontSize:28,color:todayWk.color}}>{todayWk.dur}</div>
+                <Mono>MIN</Mono>
+              </div>
+            </div>
+            <div style={{display:"flex",flexDirection:"column",gap:5,marginBottom:14}}>
+              {todayWk.slots.map((slot,si)=>{
+                const selIdx=todaySlot?.slotSelections?.[si]||0;
+                const exId=[slot.primary,...slot.alts][selIdx];
+                const ex=EX[exId];
+                if(!ex) return null;
+                const mc=MC[ex.muscle]||C.lime300;
+                return (
+                  <div key={si} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 12px",backgroundColor:C.bg800,borderRadius:10}}>
+                    <div style={{display:"flex",alignItems:"center",gap:8}}>
+                      <div style={{width:5,height:5,borderRadius:99,backgroundColor:mc,flexShrink:0}}/>
+                      <span style={{...T.body,fontSize:13,color:C.text2}}>{ex.name}</span>
+                      {selIdx>0&&<Pill color={C.bg700} tc={C.text5} style={{fontSize:7}}>Alt</Pill>}
+                    </div>
+                    <span style={{...T.mono,fontSize:9,color:C.text5,letterSpacing:1}}>{ex.sets}×{ex.reps}</span>
+                  </div>
+                );
+              })}
+            </div>
+            <div style={{display:"flex",gap:8}}>
+              <Btn onPress={onStart} style={{flex:1}}>Start Workout →</Btn>
+              <div onClick={()=>{setRescheduleIdx(todayIdx);setShowReschedule(true);}} style={{width:46,height:46,borderRadius:12,backgroundColor:C.bg700,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0}}>
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 9a7 7 0 017-7" stroke={C.lime300} strokeWidth="1.8" strokeLinecap="round"/><path d="M16 9a7 7 0 01-7 7" stroke={C.text5} strokeWidth="1.8" strokeLinecap="round"/><path d="M2 6v3h3" stroke={C.lime300} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* Week schedule */}
+        <Card>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
+            <Mono>This Week</Mono>
+            <Mono style={{color:C.lime300}}>PPL ×2</Mono>
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:6}}>
+            {week.map((slot,i)=>{
+              const wk=PPL.find(w=>w.id===slot.workoutId);
+              const isToday=slot.today;
+              const isMissed=!slot.done&&!isToday&&i<todayIdx;
+              const isFuture=!slot.done&&!isToday&&i>todayIdx;
+              return (
+                <div key={i} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 12px",backgroundColor:isToday?C.bg800:"transparent",borderRadius:12,border:isToday?`1px solid ${wk?.color||C.bg600}33`:"1px solid transparent",transition:"background 0.2s"}}>
+                  <div style={{width:32,height:32,borderRadius:9,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",backgroundColor:slot.done?C.lime300:isMissed?C.danger+"22":C.bg700,border:isMissed?`1px solid ${C.danger}44`:"none"}}>
+                    {slot.done?<svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 7l3 3 5-5" stroke={C.bg950} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    :isMissed?<svg width="12" height="12" viewBox="0 0 12 12"><path d="M3 3l6 6M9 3L3 9" stroke={C.danger} strokeWidth="1.5" strokeLinecap="round"/></svg>
+                    :<div style={{width:8,height:8,borderRadius:2,backgroundColor:isToday?wk?.color||C.lime300:C.bg500}}/>}
+                  </div>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{display:"flex",alignItems:"center",gap:6}}>
+                      <span style={{...T.body,fontSize:13,color:slot.done?C.text4:isToday?C.text0:isMissed?C.danger:C.text2,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{wk?.name||"—"}</span>
+                      {wk&&<div style={{width:5,height:5,borderRadius:99,backgroundColor:wk.color,flexShrink:0}}/>}
+                    </div>
+                    <Mono style={{marginTop:1,letterSpacing:1}}>{slot.day}{wk?` · ${wk.dur}m`:""}</Mono>
+                  </div>
+                  {isToday&&<Pill style={{fontSize:8}}>Today</Pill>}
+                  {(isMissed||isFuture)&&(
+                    <div onClick={()=>{setRescheduleIdx(i);setShowReschedule(true);}} style={{padding:"5px 10px",borderRadius:8,backgroundColor:C.bg700,cursor:"pointer"}}>
+                      <Mono style={{color:isMissed?C.lime300:C.text5,letterSpacing:1,fontSize:9}}>{isMissed?"MOVE":"SWAP"}</Mono>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+      </div>
+
+      {showReschedule&&<RescheduleModal onConfirm={confirmReschedule} onDismiss={()=>{setShowReschedule(false);setRescheduleIdx(null);}}/>}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// WORKOUT
+// ═══════════════════════════════════════════════════════════════════════════
+function Workout({week,setWeek,onBack,onDone}) {
+  const todaySlot=week.find(d=>d.today)||week[0];
+  const workout=PPL.find(w=>w.id===todaySlot.workoutId)||PPL[0];
+  const [localSels,setLocalSels]=React.useState([...(todaySlot.slotSelections||workout.slots.map(()=>0))]);
+  const LSKEY=`logs_${workout.id}_${new Date().toDateString()}`;
+  const [logs,setLogs]=React.useState(()=>{
+    const saved=LS.get(LSKEY);
+    if(saved) return saved;
+    return Object.fromEntries(workout.slots.map((slot,si)=>{
+      const exId=[slot.primary,...slot.alts][localSels[si]||0];
+      const ex=EX[exId];
+      return [exId, Array.from({length:ex?.sets||3},()=>({weight:"",reps:"",feel:"",done:false}))];
+    }));
+  });
+  const [activeSlot,setActiveSlot]=React.useState(null);
+  const [varPicker,setVarPicker]=React.useState(null);
+  const [timerSec,setTimerSec]=React.useState(0);
+  const [timerMax,setTimerMax]=React.useState(1);
+  const [elapsed,setElapsed]=React.useState(0);
+  const [started]=React.useState(Date.now());
+  const [showFinish,setShowFinish]=React.useState(false);
+
+  React.useEffect(()=>{
+    const iv=setInterval(()=>setElapsed(Math.floor((Date.now()-started)/1000)),1000);
+    return()=>clearInterval(iv);
+  },[started]);
+  React.useEffect(()=>{
+    if(timerSec<=0) return;
+    const t=setTimeout(()=>setTimerSec(s=>Math.max(0,s-1)),1000);
+    return()=>clearTimeout(t);
+  },[timerSec]);
+
+  function getEx(si) {
+    const slot=workout.slots[si];
+    const exId=[slot.primary,...slot.alts][localSels[si]||0];
+    return {exId,ex:EX[exId],slot};
+  }
+
+  function swapVar(slotIdx,newSel) {
+    const newSels=[...localSels]; newSels[slotIdx]=newSel;
+    setLocalSels(newSels);
+    setWeek(prev=>{
+      const next=prev.map(d=>({...d}));
+      const ti=next.findIndex(d=>d.today);
+      if(ti>=0) next[ti]={...next[ti],slotSelections:[...newSels]};
+      DB.set("week",next);
+      return next;
+    });
+    setVarPicker(null);
+  }
+
+  function updateSet(exId,si,field,val) {
+    const next={...logs,[exId]:logs[exId].map((s,i)=>i===si?{...s,[field]:val}:s)};
+    setLogs(next); LS.set(LSKEY,next);
+  }
+
+  function markDone(exId,si,rest) {
+    const wasDone=logs[exId]?.[si]?.done;
+    // auto-fill reps from target if still 0
+    const targetReps=parseInt(EX[exId]?.reps)||8;
+    const next={...logs,[exId]:logs[exId].map((s,i)=>{
+      if(i!==si) return s;
+      const reps=s.reps||targetReps;
+      const weight=s.weight||(si>0?logs[exId][si-1].weight:0);
+      return {...s,done:!s.done,reps,weight};
+    })};
+    setLogs(next); LS.set(LSKEY,next);
+    if(!wasDone&&rest>0){setTimerSec(rest);setTimerMax(rest);}
+  }
+
+  const fmtT=s=>`${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;
+  const allSets=Object.values(logs).flat();
+  const doneSets=allSets.filter(s=>s.done).length;
+  const allDone=doneSets===allSets.length&&allSets.length>0;
+
+  if(showFinish) return <Finish workout={workout} elapsed={elapsed} doneSets={doneSets} week={week} setWeek={setWeek} logs={logs} onDone={onDone}/>;
+
+  return (
+    <div style={{flex:1,display:"flex",flexDirection:"column",backgroundColor:C.bg950,position:"relative"}}>
+      {/* Header */}
+      <div style={{padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:`1px solid ${C.bg800}`,flexShrink:0}}>
+        <BackBtn onPress={onBack}/>
+        <div style={{textAlign:"center"}}>
+          <div style={{...T.heading,fontSize:15,color:C.text0}}>{workout.name}</div>
+          <div style={{...T.mono,fontSize:13,color:C.lime300}}>{fmtT(elapsed)}</div>
+        </div>
+        <div style={{textAlign:"right",minWidth:36}}>
+          <div style={{...T.display,fontSize:16,color:doneSets===allSets.length&&allSets.length>0?C.lime300:C.text0}}>{doneSets}</div>
+          <Mono>/{allSets.length}</Mono>
+        </div>
+      </div>
+
+      {/* Rest timer */}
+      {timerSec>0&&(
+        <div style={{backgroundColor:C.bg900,padding:"8px 16px",display:"flex",alignItems:"center",gap:12,borderBottom:`1px solid ${C.bg700}`,flexShrink:0}}>
+          <div style={{flex:1,height:4,backgroundColor:C.bg700,borderRadius:2}}>
+            <div style={{height:"100%",borderRadius:2,backgroundColor:C.lime300,transition:"width 1s linear",width:`${(timerSec/timerMax)*100}%`}}/>
+          </div>
+          <div style={{...T.display,fontSize:18,color:C.lime300,minWidth:44,textAlign:"right"}}>{timerSec}s</div>
+        </div>
+      )}
+
+      {/* Exercises */}
+      <div style={{flex:1,overflowY:"auto"}}>
+        <div style={{padding:"12px 16px 100px",display:"flex",flexDirection:"column",gap:10}}>
+          {workout.slots.map((_,si)=>{
+            const {exId,ex,slot}=getEx(si);
+            if(!ex) return null;
+            const mc=MC[ex.muscle]||C.lime300;
+            const isActive=activeSlot===si;
+            const sets=logs[exId]||[];
+            const allSetsDone=sets.length>0&&sets.every(s=>s.done);
+            const selIdx=localSels[si]||0;
+            return (
+              <Card key={si} style={{border:`1px solid ${isActive?mc+"55":C.bg700}`,transition:"border 0.2s"}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+                  <div style={{flex:1,paddingRight:8}}>
+                    <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap",marginBottom:3}}>
+                      <div style={{width:6,height:6,borderRadius:99,backgroundColor:mc,flexShrink:0}}/>
+                      <span style={{...T.heading,fontSize:15,color:allSetsDone?C.text5:C.text0}}>{ex.name}</span>
+                      {allSetsDone&&<CheckIcon done color={C.lime300}/>}
+                      {selIdx>0&&<Pill color={C.bg700} tc={C.text5} style={{fontSize:7}}>Alt {selIdx}</Pill>}
+                    </div>
+                    <Mono style={{letterSpacing:1}}>{ex.sets}s · {ex.reps} · {ex.rest>0?`${ex.rest}s rest`:"no rest"} · {ex.eq}</Mono>
+                  </div>
+                  <div style={{display:"flex",gap:5,flexShrink:0}}>
+                    <div onClick={()=>setVarPicker(si)} style={{padding:"6px 10px",borderRadius:8,backgroundColor:C.bg700,cursor:"pointer"}}>
+                      <Mono style={{color:C.lime300,fontSize:9}}>SWAP</Mono>
+                    </div>
+                    <div onClick={()=>setActiveSlot(isActive?null:si)} style={{padding:"6px 10px",borderRadius:8,backgroundColor:isActive?C.lime300:C.bg700,cursor:"pointer"}}>
+                      <Mono style={{color:isActive?C.bg950:C.text4,fontSize:9}}>{isActive?"▲":"LOG"}</Mono>
+                    </div>
+                  </div>
+                </div>
+
+                {isActive&&(
+                  <div style={{marginTop:12}}>
+                    {/* Cues */}
+                    <div style={{padding:"8px 12px",backgroundColor:C.bg800,borderRadius:10,marginBottom:12}}>
+                      <Mono style={{color:mc,marginBottom:5}}>Key Cues</Mono>
+                      <div style={{marginTop:6,display:"flex",flexDirection:"column",gap:3}}>
+                        {ex.cues.map((c,i)=><div key={i} style={{...T.body,fontSize:12,color:C.text4,lineHeight:1.5}}>· {c}</div>)}
+                      </div>
+                    </div>
+                    {/* Set headers */}
+                    <div style={{display:"grid",gridTemplateColumns:"28px 1fr 1fr",gap:8,padding:"0 4px",marginBottom:6}}>
+                      {["SET","WEIGHT (kg)","REPS DONE"].map(h=><Mono key={h} style={{fontSize:8}}>{h}</Mono>)}
+                    </div>
+                    {/* Stepper rows */}
+                    {sets.map((s,si2)=>{
+                      const isDone=s.done;
+                      return (
+                        <div key={si2} onClick={()=>{ if(!isDone) markDone(exId,si2,ex.rest); }}
+                          style={{display:"grid",gridTemplateColumns:"28px 1fr 1fr",gap:8,alignItems:"center",
+                            padding:"10px 4px",marginBottom:6,borderRadius:12,
+                            backgroundColor:isDone?C.lime300+"18":C.bg800,
+                            border:`1px solid ${isDone?C.lime300+"55":C.bg600}`,
+                            transition:"all 0.15s",cursor:isDone?"default":"pointer"}}>
+                          {/* Set number */}
+                          <div style={{width:24,height:24,borderRadius:7,backgroundColor:isDone?C.lime300:C.bg700,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                            {isDone
+                              ?<svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke={C.bg950} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                              :<span style={{...T.mono,fontSize:10,color:C.text4}}>{si2+1}</span>}
+                          </div>
+                          {/* Weight stepper */}
+                          <div onClick={e=>e.stopPropagation()} style={{display:"flex",alignItems:"center",gap:6}}>
+                            <div onClick={()=>updateSet(exId,si2,"weight",Math.max(0,(parseFloat(s.weight)||0)-2.5))}
+                              style={{width:32,height:36,borderRadius:8,backgroundColor:C.bg700,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0}}>
+                              <span style={{...T.display,fontSize:18,color:C.text3,lineHeight:1}}>−</span>
+                            </div>
+                            <div style={{flex:1,textAlign:"center"}}>
+                              <div style={{...T.display,fontSize:18,color:isDone?C.lime300:C.text0}}>{s.weight||0}</div>
+                              <Mono style={{fontSize:7}}>kg</Mono>
+                            </div>
+                            <div onClick={()=>updateSet(exId,si2,"weight",(parseFloat(s.weight)||0)+2.5)}
+                              style={{width:32,height:36,borderRadius:8,backgroundColor:C.bg700,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0}}>
+                              <span style={{...T.display,fontSize:18,color:C.lime300,lineHeight:1}}>+</span>
+                            </div>
+                          </div>
+                          {/* Reps stepper */}
+                          <div onClick={e=>e.stopPropagation()} style={{display:"flex",alignItems:"center",gap:6}}>
+                            <div onClick={()=>updateSet(exId,si2,"reps",Math.max(0,(parseInt(s.reps)||0)-1))}
+                              style={{width:32,height:36,borderRadius:8,backgroundColor:C.bg700,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0}}>
+                              <span style={{...T.display,fontSize:18,color:C.text3,lineHeight:1}}>−</span>
+                            </div>
+                            <div style={{flex:1,textAlign:"center"}}>
+                              <div style={{...T.display,fontSize:18,color:isDone?C.lime300:C.text0}}>{s.reps||0}</div>
+                              <Mono style={{fontSize:7}}>reps</Mono>
+                            </div>
+                            <div onClick={()=>updateSet(exId,si2,"reps",(parseInt(s.reps)||0)+1)}
+                              style={{width:32,height:36,borderRadius:8,backgroundColor:C.bg700,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0}}>
+                              <span style={{...T.display,fontSize:18,color:C.lime300,lineHeight:1}}>+</span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    {/* Mark all done button */}
+                    <div onClick={()=>{ sets.forEach((_,si2)=>{ if(!sets[si2].done) markDone(exId,si2,0); }); }}
+                      style={{padding:"10px",borderRadius:10,backgroundColor:C.bg700,textAlign:"center",cursor:"pointer",marginTop:4}}>
+                      <Mono style={{color:C.lime300,fontSize:10}}>Tap a set row to mark it done · Tap again to undo</Mono>
+                    </div>
+                  </div>
+                )}
+              </Card>
+            );
+          })}
+          {allDone&&<Btn onPress={()=>setShowFinish(true)} full>Finish Workout ✓</Btn>}
+        </div>
+      </div>
+
+      {varPicker!==null&&(
+        <VariationPicker slot={workout.slots[varPicker]} currentSel={localSels[varPicker]||0} onSelect={i=>swapVar(varPicker,i)} onDismiss={()=>setVarPicker(null)}/>
+      )}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// FINISH
+// ═══════════════════════════════════════════════════════════════════════════
+function Finish({workout,elapsed,doneSets,week,setWeek,logs,onDone}) {
+  const [feel,setFeel]=React.useState("");
+  const [pain,setPain]=React.useState("");
+
+  async function submit() {
+    if(!feel||!pain) return;
+    // Calculate volume
+    let vol=0;
+    Object.entries(logs).forEach(([_,sets])=>sets.forEach(s=>{
+      if(s.done&&s.weight&&s.reps) vol+=parseFloat(s.weight)*parseFloat(s.reps);
+    }));
+    // Save workout to DB
+    await DB.addWorkout({
+      workoutId:workout.id, workoutName:workout.name,
+      date:new Date().toISOString(), dateStr:new Date().toDateString(),
+      duration:Math.floor(elapsed/60), sets:doneSets,
+      volume:Math.round(vol), feel, pain,
+      logs,
+    });
+    // Mark today done & update streak
+    setWeek(prev=>{
+      const next=prev.map(d=>({...d}));
+      const ti=next.findIndex(d=>d.today);
+      if(ti>=0) next[ti]={...next[ti],done:true};
+      DB.set("week",next);
+      return next;
+    });
+    const streak=LS.get("streak",0);
+    LS.set("streak",streak+1);
+    onDone();
+  }
+
+  const fmtT=s=>`${Math.floor(s/60)}m ${s%60}s`;
+  // Volume
+  let vol=0;
+  Object.entries(logs).forEach(([_,sets])=>sets.forEach(s=>{
+    if(s.done&&s.weight&&s.reps) vol+=parseFloat(s.weight)*parseFloat(s.reps);
+  }));
+
+  return (
+    <div className="screen-enter" style={{flex:1,display:"flex",flexDirection:"column",backgroundColor:C.bg950,padding:"24px"}}>
+      <div style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"center",gap:22}}>
+        <div style={{width:64,height:64,borderRadius:18,backgroundColor:C.lime300,display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M6 16l7 7 13-13" stroke={C.bg950} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </div>
+        <div>
+          <div style={{...T.display,fontSize:32,color:C.text0,letterSpacing:-0.5}}>Done.</div>
+          <div style={{...T.body,fontSize:14,color:C.text4,marginTop:4}}>{workout.name} · {new Date().toLocaleDateString("en-US",{weekday:"long"})}</div>
+        </div>
+        <div style={{display:"flex",gap:10}}>
+          {[["Time",fmtT(elapsed||2700)],["Sets",doneSets],[`${Math.round(vol/1000*10)/10||"–"}t`,"Volume"]].map(([v,l])=>(
+            <Card key={l} style={{flex:1,textAlign:"center",padding:"14px 8px"}}>
+              <div style={{...T.display,fontSize:20,color:C.lime300}}>{v}</div>
+              <Mono style={{marginTop:3}}>{l.toUpperCase()}</Mono>
+            </Card>
+          ))}
+        </div>
+        <div>
+          <Mono style={{marginBottom:10}}>How did it feel?</Mono>
+          <div style={{display:"flex",gap:8,marginTop:8}}>
+            {["Easy","Just right","Too hard"].map(f=>(
+              <div key={f} onClick={()=>setFeel(f)} style={{flex:1,padding:"11px 4px",borderRadius:11,backgroundColor:feel===f?C.lime300:C.bg900,border:`1px solid ${feel===f?C.lime300:C.bg700}`,cursor:"pointer",textAlign:"center",transition:"all 0.14s"}}>
+                <span style={{...T.body,fontSize:12,color:feel===f?C.bg950:C.text3}}>{f}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div>
+          <Mono style={{marginBottom:10}}>Any pain or injury?</Mono>
+          <div style={{display:"flex",gap:8,marginTop:8}}>
+            {["No","Yes – flag it"].map(p=>(
+              <div key={p} onClick={()=>setPain(p)} style={{flex:1,padding:"11px 8px",borderRadius:11,backgroundColor:pain===p?(p==="No"?C.lime300:C.danger):C.bg900,border:`1px solid ${pain===p?(p==="No"?C.lime300:C.danger):C.bg700}`,cursor:"pointer",textAlign:"center",transition:"all 0.14s"}}>
+                <span style={{...T.body,fontSize:12,color:pain===p?(p==="No"?C.bg950:"#fff"):C.text3}}>{p}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <Btn onPress={submit} full disabled={!feel||!pain}>Back to Dashboard</Btn>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PROGRESS
+// ═══════════════════════════════════════════════════════════════════════════
+function Progress() {
+  const [hist,setHist]=React.useState([]);
+  const streak=LS.get("streak",0);
+
+  React.useEffect(()=>{
+    DB.getWorkouts().then(h=>setHist(h.slice(0,20)));
+  },[]);
+
+  const totalW=hist.length;
+  const totalSets=hist.reduce((a,h)=>a+(h.sets||0),0);
+  const totalVol=hist.reduce((a,h)=>a+(h.volume||0),0);
+
+  // Workouts by day of week
+  const byDay={"Mon":0,"Tue":0,"Wed":0,"Thu":0,"Fri":0,"Sat":0,"Sun":0};
+  hist.forEach(h=>{
+    const d=new Date(h.date);
+    const key=d.toLocaleDateString("en-US",{weekday:"short"});
+    if(byDay[key]!==undefined) byDay[key]++;
+  });
+  const maxByDay=Math.max(...Object.values(byDay),1);
+
+  return (
+    <div style={{flex:1,overflowY:"auto",backgroundColor:C.bg950}}>
+      <div style={{padding:"16px 16px 100px"}}>
+        <div style={{...T.display,fontSize:26,color:C.text0,marginBottom:18,letterSpacing:-0.5}}>Progress</div>
+
+        {/* Stats */}
+        <div style={{display:"flex",gap:8,marginBottom:12}}>
+          {[[streak,"Streak","weeks"],[totalW,"Total","sessions"],[`${Math.round(totalVol/1000)}t`,"Volume","lifted"]].map(([v,l,s])=>(
+            <Card key={l} style={{flex:1,textAlign:"center",padding:"14px 6px"}}>
+              <div style={{...T.display,fontSize:22,color:C.lime300}}>{v||0}</div>
+              <Mono style={{marginTop:3}}>{l.toUpperCase()}</Mono>
+              <div style={{...T.body,fontSize:10,color:C.text5,marginTop:2}}>{s}</div>
+            </Card>
+          ))}
+        </div>
+
+        {/* By day of week */}
+        <Card style={{marginBottom:12}}>
+          <Mono style={{marginBottom:14}}>Most Active Days</Mono>
+          <div style={{display:"flex",alignItems:"flex-end",gap:6,height:64,marginBottom:8}}>
+            {Object.entries(byDay).map(([d,n],i)=>(
+              <div key={d} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
+                <div style={{width:"100%",borderRadius:"3px 3px 0 0",backgroundColor:n>0?C.lime300:C.bg700,height:`${(n/maxByDay)*56}px`,minHeight:3,transition:"height 0.4s"}}/>
+                <Mono style={{fontSize:7}}>{d.toUpperCase()}</Mono>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        {/* History */}
+        <Mono style={{marginBottom:12}}>Workout History</Mono>
+        {hist.length===0?(
+          <Card style={{textAlign:"center",padding:"32px 16px"}}>
+            <div style={{...T.body,fontSize:14,color:C.text5}}>No workouts yet. Complete your first session!</div>
+          </Card>
+        ):(
+          <div style={{display:"flex",flexDirection:"column",gap:8}}>
+            {hist.map((h,i)=>{
+              const wk=PPL.find(w=>w.id===h.workoutId);
+              return (
+                <Card key={i} style={{padding:"12px 14px"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:12}}>
+                    <div style={{width:40,height:40,borderRadius:11,backgroundColor:C.bg800,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:`1px solid ${wk?.color||C.bg600}44`}}>
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 12h2.5l2.5-6 3 9 2.5-6 1 3H16" stroke={wk?.color||C.lime300} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </div>
+                    <div style={{flex:1}}>
+                      <div style={{...T.heading,fontSize:14,color:C.text0}}>{h.workoutName}</div>
+                      <Mono style={{marginTop:2,letterSpacing:1}}>{h.dateStr} · {h.duration}min · {h.sets} sets</Mono>
+                    </div>
+                    <div style={{textAlign:"right"}}>
+                      <div style={{...T.mono,fontSize:11,color:h.feel==="Easy"?C.lime300:h.feel==="Too hard"?C.danger:C.text4}}>{h.feel}</div>
+                      {h.pain&&h.pain!=="No"&&<div style={{...T.mono,fontSize:9,color:C.danger,marginTop:2}}>⚠ pain</div>}
+                    </div>
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// STREAKS
+// ═══════════════════════════════════════════════════════════════════════════
+function Streaks({onBack}) {
+  const streak=LS.get("streak",0);
+  const best=LS.get("bestStreak",streak);
+  const milestones=[1,3,6,12,24,52];
+  return (
+    <div style={{flex:1,display:"flex",flexDirection:"column",backgroundColor:C.bg950}}>
+      <div style={{padding:"12px 16px",display:"flex",alignItems:"center",gap:12,borderBottom:`1px solid ${C.bg800}`,flexShrink:0}}>
+        <BackBtn onPress={onBack}/>
+        <div style={{...T.heading,fontSize:17,color:C.text0}}>Streaks</div>
+      </div>
+      <div style={{flex:1,overflowY:"auto",padding:"24px 16px 90px"}}>
+        <div style={{textAlign:"center",marginBottom:32}}>
+          <div style={{fontSize:96,...T.display,color:C.lime300,lineHeight:1,letterSpacing:-4}}>{streak}</div>
+          <Mono style={{marginTop:6}}>Week Streak</Mono>
+          <div style={{...T.body,fontSize:13,color:C.text4,marginTop:8}}>Consecutive weeks completing all sessions</div>
+          {best>streak&&<div style={{...T.mono,fontSize:11,color:C.text5,marginTop:4}}>Best: {best} weeks</div>}
+        </div>
+        <Mono style={{marginBottom:12}}>Milestones</Mono>
+        <div style={{display:"flex",flexDirection:"column",gap:8}}>
+          {milestones.map(m=>(
+            <Card key={m} style={{padding:"12px 14px"}}>
+              <div style={{display:"flex",alignItems:"center",gap:12}}>
+                <div style={{width:44,height:44,borderRadius:12,backgroundColor:streak>=m?C.lime300:C.bg800,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:`1px solid ${streak>=m?C.lime300:C.bg700}`}}>
+                  {streak>=m
+                    ?<svg width="20" height="20" viewBox="0 0 20 20"><path d="M4 10l5 5 7-7" stroke={C.bg950} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    :<span style={{...T.mono,fontSize:13,color:C.text5}}>{m}</span>}
+                </div>
+                <div style={{flex:1}}>
+                  <div style={{...T.heading,fontSize:14,color:streak>=m?C.text0:C.text4}}>{m} Week{m>1?"s":""}</div>
+                  <Mono style={{marginTop:2,letterSpacing:1}}>{streak>=m?"Achieved ✓":`${m-streak} more week${m-streak!==1?"s":""} to go`}</Mono>
+                </div>
+                {streak>=m&&<Pill style={{fontSize:8}}>Done</Pill>}
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════════════════════════════════════
+function Settings() {
+  const [unit,setUnit]=React.useState(()=>LS.get("unit","kg"));
+  const [notifs,setNotifs]=React.useState(()=>LS.get("notifs",true));
+  const [time,setTime]=React.useState(()=>LS.get("remTime","19:00"));
+  const [dbSize,setDbSize]=React.useState("…");
+
+  React.useEffect(()=>{
+    DB.getWorkouts().then(h=>setDbSize(`${h.length} workouts logged`));
+  },[]);
+
+  function save(k,v){LS.set(k,v);}
+
+  function Toggle({value,onChange}) {
+    return <div onClick={()=>onChange(!value)} style={{width:48,height:28,borderRadius:14,backgroundColor:value?C.lime300:C.bg700,position:"relative",cursor:"pointer",transition:"background 0.2s",flexShrink:0}}>
+      <div style={{position:"absolute",top:3,left:value?23:3,width:22,height:22,borderRadius:11,backgroundColor:value?C.bg950:C.text4,transition:"left 0.2s",boxShadow:"0 1px 3px rgba(0,0,0,0.3)"}}/>
+    </div>;
+  }
+
+  function Row({label,sub,right,accent}) {
+    return <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"14px 16px",borderBottom:`1px solid ${C.bg800}`}}>
+      <div><div style={{...T.body,fontSize:14,color:accent||C.text0}}>{label}</div>{sub&&<div style={{...T.body,fontSize:11,color:C.text5,marginTop:2}}>{sub}</div>}</div>
+      {right&&<div style={{marginLeft:12,flexShrink:0}}>{right}</div>}
+    </div>;
+  }
+
+  function Section({label}) {
+    return <div style={{padding:"18px 16px 6px"}}><Mono>{label}</Mono></div>;
+  }
+
+  return (
+    <div style={{flex:1,overflowY:"auto",backgroundColor:C.bg950}}>
+      <div style={{padding:"16px 16px 0"}}>
+        <div style={{...T.display,fontSize:26,color:C.text0,marginBottom:20,letterSpacing:-0.5}}>Settings</div>
+      </div>
+
+      <Section label="Program"/>
+      <div style={{backgroundColor:C.bg900}}>
+        <Row label="Current Plan" sub="Push · Pull · Legs ×2"/>
+        <Row label="Schedule" sub="Mon · Tue · Wed · Thu · Fri · Sat"/>
+        <Row label="Duration" sub="75–90 min per session"/>
+        <Row label="Week" sub="Week 4 of 8"/>
+      </div>
+
+      <Section label="Preferences"/>
+      <div style={{backgroundColor:C.bg900}}>
+        <Row label="Units" right={
+          <div style={{display:"flex",gap:6}}>
+            {["kg","lb"].map(u=><div key={u} onClick={()=>{setUnit(u);save("unit",u);}} style={{padding:"5px 16px",borderRadius:8,backgroundColor:unit===u?C.lime300:C.bg700,cursor:"pointer"}}>
+              <Mono style={{fontSize:10,color:unit===u?C.bg950:C.text4,letterSpacing:0}}>{u}</Mono>
+            </div>)}
+          </div>
+        }/>
+        <Row label="Reminders" sub="Daily workout notification" right={<Toggle value={notifs} onChange={v=>{setNotifs(v);save("notifs",v);}}/>}/>
+        {notifs&&<Row label="Reminder time" right={
+          <input type="time" value={time} onChange={e=>{setTime(e.target.value);save("remTime",e.target.value);}}
+            style={{backgroundColor:C.bg700,border:`1px solid ${C.bg600}`,borderRadius:8,padding:"7px 10px",color:C.text0,fontSize:13,fontFamily:"'Space Grotesk',sans-serif",outline:"none"}}/>
+        }/>}
+      </div>
+
+      <Section label="Data &amp; Storage"/>
+      <div style={{backgroundColor:C.bg900,marginBottom:100}}>
+        <Row label="Storage" sub="IndexedDB — data stays on this device"/>
+        <Row label="Database" sub={dbSize}/>
+        <Row label="Export data" sub="Coming soon" right={<svg width="14" height="14" viewBox="0 0 14 14"><path d="M5 3l4 4-4 4" stroke={C.text5} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}/>
+        <div onClick={()=>{if(window.confirm("This will delete ALL your workout history and reset the app. Are you sure?")){indexedDB.deleteDatabase("lift_db");localStorage.clear();window.location.reload();}}}
+          style={{padding:"14px 16px",cursor:"pointer"}}>
+          <div style={{...T.body,fontSize:13,color:C.danger}}>Clear all data & reset…</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// BOTTOM NAV
+// ═══════════════════════════════════════════════════════════════════════════
+function Nav({active,onNav}) {
+  const tabs=[
+    {id:"dashboard",label:"Today",icon:<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="2" y="2" width="8.5" height="8.5" rx="2.5" stroke="currentColor" strokeWidth="1.8"/><rect x="11.5" y="2" width="8.5" height="8.5" rx="2.5" stroke="currentColor" strokeWidth="1.8"/><rect x="2" y="11.5" width="8.5" height="8.5" rx="2.5" stroke="currentColor" strokeWidth="1.8"/><rect x="11.5" y="11.5" width="8.5" height="8.5" rx="2.5" stroke="currentColor" strokeWidth="1.8"/></svg>},
+    {id:"progress",label:"Progress",icon:<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M2 18h3l3-8 4 11 3-9 2 6h3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>},
+    {id:"settings",label:"Settings",icon:<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="3.5" stroke="currentColor" strokeWidth="1.8"/><path d="M11 2v2.5M11 17.5V20M2 11h2.5M17.5 11H20M4.93 4.93l1.77 1.77M15.3 15.3l1.77 1.77M4.93 17.07l1.77-1.77M15.3 6.7l1.77-1.77" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>},
+  ];
+  return (
+    <div className="safe-bottom" style={{flexShrink:0,backgroundColor:C.bg950,borderTop:`1px solid ${C.bg800}`,display:"flex",alignItems:"flex-start",zIndex:100}}>
+      {tabs.map(tab=>(
+        <div key={tab.id} onClick={()=>onNav(tab.id)} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:3,cursor:"pointer",paddingTop:10,color:active===tab.id?C.lime300:C.text5,transition:"color 0.15s"}}>
+          {tab.icon}
+          <span style={{fontFamily:"'Space Grotesk',sans-serif",fontSize:10,fontWeight:600,letterSpacing:0.2}}>{tab.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ROOT APP
+// ═══════════════════════════════════════════════════════════════════════════
+function App() {
+  const [ready,setReady]=React.useState(false);
+  const [onboarded,setOnboarded]=React.useState(false);
+  const [screen,setScreen]=React.useState("dashboard");
+  const [sub,setSub]=React.useState(null); // "workout"|"streaks"
+  const [week,setWeekState]=React.useState(makeDefaultWeek());
+  const [streak,setStreak]=React.useState(0);
+
+  // Persist week
+  function setWeek(fn) {
+    setWeekState(prev=>{
+      const next=typeof fn==="function"?fn(prev):fn;
+      DB.set("week",next);
+      return next;
+    });
+  }
+
+  // Load persisted state on mount
+  React.useEffect(()=>{
+    (async()=>{
+      const [ob,savedWeek,savedStreak]=await Promise.all([
+        DB.get("onboarded"),
+        DB.get("week"),
+        null,
+      ]);
+      if(ob) setOnboarded(true);
+      if(savedWeek&&Array.isArray(savedWeek)) setWeekState(savedWeek);
+      setStreak(LS.get("streak",0));
+      setReady(true);
+    })();
+  },[]);
+
+  // Keep streak in sync
+  React.useEffect(()=>{ setStreak(LS.get("streak",0)); },[sub]);
+
+  if(!ready) return (
+    <div style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",backgroundColor:C.bg950}}>
+      <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:14}}>
+        <div style={{width:56,height:56,borderRadius:16,backgroundColor:C.lime300,display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M4 14h4l4-10 5 20 4-14 3 4h4" stroke={C.bg950} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </div>
+        <div style={{...T.display,fontSize:22,color:C.lime300,letterSpacing:-0.5}}>LIFT</div>
+      </div>
+    </div>
+  );
+
+  // Onboarding skipped — go straight to dashboard
+
+  const showNav=!sub;
+
+  function render() {
+    if(sub==="workout-select") return <WorkoutSelection week={week} setWeek={setWeek} onBack={()=>setSub(null)} onStart={()=>setSub("workout")}/>;
+    if(sub==="workout") return <Workout week={week} setWeek={setWeek} onBack={()=>setSub("workout-select")} onDone={()=>{setSub(null);setStreak(LS.get("streak",0));}}/>;
+    if(sub==="streaks") return <Streaks onBack={()=>setSub(null)}/>;
+    if(screen==="dashboard") return (
+      <div style={{flex:1,display:"flex",flexDirection:"column",overflow:"hidden"}}>
+        <TopBar week={week} streak={streak} onStreakTap={()=>setSub("streaks")}/>
+        <Dashboard week={week} setWeek={setWeek} onStart={()=>setSub("workout-select")}/>
+      </div>
+    );
+    if(screen==="progress") return <Progress/>;
+    if(screen==="settings") return <Settings/>;
+  }
+
+  return (
+    <div style={{width:"100%",height:"100%",display:"flex",flexDirection:"column",backgroundColor:C.bg950,overflow:"hidden"}}>
+      <div style={{flex:1,display:"flex",flexDirection:"column",overflow:"hidden"}} className="screen-enter">
+        {render()}
+      </div>
+      {showNav&&<Nav active={screen} onNav={s=>{setScreen(s);setSub(null);}}/>}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
