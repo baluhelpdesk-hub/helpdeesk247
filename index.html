@@ -486,10 +486,22 @@ function RescheduleModal({onConfirm,onDismiss}) {
 function WorkoutSelection({week,setWeek,onBack,onStart}) {
   const todayIdx=week.findIndex(d=>d.today);
   const todaySlot=week[todayIdx];
-  const [selectedId,setSelectedId]=React.useState(todaySlot?.workoutId||PPL[0].id);
-  const [expandedId,setExpandedId]=React.useState(todaySlot?.workoutId||PPL[0].id);
+
+  // Pre-select today's scheduled workout, fall back to Push A
+  const defaultId=todaySlot?.workoutId||PPL[0].id;
+  const defaultGroup=PPL.find(w=>w.id===defaultId)?.label||"PUSH";
+
+  const [selectedId,setSelectedId]=React.useState(defaultId);
+  const [expandedGroup,setExpandedGroup]=React.useState(defaultGroup);
 
   const selectedWorkout=PPL.find(w=>w.id===selectedId);
+
+  // Grouped by muscle category
+  const GROUPS=[
+    {label:"PUSH",color:"#4a9eff",workouts:PPL.filter(w=>w.label==="PUSH")},
+    {label:"PULL",color:"#f5c400",workouts:PPL.filter(w=>w.label==="PULL")},
+    {label:"LEGS",color:"#9dd600",workouts:PPL.filter(w=>w.label==="LEGS")},
+  ];
 
   function handleStart() {
     if(selectedId!==todaySlot?.workoutId) {
@@ -503,9 +515,14 @@ function WorkoutSelection({week,setWeek,onBack,onStart}) {
     onStart();
   }
 
-  function toggleCard(wId) {
+  function selectWorkout(wId) {
     setSelectedId(wId);
-    setExpandedId(prev=>prev===wId?null:wId);
+    const grp=PPL.find(w=>w.id===wId)?.label;
+    if(grp) setExpandedGroup(grp);
+  }
+
+  function toggleGroup(label) {
+    setExpandedGroup(prev=>prev===label?null:label);
   }
 
   return (
@@ -515,77 +532,94 @@ function WorkoutSelection({week,setWeek,onBack,onStart}) {
         <BackBtn onPress={onBack}/>
         <div>
           <div style={{...T.heading,fontSize:17,color:C.text0}}>Select Workout</div>
-          <Mono style={{marginTop:2}}>Tap to preview · tap again to collapse</Mono>
+          <Mono style={{marginTop:2}}>Pick a muscle group · choose A or B</Mono>
         </div>
       </div>
 
-      {/* Cards */}
-      <div style={{flex:1,overflowY:"auto"}}>
-        <div style={{padding:"12px 16px 120px",display:"flex",flexDirection:"column",gap:8}}>
-          {PPL.map(w=>{
-            const isSel=selectedId===w.id;
-            const isExp=expandedId===w.id;
-            const isToday=todaySlot?.workoutId===w.id;
+      {/* Scrollable group list */}
+      <div style={{flex:1,overflowY:"auto",WebkitOverflowScrolling:"touch"}}>
+        <div style={{padding:"12px 16px 140px",display:"flex",flexDirection:"column",gap:10}}>
+          {GROUPS.map(grp=>{
+            const isOpen=expandedGroup===grp.label;
+            const grpSelected=grp.workouts.find(w=>w.id===selectedId);
+
             return (
-              <div key={w.id} style={{borderRadius:14,overflow:"hidden"}}>
-                {/* Card header */}
+              <div key={grp.label} style={{borderRadius:14,overflow:"hidden",border:`2px solid ${grpSelected?grp.color:C.bg700}`,transition:"border-color 0.15s"}}>
+
+                {/* ── Group header (tap to expand/collapse) ── */}
                 <div
-                  onClick={()=>toggleCard(w.id)}
-                  style={{
-                    border:`2px solid ${isSel?w.color:C.bg700}`,
-                    borderBottom:isExp?`1px solid ${w.color}44`:`2px solid ${isSel?w.color:C.bg700}`,
-                    borderRadius:isExp?"14px 14px 0 0":14,
-                    backgroundColor:isSel?w.color+"12":C.bg900,
-                    padding:"13px 16px",cursor:"pointer",transition:"all 0.15s"
-                  }}>
-                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:5}}>
-                    <div style={{display:"flex",alignItems:"center",gap:8}}>
-                      <div style={{width:8,height:8,borderRadius:99,backgroundColor:w.color,flexShrink:0}}/>
-                      <span style={{...T.heading,fontSize:16,color:C.text0}}>{w.name}</span>
-                      <Pill color={w.color+"22"} tc={w.color} style={{fontSize:7}}>{w.label}</Pill>
-                      {isToday&&<Pill style={{fontSize:7}}>Scheduled</Pill>}
-                    </div>
-                    <div style={{display:"flex",alignItems:"center",gap:8}}>
-                      <span style={{...T.mono,fontSize:10,color:isSel?w.color:C.text5}}>{w.dur}m</span>
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{transition:"transform 0.2s",transform:isExp?"rotate(180deg)":"rotate(0deg)"}}>
-                        <path d="M2 4l4 4 4-4" stroke={isSel?w.color:C.text5} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </div>
+                  onClick={()=>toggleGroup(grp.label)}
+                  style={{backgroundColor:grpSelected?grp.color+"18":C.bg900,padding:"14px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:10}}>
+                    <div style={{width:10,height:10,borderRadius:99,backgroundColor:grp.color,flexShrink:0}}/>
+                    <span style={{...T.heading,fontSize:16,color:C.text0}}>{grp.label}</span>
+                    {grpSelected&&<Pill color={grp.color+"22"} tc={grp.color} style={{fontSize:7}}>{grpSelected.name} selected</Pill>}
                   </div>
-                  <div style={{...T.body,fontSize:12,color:C.text4}}>{w.focus}</div>
-                  {/* Exercise name pills */}
-                  <div style={{display:"flex",flexWrap:"wrap",gap:4,marginTop:8}}>
-                    {w.slots.map((slot,si)=>{
-                      const ex=EX[slot.primary];
-                      const mc=MC[ex?.muscle]||C.lime300;
-                      return ex?(
-                        <span key={si} style={{...T.body,fontSize:10,color:MC[ex.muscle]||C.lime300,backgroundColor:(MC[ex.muscle]||C.lime300)+"15",padding:"2px 8px",borderRadius:5,border:`1px solid ${MC[ex.muscle]||C.lime300}33`}}>{ex.name}</span>
-                      ):null;
-                    })}
+                  <div style={{display:"flex",alignItems:"center",gap:8}}>
+                    <span style={{...T.body,fontSize:11,color:C.text4}}>{grp.workouts[0].focus}</span>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{transition:"transform 0.2s",transform:isOpen?"rotate(180deg)":"rotate(0deg)",flexShrink:0}}>
+                      <path d="M2 4l4 4 4-4" stroke={grpSelected?grp.color:C.text5} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
                   </div>
                 </div>
 
-                {/* Expanded detail */}
-                {isExp&&(
-                  <div className="fade-enter" style={{border:`2px solid ${w.color}`,borderTop:"none",borderRadius:"0 0 14px 14px",backgroundColor:C.bg800,padding:"4px 0 8px"}}>
-                    {w.slots.map((slot,si)=>{
+                {/* ── Expanded body ── */}
+                {isOpen&&(
+                  <div style={{borderTop:`1px solid ${grp.color}33`,backgroundColor:C.bg800}}>
+
+                    {/* Workout A / B selector row */}
+                    <div style={{display:"flex",borderBottom:`1px solid ${C.bg700}`}}>
+                      {grp.workouts.map((w,wi)=>{
+                        const isSel=selectedId===w.id;
+                        const isToday=todaySlot?.workoutId===w.id;
+                        return (
+                          <div
+                            key={w.id}
+                            onClick={()=>selectWorkout(w.id)}
+                            style={{flex:1,padding:"13px 14px",backgroundColor:isSel?grp.color+"22":C.bg850,borderRight:wi===0?`1px solid ${C.bg700}`:"none",cursor:"pointer",transition:"background 0.15s"}}>
+                            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:5}}>
+                              <div style={{display:"flex",alignItems:"center",gap:8}}>
+                                {/* Radio dot */}
+                                <div style={{width:17,height:17,borderRadius:99,border:`2px solid ${isSel?grp.color:C.bg600}`,backgroundColor:isSel?grp.color:"transparent",display:"flex",alignItems:"center",justifyContent:"center",transition:"all 0.15s",flexShrink:0}}>
+                                  {isSel&&<div style={{width:6,height:6,borderRadius:99,backgroundColor:C.bg950}}/>}
+                                </div>
+                                <span style={{...T.heading,fontSize:14,color:isSel?C.text0:C.text3}}>{w.name}</span>
+                              </div>
+                              {isToday&&<Pill style={{fontSize:7,flexShrink:0}}>Today</Pill>}
+                            </div>
+                            <div style={{...T.mono,fontSize:9,color:isSel?grp.color:C.text5,paddingLeft:25}}>{w.dur}m · {w.slots.length} exercises</div>
+                            {/* Exercise name preview pills */}
+                            <div style={{display:"flex",flexWrap:"wrap",gap:3,marginTop:7,paddingLeft:25}}>
+                              {w.slots.slice(0,4).map((slot,si)=>{
+                                const ex=EX[slot.primary];
+                                if(!ex) return null;
+                                return <span key={si} style={{...T.body,fontSize:9,color:MC[ex.muscle]||C.lime300,backgroundColor:(MC[ex.muscle]||C.lime300)+"15",padding:"1px 6px",borderRadius:4,border:`1px solid ${MC[ex.muscle]||C.lime300}33`}}>{ex.name}</span>;
+                              })}
+                              {w.slots.length>4&&<span style={{...T.body,fontSize:9,color:C.text5}}>+{w.slots.length-4} more</span>}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* ── Exercise detail for the selected workout in this group ── */}
+                    {grpSelected&&grpSelected.slots.map((slot,si)=>{
                       const ex=EX[slot.primary];
                       if(!ex) return null;
                       const mc=MC[ex.muscle]||C.lime300;
-                      const isLast=si===w.slots.length-1;
+                      const isLast=si===grpSelected.slots.length-1;
                       return (
                         <div key={si} style={{padding:"10px 16px",borderBottom:isLast?"none":`1px solid ${C.bg700}`}}>
                           {/* Exercise header */}
                           <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:7}}>
                             <div style={{width:5,height:5,borderRadius:99,backgroundColor:mc,flexShrink:0}}/>
-                            <span style={{...T.heading,fontSize:14,color:C.text0}}>{ex.name}</span>
+                            <span style={{...T.heading,fontSize:13,color:C.text0}}>{ex.name}</span>
                             <Pill color={mc+"22"} tc={mc} style={{fontSize:7,border:`1px solid ${mc}33`}}>{ex.muscle}</Pill>
                             <span style={{...T.mono,fontSize:9,color:C.text5,marginLeft:"auto"}}>{ex.sets}×{ex.reps} · {ex.eq}</span>
                           </div>
-
                           {/* Key points */}
-                          <div style={{marginBottom:6}}>
-                            <div style={{...T.mono,fontSize:8,color:C.lime300,letterSpacing:1.5,marginBottom:4}}>KEY POINTS</div>
+                          <div style={{marginBottom:5}}>
+                            <div style={{...T.mono,fontSize:8,color:C.lime300,letterSpacing:1.5,marginBottom:3}}>KEY POINTS</div>
                             {ex.cues.map((c,i)=>(
                               <div key={i} style={{display:"flex",gap:6,alignItems:"flex-start",marginBottom:2}}>
                                 <span style={{color:C.lime300,fontSize:10,lineHeight:1.6,flexShrink:0}}>✓</span>
@@ -593,10 +627,9 @@ function WorkoutSelection({week,setWeek,onBack,onStart}) {
                               </div>
                             ))}
                           </div>
-
-                          {/* Mistakes to avoid */}
+                          {/* Mistakes */}
                           <div>
-                            <div style={{...T.mono,fontSize:8,color:C.danger,letterSpacing:1.5,marginBottom:4}}>AVOID THESE MISTAKES</div>
+                            <div style={{...T.mono,fontSize:8,color:C.danger,letterSpacing:1.5,marginBottom:3}}>AVOID</div>
                             {ex.mistakes.map((m,i)=>(
                               <div key={i} style={{display:"flex",gap:6,alignItems:"flex-start",marginBottom:2}}>
                                 <span style={{color:C.danger,fontSize:10,lineHeight:1.6,flexShrink:0}}>✗</span>
@@ -607,6 +640,7 @@ function WorkoutSelection({week,setWeek,onBack,onStart}) {
                         </div>
                       );
                     })}
+
                   </div>
                 )}
               </div>
@@ -615,7 +649,7 @@ function WorkoutSelection({week,setWeek,onBack,onStart}) {
         </div>
       </div>
 
-      {/* Start button */}
+      {/* Sticky start button */}
       <div className="safe-bottom" style={{padding:"12px 16px 0",backgroundColor:C.bg950,borderTop:`1px solid ${C.bg800}`,flexShrink:0}}>
         <Btn onPress={handleStart} full>Begin {selectedWorkout?.name} →</Btn>
       </div>
