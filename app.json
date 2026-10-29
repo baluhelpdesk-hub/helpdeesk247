@@ -3,7 +3,7 @@
   "app": {
     "appIdType": 0,
     "appId": 544110,
-    "appName": "TacticaL_2_eng_AOD_T_Rex_2",
+    "appName": "Claude dual time",
     "appType": "watchface",
     "version": {
       "code": 3,
@@ -31,7 +31,7 @@
   "i18n": {
     "en-US": {
       "icon": "cover.png",
-      "appName": "TacticaL_2_eng_AOD_T_Rex_2"
+      "appName": "Claude dual time"
     }
   },
   "defaultLanguage": "en-US",
