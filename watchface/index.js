@@ -116,11 +116,12 @@ try {
                 // Secondary clock under the date: New York time in the main clock's font, at half size.
                 drawNewYork(NORMAL, 'tz', 343, 347, 360);
 
-                // Taps: native app screen names as used by the original face (calendar, battery) and Zepp OS (activity).
-                hmUI.createWidget(hmUI.widget.IMG_CLICK, { x: 26, y: 226, w: 114, h: 60, type: hmUI.data_type.HEART, show_level: NORMAL });
-                tapOpens(140, 226, 156, 60, 'activityAppScreen');
-                tapOpens(296, 226, 150, 60, 'Settings_batteryManagerScreen');
-                tapOpens(106, 288, 240, 48, 'ScheduleCalScreen');
+                // Taps. Native screen names: the calendar name comes from the original face; the alarm, find phone
+                // and world clock names are unverified and need a test on the watch.
+                tapOpens(42, 130, 382, 88, 'AlarmScreen');                       // main time -> alarm
+                tapOpens(163, 24, 128, 96, 'FindPhoneScreen');                   // mascot at the top -> find my phone
+                tapOpens(106, 288, 240, 48, 'ScheduleCalScreen');                // date pill -> calendar
+                tapOpens(99, 343, 258, 44, 'WorldClockScreen');                  // New York time -> world clock
 
                 // Always-on screen: black, only mascot + time + date + New York time (Zepp asks for ~10% lit pixels and no seconds).
                 drawCommon(hmUI.show_level.ONLY_AOD, digits('a'), 135, 'mascot.png'); // thinner digits + filled mascot, same spots
