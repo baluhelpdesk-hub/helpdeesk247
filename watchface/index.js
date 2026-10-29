@@ -26,23 +26,28 @@ try {
         // The native time widgets only show the device clock, so the New York digits are image widgets
         // whose sources are swapped by a timer whenever the minute changes.
         const nySlots = [];
+        const nyAmPm = [];
         let nyShown = -1;
         let nyTimer = null;
         function drawNewYork(level, prefix, y, colonY, labelY) {
-            [141, 181, 261, 301].forEach((x, pos) => {
+            [127, 167, 247, 287].forEach((x, pos) => {
                 const widget = hmUI.createWidget(hmUI.widget.IMG, { x, y, src: prefix + '0.png', show_level: level });
                 nySlots.push({ pos, prefix, widget });
             });
-            hmUI.createWidget(hmUI.widget.IMG, { x: 221, y: colonY, src: 'tzcolon.png', show_level: level });
-            hmUI.createWidget(hmUI.widget.IMG, { x: 113, y: labelY, src: 'tzlabel.png', show_level: level });
+            hmUI.createWidget(hmUI.widget.IMG, { x: 207, y: colonY, src: 'tzcolon.png', show_level: level });
+            hmUI.createWidget(hmUI.widget.IMG, { x: 99, y: labelY, src: 'tzlabel.png', show_level: level });
+            nyAmPm.push(hmUI.createWidget(hmUI.widget.IMG, { x: 335, y: labelY, src: 'tzam.png', show_level: level }));
         }
         function updateNewYork() {
             const { hour, minute } = newYorkTime(new Date().getTime());
             const minuteOfDay = hour * 60 + minute;
             if (minuteOfDay === nyShown) return;
             nyShown = minuteOfDay;
-            const d = [Math.floor(hour / 10), hour % 10, Math.floor(minute / 10), minute % 10];
+            // 12-hour clock with a leading zero on the hour, like the main time.
+            const hour12 = hour % 12 || 12;
+            const d = [Math.floor(hour12 / 10), hour12 % 10, Math.floor(minute / 10), minute % 10];
             nySlots.forEach(s => s.widget.setProperty(hmUI.prop.SRC, s.prefix + d[s.pos] + '.png'));
+            nyAmPm.forEach(w => w.setProperty(hmUI.prop.SRC, hour < 12 ? 'tzam.png' : 'tzpm.png'));
         }
 
         // Widgets shared by the normal and always-on (AOD) screens, at the same spots so nothing jumps.
