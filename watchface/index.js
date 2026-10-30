@@ -23,6 +23,8 @@ try {
             return { hour: local.getUTCHours(), minute: local.getUTCMinutes() };
         }
 
+        // Off while the New York digits draw garbled on the watch. Set to true to bring the clock back for testing.
+        const SHOW_NEW_YORK = false;
         // The native time widgets only show the device clock, so the New York clock is built from image widgets.
         // Changing an image source in place rendered garbled on the watch, so when the minute changes the whole
         // New York group is deleted and created again with the new images.
@@ -126,33 +128,35 @@ try {
                     type: hmUI.data_type.BATTERY, show_level: NORMAL,
                 });
                 hmUI.createWidget(hmUI.widget.IMG_LEVEL, {
-                    x: 171, y: 402,
+                    x: SHOW_NEW_YORK ? 171 : 200, y: SHOW_NEW_YORK ? 402 : 370,
                     image_array: ['g0.png', 'g1.png', 'g2.png', 'g3.png', 'g4.png', 'g5.png', 'g6.png', 'g7.png', 'g8.png', 'g9.png', 'g10.png'],
                     image_length: 11,
                     type: hmUI.data_type.STEP, show_level: NORMAL,
                 });
 
                 // Secondary clock under the date: New York time in the main clock's font, at half size.
-                drawNewYork(NORMAL, 'tz', 343, 347, 360);
+                if (SHOW_NEW_YORK) drawNewYork(NORMAL, 'tz', 343, 347, 360);
 
                 // Taps. Native screen names: the calendar name comes from the original face; the alarm, find phone
                 // and world clock names are unverified and need a test on the watch.
                 tapOpens(42, 130, 382, 88, 'AlarmScreen');                       // main time -> alarm
                 tapOpens(163, 24, 128, 96, 'FindPhoneScreen');                   // mascot at the top -> find my phone
                 tapOpens(106, 288, 240, 48, 'ScheduleCalScreen');                // date pill -> calendar
-                tapOpens(99, 343, 258, 44, 'WorldClockScreen');                  // New York time -> world clock
+                if (SHOW_NEW_YORK) tapOpens(99, 343, 258, 44, 'WorldClockScreen'); // New York time -> world clock
 
                 // Always-on screen: black, only mascot + time + date + New York time (Zepp asks for ~10% lit pixels and no seconds).
                 drawCommon(hmUI.show_level.ONLY_AOD, digits('a'), 135, 'mascot.png'); // thinner digits + filled mascot, same spots
-                drawNewYork(hmUI.show_level.ONLY_AOD, 'tza', 345, 346, 359);
+                if (SHOW_NEW_YORK) drawNewYork(hmUI.show_level.ONLY_AOD, 'tza', 345, 346, 359);
 
                 // The face still draws without the live New York updates, so a failure here is only logged.
-                try {
-                    const start = nowNewYork();
-                    nyShown = start.hour * 60 + start.minute;
-                    nyTimer = timer.createTimer(1000, 5000, updateNewYork, {});
-                } catch (e) {
-                    logger.log('new york clock not started: ' + e);
+                if (SHOW_NEW_YORK) {
+                    try {
+                        const start = nowNewYork();
+                        nyShown = start.hour * 60 + start.minute;
+                        nyTimer = timer.createTimer(1000, 5000, updateNewYork, {});
+                    } catch (e) {
+                        logger.log('new york clock not started: ' + e);
+                    }
                 }
             },
             onInit() {
