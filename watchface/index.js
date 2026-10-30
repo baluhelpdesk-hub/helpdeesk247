@@ -9,6 +9,9 @@ try {
         const week = ['w1.png', 'w2.png', 'w3.png', 'w4.png', 'w5.png', 'w6.png', 'w7.png'];
         const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(i => 'm' + i + '.png');
 
+        // Set to false to remove the New York line and its tap target.
+        const SHOW_NEW_YORK = true;
+
         // New York wall clock from UTC: UTC-5, or UTC-4 in US daylight time (2nd Sunday of March to 1st Sunday of November).
         function nthSunday(year, month, n) {
             const firstWeekday = new Date(Date.UTC(year, month, 1)).getUTCDay();
@@ -23,51 +26,41 @@ try {
             return { hour: local.getUTCHours(), minute: local.getUTCMinutes() };
         }
 
-        // Off while the New York digits draw garbled on the watch. Set to true to bring the clock back for testing.
-        const SHOW_NEW_YORK = false;
-        // The native time widgets only show the device clock, so the New York clock is built from image widgets.
-        // Changing an image source in place rendered garbled on the watch, so when the minute changes the whole
-        // New York group is deleted and created again with the new images.
-        const nySets = [];
+        // "NY 08:21 AM": 12-hour time with a leading zero on the hour, like the main clock.
+        function newYorkLabel(time) {
+            const hour12 = time.hour % 12 || 12;
+            const mm = String(time.minute).padStart(2, '0');
+            return 'NY ' + String(hour12).padStart(2, '0') + ':' + mm + (time.hour < 12 ? ' AM' : ' PM');
+        }
+
+        // The native time widgets only show the device clock. The New York line is a text widget that is updated
+        // when the minute changes, which is a plain text update rather than swapping images.
+        const nyTexts = [];
         let nyShown = -1;
         let nyTimer = null;
         function nowNewYork() {
             return newYorkTime(new Date().getTime());
         }
-        function buildNewYork(set, time) {
-            // 12-hour clock with a leading zero on the hour, like the main time.
-            const hour12 = time.hour % 12 || 12;
-            const d = [Math.floor(hour12 / 10), hour12 % 10, Math.floor(time.minute / 10), time.minute % 10];
-            const make = (x, y, src) => hmUI.createWidget(hmUI.widget.IMG, { x, y, src, show_level: set.level });
-            set.widgets = [
-                make(127, set.y, set.prefix + d[0] + '.png'),
-                make(167, set.y, set.prefix + d[1] + '.png'),
-                make(207, set.colonY, 'tzcolon.png'),
-                make(247, set.y, set.prefix + d[2] + '.png'),
-                make(287, set.y, set.prefix + d[3] + '.png'),
-                make(99, set.labelY, 'tzlabel.png'),
-                make(335, set.labelY, time.hour < 12 ? 'tzam.png' : 'tzpm.png'),
-            ];
-        }
-        function drawNewYork(level, prefix, y, colonY, labelY) {
-            const set = { level, prefix, y, colonY, labelY, widgets: [] };
-            buildNewYork(set, nowNewYork());
-            nySets.push(set);
+        function drawNewYork(level, y) {
+            nyTexts.push(hmUI.createWidget(hmUI.widget.TEXT, {
+                x: 0, y, w: 454, h: 44,
+                text: newYorkLabel(nowNewYork()), text_size: 36, color: 0xffffff,
+                align_h: hmUI.align.CENTER_H, align_v: hmUI.align.CENTER_V,
+                show_level: level,
+            }));
         }
         function updateNewYork() {
             const time = nowNewYork();
             const minuteOfDay = time.hour * 60 + time.minute;
             if (minuteOfDay === nyShown) return;
             nyShown = minuteOfDay;
-            nySets.forEach(set => {
+            const label = newYorkLabel(time);
+            nyTexts.forEach(w => {
                 try {
-                    set.widgets.forEach(w => hmUI.deleteWidget(w));
+                    w.setProperty(hmUI.prop.TEXT, label);
                 } catch (e) {
-                    // If widgets cannot be removed, keep the ones already on screen rather than stacking new ones.
-                    logger.log('new york clock not updated: ' + e);
-                    return;
+                    logger.log('new york line not updated: ' + e);
                 }
-                buildNewYork(set, time);
             });
         }
 
@@ -134,19 +127,19 @@ try {
                     type: hmUI.data_type.STEP, show_level: NORMAL,
                 });
 
-                // Secondary clock under the date: New York time in the main clock's font, at half size.
-                if (SHOW_NEW_YORK) drawNewYork(NORMAL, 'tz', 343, 347, 360);
+                // Secondary clock under the date: New York time.
+                if (SHOW_NEW_YORK) drawNewYork(NORMAL, 345);
 
                 // Taps. Native screen names: the calendar name comes from the original face; the alarm, find phone
                 // and world clock names are unverified and need a test on the watch.
-                tapOpens(42, 130, 382, 88, 'AlarmScreen');                       // main time -> alarm
-                tapOpens(163, 24, 128, 96, 'FindPhoneScreen');                   // mascot at the top -> find my phone
-                tapOpens(106, 288, 240, 48, 'ScheduleCalScreen');                // date pill -> calendar
-                if (SHOW_NEW_YORK) tapOpens(99, 343, 258, 44, 'WorldClockScreen'); // New York time -> world clock
+                tapOpens(42, 130, 382, 88, 'AlarmScreen');                         // main time -> alarm
+                tapOpens(163, 24, 128, 96, 'FindPhoneScreen');                     // mascot at the top -> find my phone
+                tapOpens(106, 288, 240, 48, 'ScheduleCalScreen');                  // date pill -> calendar
+                if (SHOW_NEW_YORK) tapOpens(99, 343, 258, 44, 'WorldClockScreen'); // New York line -> world clock
 
                 // Always-on screen: black, only mascot + time + date + New York time (Zepp asks for ~10% lit pixels and no seconds).
                 drawCommon(hmUI.show_level.ONLY_AOD, digits('a'), 135, 'mascot.png'); // thinner digits + filled mascot, same spots
-                if (SHOW_NEW_YORK) drawNewYork(hmUI.show_level.ONLY_AOD, 'tza', 345, 346, 359);
+                if (SHOW_NEW_YORK) drawNewYork(hmUI.show_level.ONLY_AOD, 345);
 
                 // The face still draws without the live New York updates, so a failure here is only logged.
                 if (SHOW_NEW_YORK) {
