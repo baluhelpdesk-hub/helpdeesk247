@@ -120,12 +120,18 @@ try {
                     unit_en: 'pct.png', unit_sc: 'pct.png', unit_tc: 'pct.png',
                     type: hmUI.data_type.BATTERY, show_level: NORMAL,
                 });
-                hmUI.createWidget(hmUI.widget.IMG_LEVEL, {
-                    x: SHOW_NEW_YORK ? 171 : 200, y: SHOW_NEW_YORK ? 402 : 370,
-                    image_array: ['g0.png', 'g1.png', 'g2.png', 'g3.png', 'g4.png', 'g5.png', 'g6.png', 'g7.png', 'g8.png', 'g9.png', 'g10.png'],
-                    image_length: 11,
-                    type: hmUI.data_type.STEP, show_level: NORMAL,
-                });
+                // Day bar: fills from midnight to the end of the day, one segment step per hour. The watch updates it
+                // from its own clock. Skipped if the hour data type is not available, so the rest of the face still draws.
+                if (hmUI.data_type.HOUR !== undefined) {
+                    const dayBar = [];
+                    for (let hour = 0; hour < 24; hour++) dayBar.push('g' + Math.round(hour * 10 / 23) + '.png');
+                    hmUI.createWidget(hmUI.widget.IMG_LEVEL, {
+                        x: SHOW_NEW_YORK ? 171 : 200, y: SHOW_NEW_YORK ? 402 : 370,
+                        image_array: dayBar,
+                        image_length: 24,
+                        type: hmUI.data_type.HOUR, show_level: NORMAL,
+                    });
+                }
 
                 // Secondary clock under the date: New York time.
                 if (SHOW_NEW_YORK) drawNewYork(NORMAL, 345);
