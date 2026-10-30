@@ -23,39 +23,50 @@ try {
             return { hour: local.getUTCHours(), minute: local.getUTCMinutes() };
         }
 
-        // The native time widgets only show the device clock, so the New York digits are image widgets
-        // whose sources are swapped by a timer whenever the minute changes.
-        const nySlots = [];
-        const nyAmPm = [];
+        // The native time widgets only show the device clock, so the New York clock is built from image widgets.
+        // Changing an image source in place rendered garbled on the watch, so when the minute changes the whole
+        // New York group is deleted and created again with the new images.
+        const nySets = [];
         let nyShown = -1;
         let nyTimer = null;
+        function nowNewYork() {
+            return newYorkTime(new Date().getTime());
+        }
+        function buildNewYork(set, time) {
+            // 12-hour clock with a leading zero on the hour, like the main time.
+            const hour12 = time.hour % 12 || 12;
+            const d = [Math.floor(hour12 / 10), hour12 % 10, Math.floor(time.minute / 10), time.minute % 10];
+            const make = (x, y, src) => hmUI.createWidget(hmUI.widget.IMG, { x, y, src, show_level: set.level });
+            set.widgets = [
+                make(127, set.y, set.prefix + d[0] + '.png'),
+                make(167, set.y, set.prefix + d[1] + '.png'),
+                make(207, set.colonY, 'tzcolon.png'),
+                make(247, set.y, set.prefix + d[2] + '.png'),
+                make(287, set.y, set.prefix + d[3] + '.png'),
+                make(99, set.labelY, 'tzlabel.png'),
+                make(335, set.labelY, time.hour < 12 ? 'tzam.png' : 'tzpm.png'),
+            ];
+        }
         function drawNewYork(level, prefix, y, colonY, labelY) {
-            [127, 167, 247, 287].forEach((x, pos) => {
-                const widget = hmUI.createWidget(hmUI.widget.IMG, { x, y, src: prefix + '0.png', show_level: level });
-                nySlots.push({ pos, prefix, widget });
-            });
-            hmUI.createWidget(hmUI.widget.IMG, { x: 207, y: colonY, src: 'tzcolon.png', show_level: level });
-            hmUI.createWidget(hmUI.widget.IMG, { x: 99, y: labelY, src: 'tzlabel.png', show_level: level });
-            nyAmPm.push(hmUI.createWidget(hmUI.widget.IMG, { x: 335, y: labelY, src: 'tzam.png', show_level: level }));
+            const set = { level, prefix, y, colonY, labelY, widgets: [] };
+            buildNewYork(set, nowNewYork());
+            nySets.push(set);
         }
         function updateNewYork() {
-            const { hour, minute } = newYorkTime(new Date().getTime());
-            const minuteOfDay = hour * 60 + minute;
+            const time = nowNewYork();
+            const minuteOfDay = time.hour * 60 + time.minute;
             if (minuteOfDay === nyShown) return;
             nyShown = minuteOfDay;
-            // 12-hour clock with a leading zero on the hour, like the main time.
-            const hour12 = hour % 12 || 12;
-            const d = [Math.floor(hour12 / 10), hour12 % 10, Math.floor(minute / 10), minute % 10];
-            nySlots.forEach(s => setSrc(s.widget, s.prefix + d[s.pos] + '.png'));
-            nyAmPm.forEach(w => setSrc(w, hour < 12 ? 'tzam.png' : 'tzpm.png'));
-        }
-        // Swap an image source; if the SRC property is not accepted, fall back to MORE so one bad call never stops the face.
-        function setSrc(widget, src) {
-            try {
-                widget.setProperty(hmUI.prop.SRC, src);
-            } catch (e) {
-                widget.setProperty(hmUI.prop.MORE, { src });
-            }
+            nySets.forEach(set => {
+                try {
+                    set.widgets.forEach(w => hmUI.deleteWidget(w));
+                } catch (e) {
+                    // If widgets cannot be removed, keep the ones already on screen rather than stacking new ones.
+                    logger.log('new york clock not updated: ' + e);
+                    return;
+                }
+                buildNewYork(set, time);
+            });
         }
 
         // Widgets shared by the normal and always-on (AOD) screens, at the same spots so nothing jumps.
@@ -137,7 +148,8 @@ try {
 
                 // The face still draws without the live New York updates, so a failure here is only logged.
                 try {
-                    updateNewYork();
+                    const start = nowNewYork();
+                    nyShown = start.hour * 60 + start.minute;
                     nyTimer = timer.createTimer(1000, 5000, updateNewYork, {});
                 } catch (e) {
                     logger.log('new york clock not started: ' + e);
