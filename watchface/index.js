@@ -132,6 +132,9 @@ try {
 
                 // Taps. Native screen names: the calendar name comes from the original face; the alarm, find phone
                 // and world clock names are unverified and need a test on the watch.
+                // Heart rate and steps open their apps as in the original face (heart uses the built-in heart type).
+                hmUI.createWidget(hmUI.widget.IMG_CLICK, { x: 26, y: 226, w: 114, h: 60, type: hmUI.data_type.HEART, show_level: NORMAL });
+                tapOpens(140, 226, 156, 60, 'activityAppScreen');
                 tapOpens(42, 130, 382, 88, 'AlarmScreen');                         // main time -> alarm
                 tapOpens(163, 24, 128, 96, 'FindPhoneScreen');                     // mascot at the top -> find my phone
                 tapOpens(106, 288, 240, 48, 'ScheduleCalScreen');                  // date pill -> calendar
