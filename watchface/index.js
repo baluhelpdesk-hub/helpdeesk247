@@ -46,8 +46,16 @@ try {
             // 12-hour clock with a leading zero on the hour, like the main time.
             const hour12 = hour % 12 || 12;
             const d = [Math.floor(hour12 / 10), hour12 % 10, Math.floor(minute / 10), minute % 10];
-            nySlots.forEach(s => s.widget.setProperty(hmUI.prop.SRC, s.prefix + d[s.pos] + '.png'));
-            nyAmPm.forEach(w => w.setProperty(hmUI.prop.SRC, hour < 12 ? 'tzam.png' : 'tzpm.png'));
+            nySlots.forEach(s => setSrc(s.widget, s.prefix + d[s.pos] + '.png'));
+            nyAmPm.forEach(w => setSrc(w, hour < 12 ? 'tzam.png' : 'tzpm.png'));
+        }
+        // Swap an image source; if the SRC property is not accepted, fall back to MORE so one bad call never stops the face.
+        function setSrc(widget, src) {
+            try {
+                widget.setProperty(hmUI.prop.SRC, src);
+            } catch (e) {
+                widget.setProperty(hmUI.prop.MORE, { src });
+            }
         }
 
         // Widgets shared by the normal and always-on (AOD) screens, at the same spots so nothing jumps.
@@ -127,8 +135,13 @@ try {
                 drawCommon(hmUI.show_level.ONLY_AOD, digits('a'), 135, 'mascot.png'); // thinner digits + filled mascot, same spots
                 drawNewYork(hmUI.show_level.ONLY_AOD, 'tza', 345, 346, 359);
 
-                updateNewYork();
-                nyTimer = timer.createTimer(1000, 5000, updateNewYork, {});
+                // The face still draws without the live New York updates, so a failure here is only logged.
+                try {
+                    updateNewYork();
+                    nyTimer = timer.createTimer(1000, 5000, updateNewYork, {});
+                } catch (e) {
+                    logger.log('new york clock not started: ' + e);
+                }
             },
             onInit() {
                 logger.log('index page.js on init invoke');

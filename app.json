@@ -2,15 +2,15 @@
   "configVersion": "v2",
   "app": {
     "appIdType": 0,
-    "appId": 544110,
-    "appName": "Claude dual time",
+    "appId": 544120,
+    "appName": "Claude Orange Dual Time",
     "appType": "watchface",
     "version": {
-      "code": 3,
-      "name": "1.0.2"
+      "code": 1,
+      "name": "1.0.0"
     },
     "vender": "zepp",
-    "description": "Pixel mascot watch face in a terminal style. Big bold time, heart rate, steps, battery, date and a step-goal bar. Low-power always-on screen with the mascot, time and date. Made for Amazfit T-Rex 2.",
+    "description": "Claude orange pixel mascot watch face in a terminal style. Big bold time, New York time in 12-hour format with AM/PM, date, and a low-power always-on screen with the filled mascot and both times. Made for Amazfit T-Rex 2.",
     "icon": "cover.png",
     "cover": [
       "cover.png"
@@ -31,7 +31,7 @@
   "i18n": {
     "en-US": {
       "icon": "cover.png",
-      "appName": "Claude dual time"
+      "appName": "Claude Orange Dual Time"
     }
   },
   "defaultLanguage": "en-US",
